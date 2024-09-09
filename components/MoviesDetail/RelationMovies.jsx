@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import MoviesCard from "../MoviesCard.jsx";
-import { getImages } from "@/commonApi/commonApi.js";
 
 const setToDemonstrationMode = (data, wallpapers) => {
   data?.forEach((x) => {
     x.coverUrl = `${process.env.NEXT_PUBLIC_TEST_PATH}/${
       wallpapers[Math.floor(Math.random() * wallpapers.length)]
     }`;
+  });
+};
+
+const setToDemonstrationMode2 = (data, wallpapers) => {
+  data?.forEach((x) => {
+    x.coverUrl = `${wallpapers[Math.floor(Math.random() * wallpapers.length)]}`;
   });
 };
 
@@ -29,12 +34,15 @@ export default function RelationMovies({ actressNames = [], setCode }) {
           actress: actressNames,
         }),
       }),
-      getImages(),
+      fetch("/api/common/image").then((resp) => {
+        return resp.json();
+      }),
     ]);
     const data = await resp.json();
 
     // 设置为演示模式
-    setToMinioMode(data, wallpapers);
+    // setToMinioMode(data, wallpapers);
+    setToDemonstrationMode2(data, wallpapers.wallpapers);
 
     const processedData = data?.map((x) => {
       const releaseDate = x.releaseDate
