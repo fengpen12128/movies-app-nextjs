@@ -11,10 +11,17 @@ generator client {
 
 datasource db {
     provider     = "postgresql"
-    url          = env("DATABASE_URL")
-    directUrl    = env("DIRECT_URL")
-    relationMode = "prisma" // 使用 Prisma 管理关系，而不是数据库外键约束
+    url          = env("POSTGRES_PRISMA_URL") // uses connection pooling
+    directUrl    = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+    relationMode = "prisma"
 }
+
+// datasource db {
+//     provider     = "postgresql"
+//     url          = env("DATABASE_URL")
+//     directUrl    = env("DIRECT_URL")
+//     relationMode = "prisma" // 使用 Prisma 管理关系，而不是数据库外键约束
+// }
 
 generator prismaClient {
     provider        = "prisma-client-js"
