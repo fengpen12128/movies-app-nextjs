@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Spinner } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import MoviesCard from "../MoviesCard.jsx";
-import { getImages } from "@/api/commonApi";
+import { getImages } from "@/commonApi/commonApi.js";
 
 const setToDemonstrationMode = (data, wallpapers) => {
   data?.forEach((x) => {

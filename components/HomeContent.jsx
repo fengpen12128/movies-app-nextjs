@@ -8,7 +8,7 @@ import MoviesDetail from "@/components/MoviesDetail";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { Card, TextField, Spinner } from "@radix-ui/themes";
 import SiderBar from "@/components/SiderBar";
-import { getImages } from "@/api/commonApi";
+import { getImages } from "@/commonApi/commonApi";
 import FilterBar from "@/components/FilterBar";
 const CardContent = ({ movies, setSilderOpen, setClickMovie }) => {
   const router = useRouter();
@@ -105,7 +105,9 @@ const HomeContent = () => {
       // }));
       const updatedMovies = data?.movies.map((x, index) => ({
         ...x,
-        coverUrl: `${wallpapers.wallpapers[index % wallpapers.wallpapers.length]}`,
+        coverUrl: `${
+          wallpapers.wallpapers[index % wallpapers.wallpapers.length]
+        }`,
       }));
 
       //   const updatedMovies = data?.movies.map((x) => ({

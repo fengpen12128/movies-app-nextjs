@@ -7,7 +7,7 @@ import VideoPlayResource from "./VideoPlayResource.jsx";
 import MoviesPreview from "../MediaPreview.jsx";
 import MagnetLinkTable from "./MagnetLinkTable.jsx";
 import RelationMovies from "./RelationMovies.jsx";
-import { getImages } from "@/api/commonApi";
+import { getImages } from "@/commonApi/commonApi.js";
 
 const setToDemonstrationMode = (data, wallpapers) => {
   data.coverUrl = `${process.env.NEXT_PUBLIC_TEST_PATH}/${
