@@ -103,17 +103,17 @@ const HomeContent = () => {
       //     wallpapers[index % wallpapers.length]
       //   }`,
       // }));
-      const updatedMovies = data?.movies.map((x, index) => ({
-        ...x,
-        coverUrl: `${
-          wallpapers.wallpapers[index % wallpapers.wallpapers.length]
-        }`,
-      }));
+    //   const updatedMovies = data?.movies.map((x, index) => ({
+    //     ...x,
+    //     coverUrl: `${
+    //       wallpapers.wallpapers[index % wallpapers.wallpapers.length]
+    //     }`,
+    //   }));
 
-      //   const updatedMovies = data?.movies.map((x) => ({
-      //     ...x,
-      //     coverUrl: `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`,
-      //   }));
+        const updatedMovies = data?.movies.map((x) => ({
+          ...x,
+          coverUrl: `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`,
+        }));
 
       setMovies(updatedMovies || []);
       setTotal(data.total);
