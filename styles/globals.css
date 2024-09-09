@@ -1,0 +1,87 @@
+@import url("g1.css");
+@import url("g2.css");
+@import url("g3.css");
+@import url("g4.css");
+
+
+:root {
+    --nav-filter-bg: rgba(60, 60, 60, 0.6);
+    --nav-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    --nav-filter-color: #a0a0a0;
+    --nav-action-item-bg: linear-gradient(rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.08));
+    --nav-filter-color: #a0a0a0;
+    --nav-filter-bg-hover: rgba(60, 60, 60, 0.8);
+}
+
+
+
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+}
+
+.mac-close-icon {
+    width: 14px;
+    /* 圆圈的宽度 */
+    height: 14px;
+    /* 圆圈的高度 */
+    background-color: #ff5f57;
+    /* 红色背景 */
+    border-radius: 50%;
+    /* 圆形 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.mac-close-x {
+    color: white;
+    /* “×”的颜色 */
+    font-size: 10px;
+    /* “×”的大小 */
+    line-height: 1;
+    font-weight: bold;
+    visibility: hidden;
+    /* 默认隐藏 */
+}
+
+.mac-close-icon:hover .mac-close-x {
+    visibility: visible;
+    /* 悬停时显示“×” */
+}
+
+/* .app {
+    @apply relative z-10 flex justify-center items-center flex-col  mx-auto sm:px-16 px-6 ;
+  } */
+
+
+.flex-between {
+    @apply flex justify-between items-center;
+  }
+
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+
+  .flex-start {
+    @apply flex justify-start items-start;
+  }
+
+
+  .flex-end {
+    @apply flex justify-end items-center;
+  }
+
+
+.transition-transform {
+    @apply transition-all duration-200 ease-in-out transform
+}
