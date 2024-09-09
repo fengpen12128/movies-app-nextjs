@@ -1,13 +1,12 @@
 import prisma from "@/app/lib/prisma";
 
 export const GET = async (req, { params }) => {
-
   const { code } = params;
 
   try {
     const movie = await prisma.movieInfo.findUnique({
       where: {
-        code: code,
+        id: Number(code),
       },
       include: {
         actresses: true,

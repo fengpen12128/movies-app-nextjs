@@ -30,7 +30,7 @@ const CardContent = ({ movies, setSilderOpen, setClickMovie }) => {
     <section className={colClassDia}>
       {movies.map((x) => (
         <MoviesCard
-          onClick={() => handleClickMoviesCard(x.code)}
+          onClick={() => handleClickMoviesCard(x.id)}
           key={x.id}
           coverUrl={x.coverUrl}
           //coverUrl={`http://192.168.1.37:9000/movies/${x.coverUrl}`}
