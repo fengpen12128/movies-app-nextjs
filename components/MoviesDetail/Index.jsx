@@ -19,11 +19,17 @@ const setToDemonstrationMode = (data, wallpapers) => {
     }`;
   });
 };
+const setToDemonstrationMode2 = (data, wallpapers) => {
+  data.coverUrl = `${
+    wallpapers[Math.floor(Math.random() * wallpapers.length)]
+  }`;
+  data.files.forEach((x) => {
+    x.path = `${wallpapers[Math.floor(Math.random() * wallpapers.length)]}`;
+  });
+};
 
 const setToMinioMode = (data, wallpapers) => {
-  data.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${
-    data.coverUrl
-  }`;
+  data.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${data.coverUrl}`;
   data.files.forEach((x) => {
     x.path = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.path}`;
   });
@@ -36,11 +42,14 @@ const Index = ({ code: initialCode }) => {
   const getMoviesDetail = async () => {
     const [resp, wallpapers] = await Promise.all([
       fetch(`/api/movies/detail/${code}`),
-      getImages(),
+      //getImages(),
+      fetch("/api/common/image").then((resp) => {
+        return resp.json();
+      }),
     ]);
     const data = await resp.json();
     // 设置为演示模式
-    setToMinioMode(data, wallpapers);
+    setToDemonstrationMode2(data, wallpapers.wallpapers);
     setMovies(data);
   };
 

@@ -18,7 +18,7 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
     }));
 
   const config = {
-    url: videoUrl,
+    url: "https://ommsjjjwtgpdklis.public.blob.vercel-storage.com/douying_sample-JOrHnYGM2XTUzq1qZLMIZt8OfWKcIW.mp4",
     //    url: "http://127.0.0.1:9000/demo/douying_sample.mp4",
     loop: true,
     autoplay: true,

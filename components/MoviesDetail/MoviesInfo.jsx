@@ -40,7 +40,7 @@ const MoviesInfo = ({
       return;
     }
 
-    const url = `http://127.0.0.1:9000/demo/douying_sample.mp4`;
+    const url = `https://ommsjjjwtgpdklis.public.blob.vercel-storage.com/douying_sample-JOrHnYGM2XTUzq1qZLMIZt8OfWKcIW.mp4`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
