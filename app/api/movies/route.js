@@ -96,18 +96,19 @@ export const POST = async (request) => {
 
     const totalPages = Math.ceil(totalCount / limit);
 
-    return new Response(
-      JSON.stringify({
+    return Response.json(
+      {
         movies,
         total: totalPages,
         count: totalCount,
-      }),
+      },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error fetching movies:", error);
-    return new Response(`Failed to load movies: ${error.message}`, {
-      status: 500,
-    });
+    return Response.json(
+      { error: `Failed to load movies: ${error.message}` },
+      { status: 500 }
+    );
   }
 };

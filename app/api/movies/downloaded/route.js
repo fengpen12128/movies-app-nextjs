@@ -13,9 +13,12 @@ export const GET = async (req) => {
       downloadDate: movie.createdTime,
     }));
 
-    return new Response(JSON.stringify(formattedMovies), { status: 200 });
+    return Response.json(formattedMovies, { status: 200 });
   } catch (error) {
     console.error("Error fetching downloaded movies:", error);
-    return new Response("Failed to load downloaded movies", { status: 500 });
+    return Response.json(
+      { error: "Failed to load downloaded movies" },
+      { status: 500 }
+    );
   }
 };

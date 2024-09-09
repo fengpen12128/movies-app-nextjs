@@ -41,7 +41,7 @@ export const GET = async (req, { params }) => {
     return Response.json(movie, { status: 200 });
   } catch (error) {
     console.error("Error fetching movie details:", error);
-    return new Response(
+    return Response.json( 
       { error: "Failed to fetch movie details" },
       { status: 500 }
     );

@@ -45,11 +45,11 @@ export async function POST(req) {
       coverUrl: movie.files[0]?.path || "",
     }));
 
-    return new Response(JSON.stringify(formattedActressRel), { status: 200 });
+    return Response.json(formattedActressRel, { status: 200 });
   } catch (error) {
     console.error("Error fetching actress related movies:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to fetch actress related movies" }),
+    return Response.json(
+      { error: "Failed to fetch actress related movies" },
       { status: 500 }
     );
   }

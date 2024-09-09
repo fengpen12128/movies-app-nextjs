@@ -41,7 +41,7 @@ const Index = ({ code: initialCode }) => {
 
   const getMoviesDetail = async () => {
     const [resp, wallpapers] = await Promise.all([
-      fetch(`/api/movies/detail/${code}`),
+      fetch(`/api/movies/${code}`),
       //getImages(),
       fetch("/api/common/image").then((resp) => {
         return resp.json();
