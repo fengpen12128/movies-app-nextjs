@@ -92,9 +92,9 @@ const HomeContent = () => {
           method: "POST",
           body: JSON.stringify(searchCondition),
         }).then((resp) => resp.json()),
-        fetch("/api/common/image").then((resp) => {
-          return resp.json();
-        }),
+        // fetch("/api/common/image").then((resp) => {
+        //   return resp.json();
+        // }),
       ]);
 
       // const updatedMovies = data?.movies.map((x, index) => ({

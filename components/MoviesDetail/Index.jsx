@@ -28,7 +28,7 @@ const setToDemonstrationMode2 = (data, wallpapers) => {
   });
 };
 
-const setToMinioMode = (data, wallpapers) => {
+const setToMinioMode = (data) => {
   data.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${data.coverUrl}`;
   data.files.forEach((x) => {
     x.path = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.path}`;
@@ -43,13 +43,14 @@ const Index = ({ code: initialCode }) => {
     const [resp, wallpapers] = await Promise.all([
       fetch(`/api/movies/${code}`),
       //getImages(),
-      fetch("/api/common/image").then((resp) => {
-        return resp.json();
-      }),
+      //   fetch("/api/common/image").then((resp) => {
+      //     return resp.json();
+      //   }),
     ]);
     const data = await resp.json();
     // 设置为演示模式
-    setToDemonstrationMode2(data, wallpapers.wallpapers);
+    //  setToDemonstrationMode2(data, wallpapers.wallpapers);
+    setToMinioMode(data);
     setMovies(data);
   };
 

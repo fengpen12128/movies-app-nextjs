@@ -40,8 +40,8 @@ const MoviesInfo = ({
       return;
     }
 
-    const url = `https://ommsjjjwtgpdklis.public.blob.vercel-storage.com/douying_sample-JOrHnYGM2XTUzq1qZLMIZt8OfWKcIW.mp4`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    // const url = `https://ommsjjjwtgpdklis.public.blob.vercel-storage.com/douying_sample-JOrHnYGM2XTUzq1qZLMIZt8OfWKcIW.mp4`;
+    window.open(videoFirst, "_blank", "noopener,noreferrer");
   };
 
   const handlePrefixClick = (prefix) => {
