@@ -1,5 +1,4 @@
 import { Card, Inset, Badge, Skeleton } from "@radix-ui/themes";
-import { useState } from "react";
 
 const MoviesCard = ({
   code,
@@ -11,11 +10,6 @@ const MoviesCard = ({
   coverUrl,
   onClick,
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  const handleImageLoad = () => {
-    setIsLoading(false);
-  };
   return (
     <Card>
       <Inset clip="padding-box" side="top" pb="current">
@@ -24,7 +18,6 @@ const MoviesCard = ({
         <img
           onClick={onClick}
           src={coverUrl}
-          onLoad={handleImageLoad}
           className="object-cover cursor-pointer h-[250px]"
         />
       </Inset>

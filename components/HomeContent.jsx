@@ -10,12 +10,7 @@ import { Card, TextField, Spinner } from "@radix-ui/themes";
 import SiderBar from "@/components/SiderBar";
 import { getImages } from "@/api/commonApi";
 import FilterBar from "@/components/FilterBar";
-
-const CardContent = ({
-  movies,
-  setSilderOpen,
-  setClickMovie,
-}) => {
+const CardContent = ({ movies, setSilderOpen, setClickMovie }) => {
   const router = useRouter();
   const pathName = usePathname();
 
@@ -97,22 +92,28 @@ const HomeContent = () => {
           method: "POST",
           body: JSON.stringify(searchCondition),
         }).then((resp) => resp.json()),
-        getImages(),
+        fetch("/api/common/image").then((resp) => {
+          return resp.json();
+        }),
       ]);
 
-        const updatedMovies = data?.movies.map((x, index) => ({
-          ...x,
-          coverUrl: `${process.env.NEXT_PUBLIC_TEST_PATH}/${
-            wallpapers[index % wallpapers.length]
-          }`,
-        }));
+      // const updatedMovies = data?.movies.map((x, index) => ({
+      //   ...x,
+      //   coverUrl: `${process.env.NEXT_PUBLIC_TEST_PATH}/${
+      //     wallpapers[index % wallpapers.length]
+      //   }`,
+      // }));
+      const updatedMovies = data?.movies.map((x, index) => ({
+        ...x,
+        coverUrl: `${wallpapers.wallpapers[index % wallpapers.wallpapers.length]}`,
+      }));
 
-    //   const updatedMovies = data?.movies.map((x) => ({
-    //     ...x,
-    //     coverUrl: `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`,
-    //   }));
+      //   const updatedMovies = data?.movies.map((x) => ({
+      //     ...x,
+      //     coverUrl: `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`,
+      //   }));
 
-      setMovies(updatedMovies);
+      setMovies(updatedMovies || []);
       setTotal(data.total);
       setTotalCount(data.count);
     } catch (error) {
@@ -187,6 +188,7 @@ const HomeContent = () => {
   return (
     <>
       <SiderBar handleSiderClick={handleSiderClick} />
+
       <div className={displayDialog}>
         <Card className="my-10" size="4">
           <div className="flex items-center justify-center">
@@ -205,7 +207,7 @@ const HomeContent = () => {
             </TextField.Root>
           </div>
 
-          <FilterBar />
+          {/* <FilterBar /> */}
         </Card>
 
         {!movies.length && (
