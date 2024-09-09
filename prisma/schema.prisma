@@ -5,21 +5,21 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
     previewFeatures = ["tracing"]
 }
 
 datasource db {
     provider     = "postgresql"
     url          = env("DATABASE_URL")
-    // directUrl    = env("DIRECT_URL")
+    directUrl    = env("DIRECT_URL")
     relationMode = "prisma" // 使用 Prisma 管理关系，而不是数据库外键约束
 }
 
 generator prismaClient {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
     previewFeatures = ["tracing"]
-    binaryTargets = ["native"]
+    binaryTargets   = ["native"]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
@@ -99,9 +99,9 @@ model MagnetLinks {
 }
 
 model MoviesCollection {
-    id          Int       @id @default(autoincrement())
-    moviesCode  String    @unique @db.VarChar(100)
-    createdTime DateTime  @default(now()) @db.Timestamp()
+    id          Int      @id @default(autoincrement())
+    moviesCode  String   @unique @db.VarChar(100)
+    createdTime DateTime @default(now()) @db.Timestamp()
 }
 
 model MoviesTag {
