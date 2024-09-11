@@ -4,12 +4,19 @@ import { useEffect, useState, useCallback } from "react";
 import { Pagination } from "@nextui-org/pagination";
 
 import MoviesCard from "@/components/MoviesCard";
-import MoviesDetail from "@/components/MoviesDetail";
+import MovieDetailView from "@/components/MovieDetailView";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Card, TextField, Spinner } from "@radix-ui/themes";
+import {
+  Card,
+  TextField,
+  Spinner,
+  Button,
+  Select,
+  Flex,
+} from "@radix-ui/themes";
+import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import SiderBar from "@/components/SiderBar";
-import { getImages } from "@/commonApi/commonApi";
-import FilterBar from "@/components/FilterBar";
+
 const CardContent = ({ movies, setSilderOpen, setClickMovie }) => {
   const router = useRouter();
   const pathName = usePathname();
@@ -28,7 +35,7 @@ const CardContent = ({ movies, setSilderOpen, setClickMovie }) => {
 
   return (
     <section className={colClassDia}>
-      {movies.map((x) => (
+      {movies.map((x, index) => (
         <MoviesCard
           onClick={() => handleClickMoviesCard(x.id)}
           key={x.id}
@@ -103,17 +110,17 @@ const HomeContent = () => {
       //     wallpapers[index % wallpapers.length]
       //   }`,
       // }));
-    //   const updatedMovies = data?.movies.map((x, index) => ({
-    //     ...x,
-    //     coverUrl: `${
-    //       wallpapers.wallpapers[index % wallpapers.wallpapers.length]
-    //     }`,
-    //   }));
+      //   const updatedMovies = data?.movies.map((x, index) => ({
+      //     ...x,
+      //     coverUrl: `${
+      //       wallpapers.wallpapers[index % wallpapers.wallpapers.length]
+      //     }`,
+      //   }));
 
-        const updatedMovies = data?.movies.map((x) => ({
-          ...x,
-          coverUrl: `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`,
-        }));
+      const updatedMovies = data?.movies.map((x) => ({
+        ...x,
+        coverUrl: `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`,
+      }));
 
       setMovies(updatedMovies || []);
       setTotal(data.total);
@@ -144,6 +151,19 @@ const HomeContent = () => {
     getMovies();
   }, [getMovies]);
 
+  const [filterOptions, setFilterOptions] = useState([]);
+
+  const getFilterOptions = async () => {
+    const resp = await fetch("/api/tags/list");
+    console.log("resp", resp);
+    const filters = await resp.json();
+    setFilterOptions(filters);
+  };
+
+  useEffect(() => {
+    getFilterOptions();
+  }, []);
+
   const handleSearch = useCallback(() => {
     setSearchKeyword(keyword);
   }, [keyword]);
@@ -161,7 +181,9 @@ const HomeContent = () => {
     (title) => {
       if (title === "资源匹配") {
         router.push("/matching");
-        return;
+      }
+      if (title === "我的收藏") {
+        router.push("/collection");
       }
       resetSearchCondition();
 
@@ -177,39 +199,113 @@ const HomeContent = () => {
     [resetSearchCondition]
   );
 
-  const displayCol = `px-8 h-screen pt-6 no-scrollbar overflow-auto ${
-    silderOpen ? "w-1/2" : ""
-  }`;
-
   const displayDialog = `px-8 container mx-auto h-screen pt-6 no-scrollbar overflow-auto`;
 
   const handleCloseSilder = useCallback(() => {
     setSilderOpen(false);
   }, []);
 
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [showFilters, setShowFilters] = useState(true);
+
+  const toggleFilterOptions = (title, tag) => {
+    setSelectedTags((prev) =>
+      prev[title].includes(tag)
+        ? prev[title].filter((t) => t !== tag)
+        : prev[title].push(tag)
+    );
+  };
+
   return (
     <>
       <SiderBar handleSiderClick={handleSiderClick} />
 
       <div className={displayDialog}>
-        <Card className="my-10" size="4">
+        <Card className="mt-10 mb-5" size="4">
+          {/* search input */}
           <div className="flex items-center justify-center">
-            <TextField.Root
-              size="3"
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              onKeyDown={handleKeyDown}
-              className="w-2/3"
-              radius="medium"
-              placeholder="Search the code..."
-            >
-              {/* <TextField.Slot>
+            <div className="flex-grow  flex justify-center">
+              <TextField.Root
+                size="3"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="w-2/3"
+                radius="medium"
+                placeholder="Search the code..."
+              >
+                {/* <TextField.Slot>
               <MagnifyingGlassIcon height="16" width="16" />
             </TextField.Slot> */}
-            </TextField.Root>
-          </div>
+              </TextField.Root>
+            </div>
 
-          {/* <FilterBar /> */}
+            <div className=" self-end">
+              <Button
+                variant="surface"
+                size="sm"
+                color="indigo"
+                onClick={() => setShowFilters(!showFilters)}
+              >
+                Filters {showFilters}
+                {showFilters ? <ChevronDownIcon /> : <ChevronUpIcon />}
+              </Button>
+            </div>
+          </div>
+          <div
+            className="overflow-hidden transition-all duration-300 ease-in-out"
+            style={{ maxHeight: showFilters ? "1000px" : "0px" }}
+          >
+            <div className="space-y-6 pt-9">
+              {filterOptions.map((x) => (
+                <div key={x.title} className=" space-y-2  ">
+                  <label className="font-suse font-medium text-gray-300 ">
+                    {x.title}
+                  </label>
+                  <div key={x.title} className="flex flex-wrap gap-2">
+                    {x.options.map((tag) => (
+                      <>
+                        {selectedTags.includes(tag) ? (
+                          <Button
+                            key={tag}
+                            color="cyan"
+                            onClick={() => toggleFilterOptions(tag)}
+                            variant="outline"
+                            size="sm"
+                          >
+                            {tag}
+                          </Button>
+                        ) : (
+                          <Button
+                            key={tag}
+                            onClick={() => toggleFilterOptions(tag)}
+                            variant="outline"
+                            size="sm"
+                          >
+                            {tag}
+                          </Button>
+                        )}
+                      </>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        <Card className="mb-5">
+          <Flex gap="3" align="center">
+            <label>Downloads</label>
+            <Select.Root size="2" defaultValue="1">
+              <Select.Trigger />
+              <Select.Content>
+                <Select.Item value="1">全部</Select.Item>
+                <Select.Item value="2">已下载</Select.Item>
+                <Select.Item value="3">未下载</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          </Flex>
         </Card>
 
         {!movies.length && (
@@ -242,22 +338,13 @@ const HomeContent = () => {
           </div>
         </div>
       </div>
-      <div
-        onClick={(e) => {
-          handleCloseSilder();
-        }}
-        className="no-scrollbar fixed inset-0 bg-black bg-opacity-60 h-screen w-screen flex items-center justify-center z-50"
-        style={{ display: silderOpen ? "flex" : "none" }}
-      >
-        <Card
-          className="w-full sm:w-1/2 h-[80vh] sm:h-[95vh] overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="h-full overflow-y-auto no-scrollbar">
-            {silderOpen && <MoviesDetail code={clickMovie} />}
-          </div>
-        </Card>
-      </div>
+
+      {/* movies detail 展示 */}
+      <MovieDetailView
+        open={silderOpen}
+        setOpen={setSilderOpen}
+        clickedMovie={clickMovie}
+      />
     </>
   );
 };

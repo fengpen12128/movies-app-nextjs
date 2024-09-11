@@ -46,7 +46,7 @@ export default function VideoPlayResource({ videoResource = [] }) {
             const href =
               typeof window !== "undefined" && window.innerWidth <= 768
                 ? "http://127.0.0.1:9000/demo/douying_sample.mp4"
-                : "iina://weblink?url=http://127.0.0.1:9000/demo/douying_sample.mp4";
+                : `iina://weblink?url=${process.env.NEXT_PUBLIC_VIDEO_SERVER_PATH}${item.path}`;
             return (
               <a
                 key={item.id}

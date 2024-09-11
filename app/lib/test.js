@@ -115,22 +115,41 @@ import prisma from "./prisma.js";
 // });
 
 // console.log(movies);
-const collectedMoviesCodes = await prisma.moviesCollection.findMany({
-  distinct: ["moviesCode"],
-  select: {
-    moviesCode: true,
-  },
-});
+// const collectedMoviesCodes = await prisma.moviesCollection.findMany({
+//   distinct: ["moviesCode"],
+//   select: {
+//     moviesCode: true,
+//   },
+// });
 
-const movies = await prisma.movieInfo.findMany({
-  orderBy: {
-    releaseDate: "desc",
-  },
-  where: {
-    code: {
-      in: collectedMoviesCodes.map(movie => movie.moviesCode),
+// const movies = await prisma.movieInfo.findMany({
+//   orderBy: {
+//     releaseDate: "desc",
+//   },
+//   where: {
+//     code: {
+//       in: collectedMoviesCodes.map(movie => movie.moviesCode),
+//     },
+//   },
+// });
+
+// console.log(movies);
+
+const collectedMovies = await prisma.MoviesCollection.findMany({
+  select: {
+    id: true,
+    createdTime: true,
+    movieInfo: {
+      select: {
+        id: true,
+        code: true,
+        prefix: true,
+        duration: true,
+        rate: true,
+        files: true, // 包含文件信息
+        actresses: true, // 包含演员信息
+      },
     },
   },
 });
-
-console.log(movies);
+console.log(collectedMovies);

@@ -17,7 +17,7 @@ const MoviesCard = ({
 
         <img
           onClick={onClick}
-          src={coverUrl}
+          src={'http://127.0.0.1:9000/wallpapers/60.jpg'}
           className="object-cover cursor-pointer h-[250px]"
         />
       </Inset>
@@ -34,7 +34,11 @@ const MoviesCard = ({
           <span className="mx-2">•</span>
           <span>{viewCount} views</span>
           <span className="mx-2">•</span>
-          <span>{new Date(releaseDate).toISOString().split("T")[0]}</span>
+          {releaseDate ? (
+            <span>{new Date(releaseDate)?.toISOString().split("T")[0]}</span>
+          ) : (
+            "1988-01-01"
+          )}
         </div>
 
         <div className="flex gap-2  ">

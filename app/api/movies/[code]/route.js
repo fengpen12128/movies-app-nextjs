@@ -24,13 +24,13 @@ export const GET = async (req, { params }) => {
 
     const collected = await prisma.moviesCollection.findUnique({
       where: {
-        moviesCode: code,
+        moviesCode: movie.code,
       },
     });
 
     const videoResource = await prisma.moviesVideoResource.findMany({
       where: {
-        movieCode: code,
+        movieCode: movie.code,
       },
     });
 
@@ -41,7 +41,7 @@ export const GET = async (req, { params }) => {
     return Response.json(movie, { status: 200 });
   } catch (error) {
     console.error("Error fetching movie details:", error);
-    return Response.json( 
+    return Response.json(
       { error: "Failed to fetch movie details" },
       { status: 500 }
     );

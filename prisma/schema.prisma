@@ -39,23 +39,25 @@ model Actress {
 }
 
 model MovieInfo {
-    id           Int           @id @default(autoincrement())
-    code         String?       @unique(map: "code_uni") @db.VarChar(100)
-    prefix       String?       @db.VarChar(100)
-    duration     String?       @db.VarChar(100)
-    rate         Decimal?      @db.Decimal(10, 2)
+    id           Int                @id @default(autoincrement())
+    code         String?            @unique(map: "code_uni") @db.VarChar(100)
+    prefix       String?            @db.VarChar(100)
+    duration     String?            @db.VarChar(100)
+    rate         Decimal?           @db.Decimal(10, 2)
     rateNum      Int?
-    releaseDate  DateTime?     @db.Date
+    releaseDate  DateTime?          @db.Date
     releaseYear  Int?
-    crawlWebsite String?       @db.VarChar(100)
-    crawlUrl     String?       @db.VarChar(200)
-    batchNum     String?       @db.VarChar(300)
-    updatedTime  DateTime?     @db.Timestamp()
-    createdTime  DateTime?     @default(now())
-    actresses    Actress[]     @relation("ActressMovie")
+    crawlWebsite String?            @db.VarChar(100)
+    crawlUrl     String?            @db.VarChar(200)
+    batchNum     String?            @db.VarChar(300)
+    updatedTime  DateTime?          @db.Timestamp()
+    createdTime  DateTime?          @default(now())
+    actresses    Actress[]          @relation("ActressMovie")
     files        FilesInfo[]
     magnetLinks  MagnetLinks[]
-    tags         MoviesTag[]   @relation("MoviesOnTag")
+    collections  MoviesCollection[] // 关联到收藏
+
+    tags MoviesTag[] @relation("MoviesOnTag")
 }
 
 // model ActressMovie {
@@ -106,9 +108,10 @@ model MagnetLinks {
 }
 
 model MoviesCollection {
-    id          Int      @id @default(autoincrement())
-    moviesCode  String   @unique @db.VarChar(100)
-    createdTime DateTime @default(now()) @db.Timestamp()
+    id          Int        @id @default(autoincrement())
+    moviesCode  String     @unique @db.VarChar(100)
+    createdTime DateTime   @default(now()) @db.Timestamp()
+    MovieInfo   MovieInfo? @relation(fields: [moviesCode], references: [code])
 }
 
 model MoviesTag {
