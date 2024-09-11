@@ -1,3 +1,5 @@
+"use client";
+
 import { MoviesStackMy } from "@/components/MoivesStack";
 import MoviesCard from "@/components/MoviesCard";
 import { useEffect, useState } from "react";
