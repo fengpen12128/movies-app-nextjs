@@ -14,7 +14,7 @@ import {
 } from "@radix-ui/themes";
 
 import SiderBar from "@/components/SiderBar";
-import CollectionCardSection from "./components/CollectionCardSection.jsx";
+import CollectionCardSection from "./CollectionCardSection.jsx";
 
 const Collections = () => {
   const [total, setTotal] = useState(1);
