@@ -17,7 +17,7 @@ const MoviesCard = ({
 
         <img
           onClick={onClick}
-          src={'http://127.0.0.1:9000/wallpapers/60.jpg'}
+          src={coverUrl}
           className="object-cover cursor-pointer h-[250px]"
         />
       </Inset>
