@@ -23,7 +23,7 @@ export default function SearchBar() {
       if (!searchKeyword) {
         router.push(pathname);
       } else {
-      router.push(`${pathname}?search=${searchKeyword}`);
+        router.push(`${pathname}?search=${searchKeyword}`);
       }
     }
   };
@@ -43,7 +43,7 @@ export default function SearchBar() {
           ></TextField.Root>
         </div>
 
-        <div className=" self-end">
+        <div className="self-end hidden sm:block">
           <Button
             variant="surface"
             size="sm"
