@@ -1,4 +1,4 @@
-import prisma from "@/app/lib/prisma";
+import prisma from "@/utils/prisma";
 import { NextResponse } from "next/server";
 
 export const GET = async (req) => {
@@ -23,8 +23,8 @@ export const GET = async (req) => {
     console.log(collectionMovies);
 
     collectionMovies = collectionMovies.map((x) => ({
-      ...x.MovieInfo,
       collectedTime: x.createdTime,
+      ...x.MovieInfo,
     }));
 
     const downloadMoviesCode = downloadMovies.map((item) => item.movieCode);

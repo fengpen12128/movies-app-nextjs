@@ -7,26 +7,26 @@ import VideoPlayResource from "./VideoPlayResource.jsx";
 import MoviesPreview from "../MediaPreview.jsx";
 import MagnetLinkTable from "./MagnetLinkTable.jsx";
 import RelationMovies from "./RelationMovies.jsx";
-import { getImages } from "@/commonApi/commonApi.js";
+import { useRequest } from "ahooks";
 
-const setToDemonstrationMode = (data, wallpapers) => {
-  data.coverUrl = `${process.env.NEXT_PUBLIC_TEST_PATH}/${
-    wallpapers[Math.floor(Math.random() * wallpapers.length)]
-  }`;
-  data.files.forEach((x) => {
-    x.path = `${process.env.NEXT_PUBLIC_TEST_PATH}/${
-      wallpapers[Math.floor(Math.random() * wallpapers.length)]
-    }`;
-  });
-};
-const setToDemonstrationMode2 = (data, wallpapers) => {
-  data.coverUrl = `${
-    wallpapers[Math.floor(Math.random() * wallpapers.length)]
-  }`;
-  data.files.forEach((x) => {
-    x.path = `${wallpapers[Math.floor(Math.random() * wallpapers.length)]}`;
-  });
-};
+// const setToDemonstrationMode = (data, wallpapers) => {
+//   data.coverUrl = `${process.env.NEXT_PUBLIC_TEST_PATH}/${
+//     wallpapers[Math.floor(Math.random() * wallpapers.length)]
+//   }`;
+//   data.files.forEach((x) => {
+//     x.path = `${process.env.NEXT_PUBLIC_TEST_PATH}/${
+//       wallpapers[Math.floor(Math.random() * wallpapers.length)]
+//     }`;
+//   });
+// };
+// const setToDemonstrationMode2 = (data, wallpapers) => {
+//   data.coverUrl = `${
+//     wallpapers[Math.floor(Math.random() * wallpapers.length)]
+//   }`;
+//   data.files.forEach((x) => {
+//     x.path = `${wallpapers[Math.floor(Math.random() * wallpapers.length)]}`;
+//   });
+// };
 
 const setToMinioMode = (data) => {
   data.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${data.coverUrl}`;
@@ -35,37 +35,26 @@ const setToMinioMode = (data) => {
   });
 };
 const Index = ({ code: initialCode }) => {
-  const [movies, setMovies] = useState(null);
-
   const [code, setCode] = useState(initialCode);
 
-  const getMoviesDetail = async () => {
-    const [resp, wallpapers] = await Promise.all([
-      fetch(`/api/movies/${code}`),
-      //getImages(),
-      //   fetch("/api/common/image").then((resp) => {
-      //     return resp.json();
-      //   }),
-    ]);
-    const data = await resp.json();
-    // 设置为演示模式
-    //  setToDemonstrationMode2(data, wallpapers.wallpapers);
-    setToMinioMode(data);
-    setMovies(data);
-  };
-
-  useEffect(() => {
-    if (!code) return;
-    // 用于在点击关系电影时，清除已有电影数据，从而出现Loading效果
-    setMovies(null);
-    getMoviesDetail();
-  }, [code]);
+  const { data: movies, loading } = useRequest(
+    async () => {
+      if (!code) return null;
+      const resp = await fetch(`/api/movies/${code}`);
+      const data = await resp.json();
+      setToMinioMode(data);
+      return data;
+    },
+    {
+      refreshDeps: [code],
+    }
+  );
 
   if (!code) {
     return <div>No movie selected</div>;
   }
 
-  if (!movies) {
+  if (loading) {
     return (
       <div className="h-full w-full flex items-center justify-center">
         <Spinner size="3" />

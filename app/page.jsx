@@ -1,14 +1,7 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { Suspense } from "react";
-import HomeContent from "@/components/HomeContent";
-
-const Home = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HomeContent />
-    </Suspense>
-  );
+const page = () => {
+  redirect("/home");
 };
 
-export default Home;
+export default page;

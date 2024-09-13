@@ -18,6 +18,7 @@ const MoviesCard = ({
         <img
           onClick={onClick}
           src={coverUrl}
+          //src={process.env.NEXT_PUBLIC_DEMO_IMAGE}
           className="object-cover cursor-pointer h-[250px]"
         />
       </Inset>

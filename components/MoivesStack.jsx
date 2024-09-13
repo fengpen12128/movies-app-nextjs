@@ -30,7 +30,10 @@ export function MoviesStackMy({ moviesList = [], actress = "" }) {
       />
       <div onClick={() => setOpen(true)} className="relative h-[350px]">
         {moviesList.slice(0, 3).map((x, index) => (
-          <div className="absolute inset-0 flex justify-center items-center">
+          <div
+            key={x.id}
+            className="absolute inset-0 flex justify-center items-center"
+          >
             <div className={rotateStyle[index]}>
               <MoviesCard
                 {...x}
@@ -57,6 +60,7 @@ export function MoviesStackMy({ moviesList = [], actress = "" }) {
             <div className="grid grid-cols-1  gap-4 sm:grid-cols-3">
               {moviesList.map((x) => (
                 <MoviesCard
+                  key={x.id}
                   {...x}
                   coverUrl={`${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`}
                   onClick={() => {

@@ -2,7 +2,6 @@ import "@/styles/globals.css";
 import "@/styles/siderbar.css";
 import "@radix-ui/themes/styles.css";
 import { Theme } from "@radix-ui/themes";
-
 export const metadata = {
   title: "MoviesAdminNext",
 };

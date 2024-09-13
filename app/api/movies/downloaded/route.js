@@ -1,4 +1,4 @@
-import prisma from "@/app/lib/prisma";
+import prisma from "@/utils/prisma";
 
 export const GET = async (req) => {
   try {
@@ -13,7 +13,7 @@ export const GET = async (req) => {
       downloadDate: movie.createdTime,
     }));
 
-    return Response.json(formattedMovies, { status: 200 });
+    return NextResponse.json(formattedMovies, { status: 200 });
   } catch (error) {
     console.error("Error fetching downloaded movies:", error);
     return Response.json(

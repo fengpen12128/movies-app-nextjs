@@ -2,12 +2,12 @@
 
 import React from "react";
 import { Suspense } from "react";
-import Collections from "./components/Collections";
+import CollectionCardSection from './CollectionCardSection.jsx';
 
 const page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Collections />
+      <CollectionCardSection />
     </Suspense>
   );
 };

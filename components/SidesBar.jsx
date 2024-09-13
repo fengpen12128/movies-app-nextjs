@@ -5,25 +5,31 @@ import { MdFavorite } from "react-icons/md";
 import { AiFillHome } from "react-icons/ai";
 import { IoDownload } from "react-icons/io5";
 import { GoFileDirectoryFill } from "react-icons/go";
+import { useRouter } from "next/navigation";
 
-export default function SiderBar({ handleSiderClick }) {
+export default function SidesBar() {
+  const router = useRouter();
   const list = [
     {
       title: "首页",
       icon: "home",
+      path: "/",
     },
     {
       title: "我的收藏",
       icon: "favorites",
       active: false,
+      path: "/collection",
     },
     {
       title: "已下载",
       icon: "download",
+      path: "/download",
     },
     {
       title: "资源匹配",
       icon: "match",
+      path: "/matching",
     },
   ];
 
@@ -33,11 +39,11 @@ export default function SiderBar({ handleSiderClick }) {
       <div className="sidebar">
         <div className="navbar">
           {list.map((item) => {
-            const { title, icon } = item;
+            const { title, icon, path } = item;
             return (
               <div
                 className={
-                    currentTitle === title
+                  currentTitle === title
                     ? "active sidebar__item"
                     : "sidebar__item"
                 }
@@ -45,7 +51,7 @@ export default function SiderBar({ handleSiderClick }) {
                 draggable={false}
                 onClick={() => {
                   setCurrentTitle(title);
-                  handleSiderClick(title);
+                  router.push(path);
                 }}
               >
                 <div>

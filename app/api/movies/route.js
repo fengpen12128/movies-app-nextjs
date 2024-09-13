@@ -1,29 +1,15 @@
-import prisma from "@/app/lib/prisma";
+import prisma from "@/utils/prisma";
 
 export const POST = async (request) => {
   const {
-    keyword,
-    page,
-    limit = 20,
-    query = { collected: 0, downloaded: 0, actressName: "", prefix: "" },
+    search,
+    page = 1,
+    limit = 50,
+    prefix,
+    actressName,
   } = await request.json();
-  const { collected, downloaded, actressName, prefix } = query;
 
   try {
-    const collectedMoviesCodes = await prisma.moviesCollection.findMany({
-      distinct: ["moviesCode"],
-      select: {
-        moviesCode: true,
-      },
-    });
-
-    const downloadedMoviesCodes = await prisma.moviesVideoResource.findMany({
-      distinct: ["movieCode"],
-      select: {
-        movieCode: true,
-      },
-    });
-
     const skip = (page - 1) * limit;
     let moviesQuery = {
       skip,
@@ -32,7 +18,18 @@ export const POST = async (request) => {
         releaseDate: "desc",
       },
       where: {
-        ...(keyword && { code: { contains: keyword, mode: "insensitive" } }),
+        ...(search && {
+          OR: [
+            { code: { contains: search, mode: "insensitive" } },
+            {
+              actresses: {
+                some: {
+                  actressName: { contains: search, mode: "insensitive" },
+                },
+              },
+            },
+          ],
+        }),
         ...(prefix && { prefix }),
         ...(actressName && {
           actresses: {
@@ -44,16 +41,16 @@ export const POST = async (request) => {
             },
           },
         }),
-        ...(collected === 1 && {
-          code: {
-            in: collectedMoviesCodes.map((item) => item.moviesCode),
-          },
-        }),
-        ...(downloaded === 1 && {
-          code: {
-            in: downloadedMoviesCodes.map((item) => item.movieCode),
-          },
-        }),
+        // ...(collected === 1 && {
+        //   code: {
+        //     in: collectedMoviesCodes.map((item) => item.moviesCode),
+        //   },
+        // }),
+        // ...(downloaded === true && {
+        //   code: {
+        //     in: downloadedMoviesCodes.map((item) => item.movieCode),
+        //   },
+        // }),
       },
       include: {
         tags: true,
@@ -94,13 +91,15 @@ export const POST = async (request) => {
       movie.downloaded = downloadMoviesCode.includes(movie.code);
     });
 
-    const totalPages = Math.ceil(totalCount / limit);
-
     return Response.json(
       {
         movies,
-        total: totalPages,
-        count: totalCount,
+        pagination: {
+          totalCount,
+          currentPage: page,
+          pageSize: limit,
+          totalPages: Math.ceil(totalCount / limit),
+        },
       },
       { status: 200 }
     );
