@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getRedisClient, disconnectRedis } from "@/utils/redisUtils";
-import prisma from "@/app/lib/prisma";
+import prisma from "@/utils/prisma";
+
 
 export async function GET(req, res) {
   let client;

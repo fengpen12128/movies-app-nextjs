@@ -1,5 +1,6 @@
 import { getMinioFiles } from "@/utils/minioTools";
-import prisma from "@/app/lib/prisma";
+import prisma from "@/utils/prisma";
+
 export const GET = async (req) => {
   try {
     const allFiles = await getMinioFiles();
