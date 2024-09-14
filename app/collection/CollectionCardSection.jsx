@@ -2,7 +2,7 @@
 
 import {MoviesStackMy} from '@/components/MoivesStack';
 import MoviesCard from '@/components/MoviesCard';
-import {useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import MovieDetailView from '@/components/MovieDetailView';
 import {useRequest} from 'ahooks';
 import {Spinner} from '@radix-ui/themes';
@@ -11,7 +11,6 @@ import {useSearchParams} from 'next/navigation';
 
 
 const StackArrange = ({moviesList = [], handleClickMoviesCard}) => {
-    console.log('xxxxxxxxx',moviesList)
   return (
       moviesList.map((x) =>
           x.movies.length === 1 ? (
@@ -65,6 +64,11 @@ const CollectionCardSection = () => {
     {
       cacheKey: "collectedMoviesStackList",
         refreshDeps: [page,arrangeParams],
+        // onSuccess: (data) => {
+        //   if (arrangeParams === 'stack') {
+        //
+        //   }
+        // }
     }
   );
 
@@ -80,15 +84,16 @@ const CollectionCardSection = () => {
 
   let showList
 
-    if (arrangeParams === 'stack') {
-      // showList  = useMemo(() => {
-      //     return collectedMoviesStackList?.slice((page - 1) * 30, page * 30) || [];
-      // }, [collectedMoviesStackList, page]);
-        showList = collectedMoviesStackList?.data
-
-    }   else {
-      showList = collectedMoviesStackList?.data
-  }
+  // useEffect(() => {
+  //     if (arrangeParams === 'stack') {
+  //         // showList  = useMemo(() => {
+  //         //     return collectedMoviesStackList?.slice((page - 1) * 30, page * 30) || [];
+  //         // }, [collectedMoviesStackList, page]);
+  //         showList = collectedMoviesStackList?.data
+  //     }   else {
+  //         showList = collectedMoviesStackList?.data
+  //     }
+  // },[arrangeParams])
 
     const { totalCount, currentPage, totalPages } = collectedMoviesStackList?.pagination || {};
 
@@ -108,8 +113,8 @@ const CollectionCardSection = () => {
   return (
     <>
       <section className={colClassDia}>
-          {arrangeParams === 'flex' && <FlexArrange moviesList={showList} handleClickMoviesCard={handleClickMoviesCard} />}
-          {arrangeParams === 'stack' && <StackArrange moviesList={showList} handleClickMoviesCard={handleClickMoviesCard} />}
+          {(arrangeParams === 'flex' && collectedMoviesStackList?.data && collectedMoviesStackList?.data.length > 0) && <FlexArrange moviesList={collectedMoviesStackList?.data} handleClickMoviesCard={handleClickMoviesCard} />}
+          {(arrangeParams === 'stack' && collectedMoviesStackList && collectedMoviesStackList.length > 0) && <StackArrange moviesList={collectedMoviesStackList} handleClickMoviesCard={handleClickMoviesCard} />}
 
       </section>
         {
