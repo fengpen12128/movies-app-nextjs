@@ -25,14 +25,14 @@ export const GET = async (req) => {
       await Promise.all([
         prisma.MoviesCollection.findMany({
           select: {
-            moviesCode: true,
+            movieCode: true,
           },
         }),
         prisma.MoviesVideoResource.findMany(q),
         prisma.MoviesVideoResource.count({ where: q.where }),
       ]);
 
-    const collectionMoviesCode = collectionMovies.map((x) => x.moviesCode);
+    const collectionMovieCode = collectionMovies.map((x) => x.movieCode);
 
     const downloadMovies = downloadMoviesResult.map((x) => ({
       downloadTime: x.createdTime,
@@ -41,7 +41,7 @@ export const GET = async (req) => {
 
     downloadMovies.forEach((x) => {
       x.releaseDate = x.releaseDate.toLocaleDateString();
-      x.collected = collectionMoviesCode.includes(x.code);
+      x.collected = collectionMovieCode.includes(x.code);
       x.downloaded = true;
       x.coverUrl = x.files[0]?.path;
       delete x.files;

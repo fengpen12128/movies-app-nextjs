@@ -27,13 +27,13 @@ export const GET = async (req) => {
       ...x.MovieInfo,
     }));
 
-    const downloadMoviesCode = downloadMovies.map((item) => item.movieCode);
+    const downloadMovieCode = downloadMovies.map((item) => item.movieCode);
 
     collectionMovies.forEach((x) => {
       x.actresses = x.actresses.map((actress) => actress.actressName);
       x.releaseDate = x.releaseDate.toLocaleDateString();
       x.collected = true;
-      x.downloaded = downloadMoviesCode.includes(x.code);
+      x.downloaded = downloadMovieCode.includes(x.code);
       x.coverUrl = x.files[0]?.path;
       delete x.files;
     });

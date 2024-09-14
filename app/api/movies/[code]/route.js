@@ -4,7 +4,7 @@ export const GET = async (req, { params }) => {
   const { code } = params;
 
   try {
-    const movie = await prisma.movieInfo.findUnique({
+    const movie = await prisma.MoviesInfo.findUnique({
       where: {
         id: Number(code),
       },
@@ -24,7 +24,7 @@ export const GET = async (req, { params }) => {
 
     const collected = await prisma.moviesCollection.findUnique({
       where: {
-        moviesCode: movie.code,
+        movieCode: movie.code,
       },
     });
 

@@ -1,11 +1,11 @@
 import prisma from "@/utils/prisma";
-
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   const { actress } = await req.json();
 
   try {
-    const actressRel = await prisma.movieInfo.findMany({
+    const actressRel = await prisma.MoviesInfo.findMany({
       where: {
         actresses: {
           some: {
@@ -45,10 +45,10 @@ export async function POST(req) {
       coverUrl: movie.files[0]?.path || "",
     }));
 
-    return Response.json(formattedActressRel, { status: 200 });
+    return NextResponse.json(formattedActressRel, { status: 200 });
   } catch (error) {
     console.error("Error fetching actress related movies:", error);
-    return Response.json(
+    return NextResponse.json(
       { error: "Failed to fetch actress related movies" },
       { status: 500 }
     );

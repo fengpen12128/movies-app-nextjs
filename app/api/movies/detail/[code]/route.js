@@ -24,7 +24,7 @@ export const GET = async (req, { params }) => {
 
     const collected = await prisma.moviesCollection.findUnique({
       where: {
-        moviesCode: code,
+        movieCode: code,
       },
     });
 

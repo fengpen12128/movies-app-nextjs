@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import SidesBar from "@/components/SidesBar";
 import SearchBar from "@/components/SearchBar";
 
@@ -13,13 +13,17 @@ export default function SharedLayout({ children }) {
     };
 
     checkWidth(); // Check on initial render
-    window.addEventListener('resize', checkWidth);
+    window.addEventListener("resize", checkWidth);
 
-    return () => window.removeEventListener('resize', checkWidth);
+    return () => window.removeEventListener("resize", checkWidth);
   }, []);
 
   return (
-    <div className={`px-4 sm:px-8 container mx-auto h-screen pt-6 overflow-auto ${!isMobile ? 'no-scrollbar' : ''}`}>
+    <div
+      className={`px-4 sm:px-8 container mx-auto  pt-6 sm:h-screen sm:overflow-auto ${
+        !isMobile ? "no-scrollbar" : ""
+      }`}
+    >
       <SidesBar />
       <SearchBar />
       <main>{children}</main>

@@ -7,14 +7,14 @@ export const GET = async (req, { params }) => {
     // Check if the movie is already collected
     const existingCollection = await prisma.moviesCollection.findUnique({
       where: {
-        moviesCode: code,
+        movieCode: code,
       },
     });
 
     if (existingCollection) {
       await prisma.moviesCollection.delete({
         where: {
-          moviesCode: code,
+          movieCode: code,
         },
       });
 
@@ -26,7 +26,7 @@ export const GET = async (req, { params }) => {
     // If not collected, add to collection
     await prisma.moviesCollection.create({
       data: {
-        moviesCode: code,
+        movieCode: code,
       },
     });
 

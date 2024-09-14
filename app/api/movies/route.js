@@ -43,12 +43,12 @@ export const POST = async (request) => {
         }),
         // ...(collected === 1 && {
         //   code: {
-        //     in: collectedMoviesCodes.map((item) => item.moviesCode),
+        //     in: collectedMovieCodes.map((item) => item.movieCode),
         //   },
         // }),
         // ...(downloaded === true && {
         //   code: {
-        //     in: downloadedMoviesCodes.map((item) => item.movieCode),
+        //     in: downloadedMovieCodes.map((item) => item.movieCode),
         //   },
         // }),
       },
@@ -63,8 +63,8 @@ export const POST = async (request) => {
     };
 
     const [movies, totalCount] = await Promise.all([
-      prisma.movieInfo.findMany(moviesQuery),
-      prisma.movieInfo.count({ where: moviesQuery.where }),
+      prisma.moviesInfo.findMany(moviesQuery),
+      prisma.moviesInfo.count({ where: moviesQuery.where }),
     ]);
 
     const [downloadMovies, collectedMovies] = await Promise.all([
@@ -75,20 +75,20 @@ export const POST = async (request) => {
       }),
       prisma.MoviesCollection.findMany({
         select: {
-          moviesCode: true,
+          movieCode: true,
         },
       }),
     ]);
 
-    const collectedMoviesCode = collectedMovies.map((item) => item.moviesCode);
-    const downloadMoviesCode = downloadMovies.map((item) => item.movieCode);
+    const collectedMovieCode = collectedMovies.map((item) => item.movieCode);
+    const downloadMovieCode = downloadMovies.map((item) => item.movieCode);
 
     movies.forEach((movie) => {
       movie.coverUrl = movie.files.find((file) => file.type === 2)?.path;
       delete movie.files;
       movie.releaseDate = movie.releaseDate.toLocaleDateString();
-      movie.collected = collectedMoviesCode.includes(movie.code);
-      movie.downloaded = downloadMoviesCode.includes(movie.code);
+      movie.collected = collectedMovieCode.includes(movie.code);
+      movie.downloaded = downloadMovieCode.includes(movie.code);
     });
 
     return Response.json(

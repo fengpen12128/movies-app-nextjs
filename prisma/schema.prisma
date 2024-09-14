@@ -1,6 +1,6 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["tracing"]
+    provider        = "prisma-client-js"
+    previewFeatures = ["tracing"]
 }
 
 // datasource db {
@@ -11,104 +11,120 @@ generator client {
 // }
 
 datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL") // uses connection pooling
-  relationMode = "prisma"
+    provider     = "postgresql"
+    url          = env("DATABASE_URL") // uses connection pooling
+    relationMode = "prisma"
 }
 
 generator prismaClient {
-  provider        = "prisma-client-js"
-  previewFeatures = ["tracing"]
-  binaryTargets   = ["native"]
+    provider        = "prisma-client-js"
+    previewFeatures = ["tracing"]
+    binaryTargets   = ["native"]
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model Actress {
-  id          Int         @id @default(autoincrement())
-  actressName String?     @db.VarChar(100)
-  birthDay    DateTime?   @db.Date
-  isBlock     String?     @default("0") @db.VarChar(10)
-  movies      MovieInfo[] @relation("ActressMovie")
+
+model MoviesInfo {
+    id           Int           @id @default(autoincrement()) @map("id")
+    code         String?       @unique(map: "code_uni") @map("code") @db.VarChar(100)
+    prefix       String?       @map("prefix") @db.VarChar(100)
+    duration     String?       @map("duration") @db.VarChar(100)
+    rate         Decimal?      @map("rate") @db.Decimal(10, 2)
+    rateNum      Int?          @map("rate_num")
+    releaseDate  DateTime?     @map("release_date") @db.Date
+    releaseYear  Int?          @map("release_year")
+    crawlWebsite String?       @map("crawl_website") @db.VarChar(100)
+    crawlUrl     String?       @map("crawl_url") @db.VarChar(200)
+    batchNum     String?       @map("batch_num") @db.VarChar(300)
+    updatedTime  DateTime?     @map("updated_time") @db.Timestamp()
+    createdTime  DateTime?     @default(now()) @map("created_time")
+    actresses    Actress[]     @relation("actress_on_movie")
+    tags         MoviesTag[]   @relation("tag_on_movie")
+    files        FilesInfo[]
+    magnetLinks  MagnetLinks[]
+
+    collections MoviesCollection[] // 关联到收藏
+    downloads   MoviesVideoResource[]
+
+    @@map("movies_info")
 }
 
-model MovieInfo {
-  id           Int                   @id @default(autoincrement())
-  code         String?               @unique(map: "code_uni") @db.VarChar(100)
-  prefix       String?               @db.VarChar(100)
-  duration     String?               @db.VarChar(100)
-  rate         Decimal?              @db.Decimal(10, 2)
-  rateNum      Int?
-  releaseDate  DateTime?             @db.Date
-  releaseYear  Int?
-  crawlWebsite String?               @db.VarChar(100)
-  crawlUrl     String?               @db.VarChar(200)
-  batchNum     String?               @db.VarChar(300)
-  updatedTime  DateTime?             @db.Timestamp()
-  createdTime  DateTime?             @default(now())
-  actresses    Actress[]             @relation("ActressMovie")
-  files        FilesInfo[]
-  magnetLinks  MagnetLinks[]
-  collections  MoviesCollection[] // 关联到收藏
-  downloads    MoviesVideoResource[]
+model Actress {
+    id          Int          @id @default(autoincrement()) @map("id")
+    actressName String?      @unique @map("actress_name") @db.VarChar(100)
+    birthDay    DateTime?    @map("birth_day") @db.Date
+    isBlock     String?      @default("0") @map("is_block") @db.VarChar(10)
+    movies      MoviesInfo[] @relation("actress_on_movie")
 
-  tags MoviesTag[] @relation("MoviesOnTag")
+    @@map("actress")
 }
 
 model CrawlInfo {
-  id                Int       @id @default(autoincrement())
-  batchId           String    @db.VarChar(255)
-  newlyIncreasedNum Int?      @default(0)
-  updatedNum        Int?      @default(0)
-  downloadSize      String?   @db.VarChar(100)
-  duration          Int?
-  checked           String?   @default("0") @db.VarChar(10)
-  createdTime       DateTime? @default(now())
+    id                Int       @id @default(autoincrement()) @map("id")
+    batchId           String    @map("batch_id") @db.VarChar(255)
+    newlyIncreasedNum Int?      @default(0) @map("newly_increased_num")
+    updatedNum        Int?      @default(0) @map("updated_num")
+    downloadSize      String?   @map("download_size") @db.VarChar(100)
+    duration          Int?      @map("duration")
+    checked           String?   @default("0") @map("checked") @db.VarChar(10)
+    createdTime       DateTime? @default(now()) @map("created_time")
+
+    @@map("crawl_info")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model FilesInfo {
-  id         Int        @id @default(autoincrement())
-  bucketName String?    @db.VarChar(100)
-  path       String?    @db.VarChar(200)
-  size       String?    @db.VarChar(100)
-  moviesId   Int?
-  type       Int?
-  movie      MovieInfo? @relation(fields: [moviesId], references: [id])
+    id         Int         @id @default(autoincrement()) @map("id")
+    bucketName String?     @map("bucket_name") @db.VarChar(100)
+    path       String?     @map("path") @db.VarChar(200)
+    size       String?     @map("size") @db.VarChar(100)
+    moviesId   Int?        @map("movies_id")
+    type       Int?        @map("type")
+    movie      MoviesInfo? @relation(fields: [moviesId], references: [id])
 
-  @@index([moviesId], map: "files_info_movies_id_index")
+    @@index([moviesId], map: "files_info_movies_id_index")
+    @@map("files_info")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model MagnetLinks {
-  id         Int        @id @default(autoincrement())
-  moviesId   Int?
-  linkUrl    String?    @db.VarChar(1000)
-  size       String?    @db.VarChar(100)
-  uploadTime String?    @db.VarChar(100)
-  movie      MovieInfo? @relation(fields: [moviesId], references: [id])
+    id         Int         @id @default(autoincrement()) @map("id")
+    moviesId   Int?        @map("movies_id")
+    linkUrl    String?     @map("link_url") @db.VarChar(1000)
+    size       String?     @map("size") @db.VarChar(100)
+    uploadTime String?     @map("upload_time") @db.VarChar(100)
+    movie      MoviesInfo? @relation(fields: [moviesId], references: [id])
 
-  @@index([moviesId], map: "magnet_links_movies_id_index")
+    @@index([moviesId], map: "magnet_links_movies_id_index")
+    @@map("magnet_links")
 }
 
 model MoviesCollection {
-  id          Int        @id @default(autoincrement())
-  moviesCode  String     @unique @db.VarChar(100)
-  createdTime DateTime   @default(now()) @db.Timestamp()
-  MovieInfo   MovieInfo? @relation(fields: [moviesCode], references: [code])
+    id          Int      @id @default(autoincrement()) @map("id")
+    movieCode   String   @unique @map("movie_code") @db.VarChar(100)
+    createdTime DateTime @default(now()) @map("created_time") @db.Timestamp()
+
+    MovieInfo MoviesInfo? @relation(fields: [movieCode], references: [code])
+
+    @@map("movies_collection")
 }
 
 model MoviesTag {
-  id          Int         @id @default(autoincrement())
-  tagName     String?     @db.VarChar(100)
-  createdTime DateTime?   @default(now())
-  movies      MovieInfo[] @relation("MoviesOnTag")
+    id          Int          @id @default(autoincrement()) @map("id")
+    tagName     String?      @unique @map("tag_name") @db.VarChar(100)
+    createdTime DateTime?    @default(now()) @map("created_time")
+    movies      MoviesInfo[] @relation("tag_on_movie")
+
+    @@map("movies_tag")
 }
 
 model MoviesVideoResource {
-  id          Int        @id @default(autoincrement())
-  movieCode   String     @db.VarChar(100)
-  path        String?    @db.VarChar(400)
-  size        String?    @db.VarChar(100)
-  createdTime DateTime?  @default(now())
-  MovieInfo   MovieInfo? @relation(fields: [movieCode], references: [code])
+    id          Int         @id @default(autoincrement()) @map("id")
+    movieCode   String?     @map("movie_code") @db.VarChar(100)
+    path        String?     @map("path") @db.VarChar(400)
+    size        String?     @map("size") @db.VarChar(100)
+    createdTime DateTime?   @default(now()) @map("created_time")
+    MovieInfo   MoviesInfo? @relation(fields: [movieCode], references: [code])
+
+    @@map("movies_video_resource")
 }
