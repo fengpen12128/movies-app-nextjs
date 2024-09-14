@@ -47,7 +47,7 @@ export default function RelationMovies({ actressNames = [], setCode }) {
           <MoviesCard
             key={x.id}
             {...x}
-            onClick={() => setCode(x.code)}
+            onClick={() => setCode(x.id)}
           ></MoviesCard>
         ))}
       </div>

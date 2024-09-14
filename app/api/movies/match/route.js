@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const [movies, movieResources] = await Promise.all([
-      prisma.MovieInfo.findMany({ select: { code: true } }),
+      prisma.MoviesInfo.findMany({ select: { code: true } }),
       prisma.MoviesVideoResource.findMany({ select: { movieCode: true } }),
     ]);
     let data;
@@ -33,7 +33,6 @@ export async function GET() {
     const movieResourcesCodes = new Set(
       movieResources.map((movie) => movie.movieCode)
     );
-    console.log("movieResourcesCodes", movieResourcesCodes);
 
     data.forEach((item) => {
       const itemNameLower = item.name.toLowerCase();
@@ -54,6 +53,6 @@ export async function GET() {
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "匹配失败" }, { status: 500 });
+    return NextResponse.json({ error:error }, { status: 500 });
   }
 }

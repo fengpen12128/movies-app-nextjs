@@ -11,13 +11,8 @@ import { filesize } from "filesize";
 
 export default function ResourceMatching() {
   const [selectedMovies, setSelectedMovies] = useState([]);
-  const [filteredMovies, setFilteredMovies] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [unmatchedCurrentPage, setUnmatchedCurrentPage] = useState(1);
   const [filter, setFilter] = useState("unPaired");
-  const itemsPerPage = 10;
   const [activeTab, setActiveTab] = useState("matched");
-
   const [pairMovies, setPairMovies] = useState([]);
 
   const {
@@ -31,8 +26,8 @@ export default function ResourceMatching() {
     },
     {
       onSuccess: (result, params) => {
-        let allpairMovies = result?.filter((movie) => !movie.isPair) || [];
-        setPairMovies(allpairMovies);
+        let allPairMovies = result?.filter((movie) => !movie.isPair) || [];
+        setPairMovies(allPairMovies);
       },
     }
   );

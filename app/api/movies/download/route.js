@@ -1,4 +1,7 @@
 import prisma from "@/utils/prisma";
+import dayjs from 'dayjs';
+import {NextResponse} from 'next/server';
+
 
 export const GET = async (req) => {
   try {
@@ -11,11 +14,18 @@ export const GET = async (req) => {
     let q = {
       where: {},
       include: {
-        MovieInfo: {
+        MovieInfo:  {
           include: {
-            files: true,
+            files: {
+              where: {
+                type: 2,
+              },
+            },
           },
-        },
+        }
+      },
+      orderBy: {
+        createdTime: "desc",
       },
       skip,
       take: pageSize,
@@ -40,15 +50,18 @@ export const GET = async (req) => {
     }));
 
     downloadMovies.forEach((x) => {
-      x.releaseDate = x.releaseDate.toLocaleDateString();
-      x.collected = collectionMovieCode.includes(x.code);
-      x.downloaded = true;
-      x.coverUrl = x.files[0]?.path;
-      delete x.files;
+     try {
+       x.releaseDate =  dayjs(x.downloadTime || '2000-01-01', 'YYYY-MM-DD')
+       x.collected = collectionMovieCode.includes(x.code);
+       x.downloaded = true;
+       x.coverUrl = x.files[0]?.path;
+       delete x.files;
+     } catch (error) {
+       console.log(error);
+     }
     });
 
-    return Response.json(
-      {
+    return NextResponse.json({
         pagination: {
           totalCount,
           currentPage: page,
@@ -61,8 +74,8 @@ export const GET = async (req) => {
     );
   } catch (error) {
     console.log(error);
-    return Response.json(
-      { error: "Failed to load downloaded movies" },
+    return NextResponse.json(
+      { error: error.message },
       { status: 500 }
     );
   }

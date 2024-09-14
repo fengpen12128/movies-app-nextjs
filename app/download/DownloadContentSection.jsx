@@ -1,12 +1,12 @@
 "use client";
 
-import MoviesCard from "@/components/MoviesCard";
-import { useEffect, useState } from "react";
-import MovieDetailView from "@/components/MovieDetailView";
-import { useRequest } from "ahooks";
-import { Spinner } from "@radix-ui/themes";
-import { useSearchParams } from "next/navigation";
-import MyPagination from "@/components/MyPagination";
+import MoviesCard from '@/components/MoviesCard';
+import {useState} from 'react';
+import MovieDetailView from '@/components/MovieDetailView';
+import {useRequest} from 'ahooks';
+import {Spinner} from '@radix-ui/themes';
+import {useSearchParams} from 'next/navigation';
+import MyPagination from '@/components/MyPagination';
 
 const downLoadSection = () => {
   const searchParams = useSearchParams();
@@ -14,12 +14,17 @@ const downLoadSection = () => {
   const { data, loading, error } = useRequest(
     async () => {
       const resp = await fetch(`/api/movies/download?page=${page}`);
-      const data = await resp.json();
-      return data;
+        return await resp.json();
     },
     {
       refreshDeps: [page],
-    }
+        onSuccess: (result, params) => {
+          result?.movies?.forEach((movie) => {
+              movie.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${movie.coverUrl}`
+          })
+        },
+    },
+
   );
 
   const { totalCount, currentPage, totalPages } = data?.pagination || {};
