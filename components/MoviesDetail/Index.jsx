@@ -9,24 +9,6 @@ import MagnetLinkTable from "./MagnetLinkTable.jsx";
 import RelationMovies from "./RelationMovies.jsx";
 import { useRequest } from "ahooks";
 
-// const setToDemonstrationMode = (data, wallpapers) => {
-//   data.coverUrl = `${process.env.NEXT_PUBLIC_TEST_PATH}/${
-//     wallpapers[Math.floor(Math.random() * wallpapers.length)]
-//   }`;
-//   data.files.forEach((x) => {
-//     x.path = `${process.env.NEXT_PUBLIC_TEST_PATH}/${
-//       wallpapers[Math.floor(Math.random() * wallpapers.length)]
-//     }`;
-//   });
-// };
-// const setToDemonstrationMode2 = (data, wallpapers) => {
-//   data.coverUrl = `${
-//     wallpapers[Math.floor(Math.random() * wallpapers.length)]
-//   }`;
-//   data.files.forEach((x) => {
-//     x.path = `${wallpapers[Math.floor(Math.random() * wallpapers.length)]}`;
-//   });
-// };
 
 const setToMinioMode = (data) => {
   data.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${data.coverUrl}`;

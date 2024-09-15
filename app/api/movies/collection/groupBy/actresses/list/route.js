@@ -1,7 +1,6 @@
 import prisma from "@/utils/prisma";
 import { NextResponse } from "next/server";
 
-
 export const GET = async (req) => {
   try {
     const downloadMovies = await prisma.MoviesVideoResource.findMany({
@@ -28,35 +27,40 @@ export const GET = async (req) => {
       },
     });
 
-
-    collectionMovies = collectionMovies.filter(x => x.MovieInfo)
+    collectionMovies = collectionMovies.filter((x) => x.MovieInfo);
     collectionMovies = collectionMovies.map((x) => ({
       collectedTime: x.createdTime,
       ...x.MovieInfo,
     }));
 
-
     const downloadMovieCode = downloadMovies.map((item) => item.movieCode);
 
-
     collectionMovies.forEach((x) => {
-     try {
-       x.actresses = x.actresses.map((actress) => actress.actressName);
-       x.releaseDate = x.releaseDate.toLocaleDateString();
-       x.collected = true;
-       x.downloaded = downloadMovieCode.includes(x.code);
-       x.coverUrl = x.files[0]?.path;
-       delete x.files;
-     } catch (e) {
-       console.error(e);
-     }
+      try {
+        x.actresses = x.actresses.map((actress) => actress.actressName);
+        x.releaseDate = x.releaseDate.toLocaleDateString();
+        x.collected = true;
+        x.downloaded = downloadMovieCode.includes(x.code);
+        x.coverUrl = x.files[0]?.path;
+        delete x.files;
+      } catch (e) {
+        console.error(e);
+      }
     });
 
+    // 提取actresses数量大于2 的不参与stack
+    let multiActresses = collectionMovies
+      .filter((x) => x.actresses.length > 2)
+      .map((x) => ({
+        actress: "",
+        movies: [x],
+      }));
 
-
+    collectionMovies = collectionMovies.filter((x) => x.actresses.length <= 2);
 
     const groupedData = groupByActress(collectionMovies, "actresses");
 
+    // stack 中的movies 收藏时间排序
     let p = Object.keys(groupedData).map((x) => ({
       actress: x,
       movies:
@@ -67,6 +71,7 @@ export const GET = async (req) => {
           : groupedData[x],
     }));
 
+    // 将 单个movies 也转化成数组形式
     let single = p
       .filter((x) => x.movies.length === 1)
       .map((x) => x.movies[0])
@@ -79,13 +84,18 @@ export const GET = async (req) => {
         movies: [x],
       }));
 
-    let result = [...single, ...p.filter((x) => x.movies.length > 1)].sort(
+    // 合并
+    let result = [
+      ...single,
+      ...p.filter((x) => x.movies.length > 1),
+      ...multiActresses,
+    ].sort(
       (a, b) =>
         new Date(b.movies[0].collectedTime) -
         new Date(a.movies[0].collectedTime)
     );
 
-    return NextResponse.json(result,{ status: 200 });
+    return NextResponse.json(result, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: `Failed to load movies: ${error.message}` },

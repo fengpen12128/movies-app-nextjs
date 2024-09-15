@@ -13,7 +13,7 @@ export default function RelationMovies({ actressNames = [], setCode }) {
     async () => {
       const resp = await fetch(`/api/movies/actressRel`, {
         method: "POST",
-        body: JSON.stringify({ actress: actressNames }),
+        body: JSON.stringify({ actressName: actressNames }),
       });
       const data = await resp.json();
       setToMinioMode(data);

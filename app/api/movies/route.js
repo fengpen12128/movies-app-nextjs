@@ -1,4 +1,5 @@
 import prisma from "@/utils/prisma";
+import dayjs from "dayjs";
 
 
 export const POST = async (request) => {
@@ -87,7 +88,7 @@ export const POST = async (request) => {
     movies.forEach((movie) => {
       movie.coverUrl = movie.files.find((file) => file.type === 2)?.path;
       delete movie.files;
-      movie.releaseDate = movie.releaseDate.toLocaleDateString();
+      movie.releaseDate = dayjs(movie.releaseDate).format("YYYY-MM-DD");
       movie.collected = collectedMovieCode.includes(movie.code);
       movie.downloaded = downloadMovieCode.includes(movie.code);
     });

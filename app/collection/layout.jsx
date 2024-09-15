@@ -21,7 +21,7 @@ export default function CollectionLayout({children}) {
         <SharedLayout>
           <Card className="my-3">
             <div className="flex gap-5">
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
                 <span>折叠</span>
                   <Select.Root value={arrange} onValueChange={handleChange} size="2" >
                       <Select.Trigger />

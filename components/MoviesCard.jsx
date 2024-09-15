@@ -1,4 +1,8 @@
 import { Card, Inset, Badge, Skeleton } from "@radix-ui/themes";
+import { useLocalStorageState } from "ahooks";
+import { useState, useEffect } from "react";
+import getGlobalSettings from "@/app/globalSetting";
+import { useDisplayMode } from "@/hooks/useDisplayMode";
 
 const MoviesCard = ({
   code,
@@ -10,18 +14,22 @@ const MoviesCard = ({
   coverUrl,
   onClick,
 }) => {
+  const displayMode = useDisplayMode();
+
   return (
     <Card>
       <Inset clip="padding-box" side="top" pb="current">
-        {/* {isLoading && <Skeleton className="h-[300px]"></Skeleton>} */}
-
         <img
           onClick={onClick}
-          src={coverUrl}
-          //src={process.env.NEXT_PUBLIC_DEMO_IMAGE}
-          className="object-cover cursor-pointer h-[250px]"
+          src={
+            displayMode === "normal"
+              ? coverUrl
+              : process.env.NEXT_PUBLIC_DEMO_IMAGE
+          }
+          className="object-contain cursor-pointer h-[300px]"
         />
       </Inset>
+
       <div className="flex flex-col items-start gap-2 ">
         <h4
           onClick={onClick}
@@ -35,11 +43,7 @@ const MoviesCard = ({
           <span className="mx-2">•</span>
           <span>{viewCount} views</span>
           <span className="mx-2">•</span>
-          {releaseDate ? (
-            <span>{new Date(releaseDate)?.toISOString().split("T")[0]}</span>
-          ) : (
-            "1988-01-01"
-          )}
+          {releaseDate ? <span>{releaseDate}</span> : "2000-01-01"}
         </div>
 
         <div className="flex gap-2  ">

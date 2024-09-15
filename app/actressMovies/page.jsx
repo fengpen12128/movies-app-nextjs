@@ -6,15 +6,15 @@ import MyPagination from "@/components/MyPagination";
 import { useSearchParams } from "next/navigation";
 import CommonCardSection from "@/components/CommonCardSection";
 
-const HomeContent = () => {
+const ActressMovies = () => {
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page")) || 1;
-  const search = searchParams.get("search") || "";
+  const actressName = searchParams.get("actressName") || "";
   const { data, loading, error } = useRequest(
     async () => {
-      const resp = await fetch(`/api/movies`, {
+      const resp = await fetch(`/api/movies/actressRel/all`, {
         method: "POST",
-        body: JSON.stringify({ page, search }),
+        body: JSON.stringify({ page, actressName }),
       });
       const data = await resp.json();
       data.movies?.forEach((x) => {
@@ -23,7 +23,7 @@ const HomeContent = () => {
       return data;
     },
     {
-      refreshDeps: [page, search],
+      refreshDeps: [page, actressName],
     }
   );
 
@@ -35,7 +35,7 @@ const HomeContent = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full w-full">
+      <div className="flex items-center justify-center h-screen w-full">
         <Spinner size="3" />
       </div>
     );
@@ -53,4 +53,4 @@ const HomeContent = () => {
   );
 };
 
-export default HomeContent;
+export default ActressMovies;

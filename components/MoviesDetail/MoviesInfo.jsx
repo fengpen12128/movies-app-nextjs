@@ -1,7 +1,8 @@
 import { Badge, Button } from "@radix-ui/themes";
 import { message } from "react-message-popup";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
+import { useDisplayMode } from "@/hooks/useDisplayMode";
 const MoviesInfo = ({
   code,
   coverUrl,
@@ -14,10 +15,10 @@ const MoviesInfo = ({
   tags,
   videoFirst,
 }) => {
+  const displayMode = useDisplayMode();
   const [isCollected, setIsCollected] = useState(initialCollected);
   const handleActressClick = (name) => {
-    message.info(name, 1000);
-    window.open(`/?actress=${name}`, "_blank");
+    window.open(`actressMovies/?actressName=${name}`, "_blank");
   };
   const toggleCollect = async () => {
     const resp = await fetch(`/api/movies/collected/${code}`);
@@ -54,7 +55,11 @@ const MoviesInfo = ({
       <img
         // className="w-1/2 mr-10 object-contain bg-gray-100 dark:bg-gray-800 "
         className="w-full sm:w-1/2 mr-10 h-[350px] object-contain  "
-        src={coverUrl}
+        src={
+          displayMode === "normal"
+            ? coverUrl
+            : process.env.NEXT_PUBLIC_DEMO_IMAGE
+        }
         alt=""
       />
 

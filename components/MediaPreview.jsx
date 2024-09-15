@@ -2,12 +2,15 @@
 
 import "react-photo-view/dist/react-photo-view.css";
 import { PhotoProvider, PhotoView } from "react-photo-view";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PortalComponent from "@/components/PortalComponent";
 import Xgplayer from "xgplayer-react";
 import { nanoid } from "nanoid";
+import { useDisplayMode } from "@/hooks/useDisplayMode";
 
 const MoviesPreview = ({ mediaUrls = [] }) => {
+  const displayMode = useDisplayMode();
+
   const videoUrl = mediaUrls.find((x) => x.type == 3)?.path;
   const coverUrl = mediaUrls.find((x) => x.type == 2)?.path;
   const introUrls = mediaUrls
@@ -20,7 +23,8 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
   const config = {
     // url: "https://ommsjjjwtgpdklis.public.blob.vercel-storage.com/douying_sample-JOrHnYGM2XTUzq1qZLMIZt8OfWKcIW.mp4",
     //    url: "http://127.0.0.1:9000/demo/douying_sample.mp4",
-    url: videoUrl,
+    url:
+      displayMode === "normal" ? videoUrl : process.env.NEXT_PUBLIC_DEMO_VIDEO,
     loop: true,
     autoplay: true,
     volume: 0,
@@ -41,29 +45,15 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
   const [showPlay, setShowPlay] = useState(false);
 
   return (
-    // <div className="w-full rounded grid grid-cols-4 gap-2  p-2 bg-[#F4F4F5] dark:bg-gray-800 ">
     <div className="w-full rounded grid grid-cols-2 sm:grid-cols-4 gap-2  p-2">
-      {/* <div className="img-container relative">
-        <img
-          className="cursor-pointer h-[200px] object-fill"
-          src={coverUrl}
-          alt=""
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-50 hover:bg-opacity-30 transition-opacity duration-300 flex items-center justify-center">
-          <span
-            onClick={handlePlayVideo}
-            className="text-white cursor-pointer text-5xl"
-          >
-            ▶
-          </span>
-
-        </div>
-      </div> */}
-
       <div className="relative">
         <img
           className="cursor-pointer h-[200px] object-cover"
-          src={coverUrl}
+          src={
+            displayMode === "normal"
+              ? coverUrl
+              : process.env.NEXT_PUBLIC_DEMO_IMAGE
+          }
           alt=""
         />
 
@@ -79,11 +69,22 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
 
       <PhotoProvider loop maskOpacity={0.5}>
         {introUrls.map((x) => (
-          <PhotoView key={x.id} src={x.path}>
+          <PhotoView
+            key={x.id}
+            src={
+              displayMode === "normal"
+                ? x.path
+                : process.env.NEXT_PUBLIC_DEMO_IMAGE
+            }
+          >
             <img
               style={{ objectFit: "cover" }}
               className="h-[200px] w-full  cursor-pointer"
-              src={x.path}
+              src={
+                displayMode === "normal"
+                  ? x.path
+                  : process.env.NEXT_PUBLIC_DEMO_IMAGE
+              }
             />
           </PhotoView>
         ))}
