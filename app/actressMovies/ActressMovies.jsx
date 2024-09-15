@@ -42,14 +42,14 @@ const ActressMovies = () => {
   }
 
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <CommonCardSection movies={data?.movies || []} />
       <MyPagination
         current={currentPage}
         totalPage={totalPages}
         totleCount={totalCount}
       />
-    </>
+    </Suspense>
   );
 };
 
