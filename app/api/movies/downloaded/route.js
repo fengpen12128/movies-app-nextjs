@@ -1,4 +1,5 @@
 import prisma from "@/utils/prisma";
+import { NextResponse } from "next/server";
 
 export const GET = async (req) => {
   try {
@@ -7,7 +8,7 @@ export const GET = async (req) => {
     const formattedMovies = downloadedMovies.map((movie) => ({
       id: movie.id,
       title: `${movie.movieCode}`,
-      fileName: movie.path.split('/').pop(),
+      fileName: movie.path.split("/").pop(),
       filePath: movie.path,
       size: movie.size,
       downloadDate: movie.createdTime,
