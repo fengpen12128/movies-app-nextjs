@@ -1,15 +1,13 @@
-"use client";
-
-import React from "react";
 import { Suspense } from "react";
-import ActressMovies from "./ActressMovies.jsx";
+import ActressMoviesClient from "./ActressMoviesClient";
 
-const page = () => {
+export default function ActressMoviesPage({ searchParams }) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ActressMovies />
+      <ActressMoviesClient
+        initialPage={searchParams.page}
+        initialActressName={searchParams.actressName}
+      />
     </Suspense>
   );
-};
-
-export default page;
+}

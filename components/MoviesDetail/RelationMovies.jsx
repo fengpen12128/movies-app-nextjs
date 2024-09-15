@@ -2,7 +2,7 @@ import { Spinner } from "@radix-ui/themes";
 import MoviesCard from "@/components/MoviesCard";
 import { useRequest } from "ahooks";
 
-const setToMinioMode = (data, wallpapers) => {
+const setToMinioMode = (data) => {
   data?.forEach((x) => {
     x.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`;
   });
