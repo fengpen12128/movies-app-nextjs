@@ -1,7 +1,6 @@
 import prisma from "@/utils/prisma";
-import dayjs from 'dayjs';
-import {NextResponse} from 'next/server';
-
+import dayjs from "dayjs";
+import { NextResponse } from "next/server";
 
 export const GET = async (req) => {
   try {
@@ -14,7 +13,7 @@ export const GET = async (req) => {
     let q = {
       where: {},
       include: {
-        MovieInfo:  {
+        MovieInfo: {
           include: {
             files: {
               where: {
@@ -22,7 +21,7 @@ export const GET = async (req) => {
               },
             },
           },
-        }
+        },
       },
       orderBy: {
         createdTime: "desc",
@@ -50,18 +49,19 @@ export const GET = async (req) => {
     }));
 
     downloadMovies.forEach((x) => {
-     try {
-       x.releaseDate =  dayjs(x.downloadTime || '2000-01-01', 'YYYY-MM-DD')
-       x.collected = collectionMovieCode.includes(x.code);
-       x.downloaded = true;
-       x.coverUrl = x.files[0]?.path;
-       delete x.files;
-     } catch (error) {
-       console.log(error);
-     }
+      try {
+        x.releaseDate = dayjs(x.downloadTime || "2000-01-01", "YYYY-MM-DD");
+        x.collected = collectionMovieCode.includes(x.code);
+        x.downloaded = true;
+        x.coverUrl = x.files[0]?.path;
+        delete x.files;
+      } catch (error) {
+        console.log(error);
+      }
     });
 
-    return NextResponse.json({
+    return NextResponse.json(
+      {
         pagination: {
           totalCount,
           currentPage: page,
@@ -74,9 +74,6 @@ export const GET = async (req) => {
     );
   } catch (error) {
     console.log(error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };
