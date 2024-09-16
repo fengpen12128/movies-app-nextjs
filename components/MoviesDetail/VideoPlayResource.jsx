@@ -58,7 +58,7 @@ export default function VideoPlayResource({ videoResource = [] }) {
                   color="cyan"
                   variant="outline"
                 >
-                  {item.path} ({item.size})
+                  {item.path?.split("/")[0]} ({item.size})
                 </Button>
               </a>
             );

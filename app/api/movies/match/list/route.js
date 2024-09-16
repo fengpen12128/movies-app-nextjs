@@ -1,5 +1,7 @@
 import prisma from "@/utils/prisma";
 import { NextResponse } from "next/server";
+import dayjs from "dayjs";
+import { X } from "lucide-react";
 
 export async function GET() {
   try {
@@ -34,11 +36,14 @@ export async function GET() {
       movieResources.map((movie) => movie.movieCode)
     );
 
+    data = data.sort((a, b) => dayjs(b.createdTime).diff(dayjs(a.createdTime)));
+
     data.forEach((item) => {
       const itemNameLower = item.name.toLowerCase();
       const matchedCode = Array.from(movieCodes).find((code) =>
         itemNameLower.includes(code)
       );
+      item.createdTime = dayjs(item.createdTime).format("YYYY-MM-DD HH:mm:ss");
 
       if (matchedCode) {
         item.matchCode = matchedCode.toUpperCase();
@@ -53,6 +58,6 @@ export async function GET() {
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error:error }, { status: 500 });
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }
