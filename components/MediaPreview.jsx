@@ -10,6 +10,16 @@ import { useDisplayMode } from "@/hooks/useDisplayMode";
 
 const MoviesPreview = ({ mediaUrls = [] }) => {
   const displayMode = useDisplayMode();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const videoUrl = mediaUrls.find((x) => x.type == 3)?.path;
   const coverUrl = mediaUrls.find((x) => x.type == 2)?.path;
@@ -21,8 +31,6 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
     }));
 
   const config = {
-    // url: "https://ommsjjjwtgpdklis.public.blob.vercel-storage.com/douying_sample-JOrHnYGM2XTUzq1qZLMIZt8OfWKcIW.mp4",
-    //    url: "http://127.0.0.1:9000/demo/douying_sample.mp4",
     url:
       displayMode === "normal" ? videoUrl : process.env.NEXT_PUBLIC_DEMO_VIDEO,
     loop: true,
@@ -30,16 +38,18 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
     volume: 0,
     poster: "",
     muted: false,
-    width: 1000,
-    height: 750,
+    width: isMobile ? '100%' : 1000,
+    height: isMobile ? 'auto' : 750,
   };
 
   const handlePlayVideo = () => {
-    if (typeof window !== "undefined" && window.innerWidth <= 768) {
-      window.open(config.url, "_blank");
-    } else {
-      setShowPlay(true);
-    }
+    // if (typeof window !== "undefined" && window.innerWidth <= 768) {
+    //   window.open(config.url, "_blank");
+    // } else {
+    //   setShowPlay(true);
+    // }
+
+    setShowPlay(true);
   };
 
   const [showPlay, setShowPlay] = useState(false);
@@ -96,7 +106,7 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
             onClick={() => setShowPlay(false)}
             className="fixed inset-0 bg-black bg-opacity-50  h-screen w-screen flex items-center justify-center z-51"
           >
-            <div className="flex items-center  justify-center rounded-lg shadow-xl">
+            <div className={`flex items-center justify-center rounded-lg shadow-xl ${isMobile ? 'w-full' : ''}`}>
               <Xgplayer config={config} />
             </div>
           </div>

@@ -122,13 +122,16 @@ export default function ResourceMatching() {
         <Tabs.Content value="matched">
           <Card className="p-6">
             <div className="mb-4 flex justify-between items-center">
-              <Button
-                color="crimson"
-                variant="soft"
-                onClick={confirmAllMatches}
-              >
-                全部确认
-              </Button>
+              {filter === 'unPaired' && (
+                <Button
+                  color="crimson"
+                  variant="soft"
+                  onClick={confirmAllMatches}
+                  disabled={pairMovies.length === 0}
+                >
+                  全部确认
+                </Button>
+              )}
               <Select.Root value={filter} onValueChange={setFilter}>
                 <Select.Trigger />
                 <Select.Content>
