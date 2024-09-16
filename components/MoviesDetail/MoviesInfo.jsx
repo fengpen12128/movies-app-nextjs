@@ -1,7 +1,6 @@
 import { Badge, Button } from "@radix-ui/themes";
 import { message } from "react-message-popup";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
 const MoviesInfo = ({
   code,
@@ -54,7 +53,7 @@ const MoviesInfo = ({
     <div className="flex gap-4 mt-5  flex-col  sm:flex-row sm:gap">
       <img
         // className="w-1/2 mr-10 object-contain bg-gray-100 dark:bg-gray-800 "
-        className="w-full sm:w-1/2 mr-10 h-[350px] object-contain  "
+        className="w-full sm:w-1/2 mr-10  object-contain  "
         src={
           displayMode === "normal"
             ? coverUrl

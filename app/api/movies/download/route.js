@@ -7,11 +7,29 @@ export const GET = async (req) => {
     const { searchParams } = new URL(req.url);
     const page = Number(searchParams.get("page") || 1);
     const pageSize = 50;
-
+    const collected = searchParams.get("collected");
     const skip = (page - 1) * pageSize;
 
+    const collectionMovies = await prisma.MoviesCollection.findMany({
+      select: {
+        movieCode: true,
+      },
+    });
+    const collectionMovieCode = collectionMovies.map((x) => x.movieCode);
+
     let q = {
-      where: {},
+      where: {
+        ...(collected === "true" && {
+          movieCode: {
+            in: collectionMovieCode,
+          },
+        }),
+        ...(collected === "false" && {
+          movieCode: {
+            notIn: collectionMovieCode,
+          },
+        }),
+      },
       include: {
         MovieInfo: {
           include: {
@@ -30,18 +48,10 @@ export const GET = async (req) => {
       take: pageSize,
     };
 
-    let [collectionMovies, downloadMoviesResult, totalCount] =
-      await Promise.all([
-        prisma.MoviesCollection.findMany({
-          select: {
-            movieCode: true,
-          },
-        }),
-        prisma.MoviesVideoResource.findMany(q),
-        prisma.MoviesVideoResource.count({ where: q.where }),
-      ]);
-
-    const collectionMovieCode = collectionMovies.map((x) => x.movieCode);
+    let [downloadMoviesResult, totalCount] = await Promise.all([
+      prisma.MoviesVideoResource.findMany(q),
+      prisma.MoviesVideoResource.count({ where: q.where }),
+    ]);
 
     const downloadMovies = downloadMoviesResult.map((x) => ({
       downloadTime: x.createdTime,
@@ -50,7 +60,9 @@ export const GET = async (req) => {
 
     downloadMovies.forEach((x) => {
       try {
-        x.releaseDate = dayjs(x.downloadTime || "2000-01-01", "YYYY-MM-DD");
+        x.releaseDate = dayjs(x.releaseDate || "2000-01-01").format(
+          "YYYY-MM-DD"
+        );
         x.collected = collectionMovieCode.includes(x.code);
         x.downloaded = true;
         x.coverUrl = x.files[0]?.path;

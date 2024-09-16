@@ -42,8 +42,9 @@ const CollectionCardSection = () => {
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
   const arrangeParams = searchParams.get("arrange") || "flex";
+  const downloadParams = searchParams.get("download") || "all";
   const {
-    data: collectedMoviesStackList,
+    data: filteredMovies,
     loading,
     error,
   } = useRequest(
@@ -52,13 +53,15 @@ const CollectionCardSection = () => {
       if (arrangeParams === "stack") {
         resp = await fetch("/api/movies/collection/groupBy/actresses/list");
       } else {
-        resp = await fetch(`/api/movies/collection/list?page=${page}`);
+        resp = await fetch(
+          `/api/movies/collection/list?page=${page}&download=${downloadParams}`
+        );
       }
       return await resp.json();
     },
     {
-      cacheKey: "collectedMoviesStackList",
-      refreshDeps: [page, arrangeParams],
+      cacheKey: "filteredMovies",
+      refreshDeps: [page, arrangeParams, downloadParams],
     }
   );
 
@@ -72,21 +75,27 @@ const CollectionCardSection = () => {
     setOpen(true);
   };
 
-  let showList;
-
-  // useEffect(() => {
-  //     if (arrangeParams === 'stack') {
-  //         // showList  = useMemo(() => {
-  //         //     return collectedMoviesStackList?.slice((page - 1) * 30, page * 30) || [];
-  //         // }, [collectedMoviesStackList, page]);
-  //         showList = collectedMoviesStackList?.data
-  //     }   else {
-  //         showList = collectedMoviesStackList?.data
+  //   const filteredMovies = useMemo(() => {
+  //     if (!collectedMoviesStackList) return [];
+  //     if (downloadParams === "all") return collectedMoviesStackList;
+  //     if (arrangeParams === "flex") {
+  //       return {
+  //         ...collectedMoviesStackList,
+  //         data: collectedMoviesStackList.data.filter(movie =>
+  //           downloadParams === "true" ? movie.downloaded : !movie.downloaded
+  //         )
+  //       };
+  //     } else {
+  //       return collectedMoviesStackList.filter(group =>
+  //         group.movies.some(movie =>
+  //           downloadParams === "true" ? movie.downloaded : !movie.downloaded
+  //         )
+  //       );
   //     }
-  // },[arrangeParams])
+  //   }, [collectedMoviesStackList, downloadParams, arrangeParams]);
 
   const { totalCount, currentPage, totalPages } =
-    collectedMoviesStackList?.pagination || {};
+    filteredMovies?.pagination || {};
 
   if (loading) {
     return (
@@ -94,7 +103,6 @@ const CollectionCardSection = () => {
         <Spinner size="3" />
       </div>
     );
-    ``;
   }
 
   if (error) {
@@ -105,18 +113,18 @@ const CollectionCardSection = () => {
     <>
       <section className={colClassDia}>
         {arrangeParams === "flex" &&
-          collectedMoviesStackList?.data &&
-          collectedMoviesStackList?.data.length > 0 && (
+          filteredMovies?.data &&
+          filteredMovies?.data.length > 0 && (
             <FlexArrange
-              moviesList={collectedMoviesStackList?.data}
+              moviesList={filteredMovies.data}
               handleClickMoviesCard={handleClickMoviesCard}
             />
           )}
         {arrangeParams === "stack" &&
-          collectedMoviesStackList &&
-          collectedMoviesStackList.length > 0 && (
+          filteredMovies &&
+          filteredMovies.length > 0 && (
             <StackArrange
-              moviesList={collectedMoviesStackList}
+              moviesList={filteredMovies}
               handleClickMoviesCard={handleClickMoviesCard}
             />
           )}
@@ -124,8 +132,8 @@ const CollectionCardSection = () => {
       {arrangeParams === "stack" && (
         <MyPagination
           current={page}
-          totalPage={Math.ceil((collectedMoviesStackList?.length || 0) / 30)}
-          totleCount={collectedMoviesStackList?.length || 0}
+          totalPage={Math.ceil((filteredMovies?.length || 0) / 30)}
+          totleCount={filteredMovies?.length || 0}
         />
       )}
       {arrangeParams === "flex" && (

@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { MdFavorite } from "react-icons/md";
 import { AiFillHome } from "react-icons/ai";
 import { IoDownload } from "react-icons/io5";
 import { GoFileDirectoryFill } from "react-icons/go";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 export default function SidesBar() {
   const router = useRouter();
+  const pathname = usePathname();
   const list = [
     {
       title: "首页",
@@ -33,24 +33,21 @@ export default function SidesBar() {
     },
   ];
 
-  const [currentTitle, setCurrentTitle] = useState(null);
   return (
     <>
       <div className="sidebar">
         <div className="navbar">
           {list.map((item) => {
             const { title, icon, path } = item;
+            const isActive =
+              pathname === path || (path === "/" && pathname === "/home");
+
             return (
               <div
-                className={
-                  currentTitle === title
-                    ? "active sidebar__item"
-                    : "sidebar__item"
-                }
+                className={isActive ? "active sidebar__item" : "sidebar__item"}
                 key={title}
                 draggable={false}
                 onClick={() => {
-                  setCurrentTitle(title);
                   router.push(path);
                 }}
               >

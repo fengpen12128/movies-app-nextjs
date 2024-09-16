@@ -1,7 +1,4 @@
-import { Card, Inset, Badge, Skeleton } from "@radix-ui/themes";
-import { useLocalStorageState } from "ahooks";
-import { useState, useEffect } from "react";
-import getGlobalSettings from "@/app/globalSetting";
+import { Card, Inset, Badge } from "@radix-ui/themes";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
 
 const MoviesCard = ({
@@ -26,7 +23,7 @@ const MoviesCard = ({
               ? coverUrl
               : process.env.NEXT_PUBLIC_DEMO_IMAGE
           }
-          className="object-contain cursor-pointer h-[300px]"
+          className="object-contain cursor-pointer "
         />
       </Inset>
 

@@ -1,5 +1,6 @@
 import prisma from "@/utils/prisma";
 import { NextResponse } from "next/server";
+import dayjs from "dayjs";
 
 export async function POST(req) {
   const { actressName, page = 1, limit = 50 } = await req.json();
@@ -45,7 +46,7 @@ export async function POST(req) {
     const formattedActressRel = actressRel.map((movie) => ({
       id: movie.id,
       code: movie.code,
-      releaseDate: movie.releaseDate,
+      releaseDate: dayjs(movie.releaseDate).format("YYYY-MM-DD"),
       rate: movie.rate,
       rateNum: movie.rateNum,
       coverUrl: movie.files[0]?.path || "",

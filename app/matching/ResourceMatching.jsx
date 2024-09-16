@@ -19,14 +19,18 @@ export default function ResourceMatching() {
     data: matchResult,
     loading,
     error,
+    run: fetchMatchResult,
   } = useRequest(
     async () => {
-      const response = await fetch("/api/movies/match");
+      const response = await fetch("/api/movies/match/list");
       return await response.json();
     },
     {
       onSuccess: (result, params) => {
-        let allPairMovies = result?.filter((movie) => !movie.isPair) || [];
+        let allPairMovies =
+          result
+            ?.filter((movie) => movie.isPair)
+            .filter((movie) => !movie.isMatched) || [];
         setPairMovies(allPairMovies);
       },
     }
@@ -51,16 +55,39 @@ export default function ResourceMatching() {
     // setCurrentPage(1);
   };
 
-  const confirmMatch = (movie) => {
-    setDownloadedMovies((prevMovies) =>
-      prevMovies.map((m) => (m.id === movie.id ? { ...m, isMatched: true } : m))
-    );
+  const submitConfirmMatch = async (movie) => {
+    const resp = await fetch("/api/movies/match/save", {
+      method: "POST",
+      body: JSON.stringify({
+        matchList: [movie],
+      }),
+    });
+
+    if (resp.ok) {
+      message.success("提交成功");
+      // 刷新页面数据
+      fetchMatchResult();
+    } else {
+      message.error("提交失败");
+    }
   };
 
-  const confirmAllMatches = () => {
-    setDownloadedMovies((prevMovies) =>
-      prevMovies.map((movie) => ({ ...movie, isMatched: true }))
-    );
+  const confirmAllMatches = async () => {
+    const unMatch = allpairMovies.filter((movie) => !movie.isMatched);
+    const resp = await fetch("/api/movies/match/save", {
+      method: "POST",
+      body: JSON.stringify({
+        matchList: unMatch,
+      }),
+    });
+
+    if (resp.ok) {
+      message.success("提交成功");
+      // 刷新页面数据
+      fetchMatchResult();
+    } else {
+      message.error("提交失败");
+    }
   };
 
   const confirmSelectedMatches = () => {
@@ -126,12 +153,18 @@ export default function ResourceMatching() {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {!pairMovies || pairMovies.length === 0 ? (
+                {loading ? (
                   <Table.Row>
                     <Table.Cell colSpan={6} className="text-center py-4">
                       <div className="flex items-center justify-center h-full w-full">
                         <Spinner size="3" />
                       </div>
+                    </Table.Cell>
+                  </Table.Row>
+                ) : pairMovies.length === 0 ? (
+                  <Table.Row>
+                    <Table.Cell colSpan={6} className="text-center py-4">
+                      暂无数据
                     </Table.Cell>
                   </Table.Row>
                 ) : (
@@ -155,7 +188,7 @@ export default function ResourceMatching() {
                           <Button
                             color="cyan"
                             variant="soft"
-                            onClick={() => confirmMatch(movie)}
+                            onClick={() => submitConfirmMatch(movie)}
                           >
                             确认匹配
                           </Button>
@@ -187,25 +220,33 @@ export default function ResourceMatching() {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {unPairMovies?.map((movie) => (
-                  <Table.Row key={movie.id}>
-                    <Table.Cell>{movie.name}</Table.Cell>
-                    <Table.Cell>{movie.path}</Table.Cell>
-                    <Table.Cell>
-                      {movie.size ? filesize(movie.size) : ""}
-                    </Table.Cell>
-                    <Table.Cell></Table.Cell>
-                    <Table.Cell>
-                      <Button
-                        color="indigo"
-                        variant="soft"
-                        onClick={() => handlePlay(movie.path)}
-                      >
-                        <PlayIcon /> 播放
-                      </Button>
+                {unPairMovies?.length === 0 ? (
+                  <Table.Row>
+                    <Table.Cell colSpan={5} className="text-center py-4">
+                      暂无数据
                     </Table.Cell>
                   </Table.Row>
-                ))}
+                ) : (
+                  unPairMovies?.map((movie) => (
+                    <Table.Row key={movie.id}>
+                      <Table.Cell>{movie.name}</Table.Cell>
+                      <Table.Cell>{movie.path}</Table.Cell>
+                      <Table.Cell>
+                        {movie.size ? filesize(movie.size) : ""}
+                      </Table.Cell>
+                      <Table.Cell></Table.Cell>
+                      <Table.Cell>
+                        <Button
+                          color="indigo"
+                          variant="soft"
+                          onClick={() => handlePlay(movie.path)}
+                        >
+                          <PlayIcon /> 播放
+                        </Button>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
+                )}
               </Table.Body>
             </Table.Root>
           </Card>

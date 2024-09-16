@@ -1,30 +1,33 @@
 "use client";
 
-import MoviesCard from '@/components/MoviesCard';
-import {useState} from 'react';
-import MovieDetailView from '@/components/MovieDetailView';
-import {useRequest} from 'ahooks';
-import {Spinner} from '@radix-ui/themes';
-import {useSearchParams} from 'next/navigation';
-import MyPagination from '@/components/MyPagination';
+import MoviesCard from "@/components/MoviesCard";
+import { useState } from "react";
+import MovieDetailView from "@/components/MovieDetailView";
+import { useRequest } from "ahooks";
+import { Spinner } from "@radix-ui/themes";
+import { useSearchParams } from "next/navigation";
+import MyPagination from "@/components/MyPagination";
 
-const downLoadSection = () => {
+const DownloadContentSection = () => {
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page")) || 1;
+  const collectedStatus = searchParams.get("collected") || "all";
+
   const { data, loading, error } = useRequest(
     async () => {
-      const resp = await fetch(`/api/movies/download?page=${page}`);
-        return await resp.json();
+      const resp = await fetch(
+        `/api/movies/download?page=${page}&collected=${collectedStatus}`
+      );
+      return await resp.json();
     },
     {
-      refreshDeps: [page],
-        onSuccess: (result, params) => {
-          result?.movies?.forEach((movie) => {
-              movie.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${movie.coverUrl}`
-          })
-        },
-    },
-
+      refreshDeps: [page, collectedStatus],
+      onSuccess: (result, params) => {
+        result?.movies?.forEach((movie) => {
+          movie.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${movie.coverUrl}`;
+        });
+      },
+    }
   );
 
   const { totalCount, currentPage, totalPages } = data?.pagination || {};
@@ -77,4 +80,4 @@ const downLoadSection = () => {
   );
 };
 
-export default downLoadSection;
+export default DownloadContentSection;
