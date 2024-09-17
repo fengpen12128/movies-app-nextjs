@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button, Table, Select, Card, Spinner } from "@radix-ui/themes";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { useRequest } from "ahooks";
@@ -9,7 +9,6 @@ import { filesize } from "filesize";
 
 export default function MatchedResources() {
   const [filter, setFilter] = useState("unPaired");
-  const [pairMovies, setPairMovies] = useState([]);
   const [confirmAllLoading, setConfirmAllLoading] = useState(false);
 
   const {
@@ -19,77 +18,72 @@ export default function MatchedResources() {
     run: fetchMatchResult,
   } = useRequest(
     async () => {
-      const response = await fetch("/api/movies/match/list");
+      const response = await fetch("/api/movies/match/list?st=is");
       return await response.json();
     },
     {
-      onSuccess: (result, params) => {
-        let allPairMovies =
-          result
-            ?.filter((movie) => movie.isPair)
-            .filter((movie) => !movie.isMatched) || [];
-        setPairMovies(allPairMovies);
-      },
+      refreshDeps: [filter],
     }
   );
 
-  let allpairMovies = matchResult?.filter((movie) => movie.isPair) || [];
-
-  useEffect(() => filterMovies(), [filter]);
-
-  const filterMovies = () => {
-    if (filter === "paired") {
-      let t = allpairMovies.filter((movie) => movie.isMatched);
-      setPairMovies(t);
-    } else if (filter === "unPaired") {
-      let t = allpairMovies.filter((movie) => !movie.isMatched);
-      setPairMovies(t);
-    } else {
-      setPairMovies(allpairMovies);
+  const pairMovies = useMemo(() => {
+    if (!matchResult) return [];
+    switch (filter) {
+      case "paired":
+        return matchResult.filter((movie) => movie.isMatched);
+      case "unPaired":
+        return matchResult.filter((movie) => !movie.isMatched);
+      default:
+        return matchResult;
     }
-  };
+  }, [matchResult, filter]);
 
   const submitConfirmMatch = async (movie) => {
-    const resp = await fetch("/api/movies/match/save", {
-      method: "POST",
-      body: JSON.stringify({
-        matchList: [movie],
-      }),
-    });
+    try {
+      const resp = await fetch("/api/movies/match/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ matchList: [movie] }),
+      });
 
-    if (resp.ok) {
-      message.success("提交成功");
-      fetchMatchResult();
-    } else {
-      message.error("提交失败");
+      if (resp.ok) {
+        message.success("提交成功");
+        fetchMatchResult();
+      } else {
+        throw new Error("提交失败");
+      }
+    } catch (error) {
+      message.error(error.message);
     }
   };
 
   const confirmAllMatches = async () => {
     setConfirmAllLoading(true);
-    const unMatch = allpairMovies.filter((movie) => !movie.isMatched);
-    const resp = await fetch("/api/movies/match/save", {
-      method: "POST",
-      body: JSON.stringify({
-        matchList: unMatch,
-      }),
-    });
+    try {
+      const unMatchedMovies = pairMovies.filter((movie) => !movie.isMatched);
+      const resp = await fetch("/api/movies/match/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ matchList: unMatchedMovies }),
+      });
 
-    if (resp.ok) {
-      message.success("提交成功");
-      fetchMatchResult();
-    } else {
-      message.error("提交失败");
+      if (resp.ok) {
+        message.success("全部确认成功");
+        fetchMatchResult();
+      } else {
+        throw new Error("全部确认失败");
+      }
+    } catch (error) {
+      message.error(error.message);
+    } finally {
+      setConfirmAllLoading(false);
     }
-    setConfirmAllLoading(false);
   };
 
   return (
     <Card className="p-6">
       <div className="mb-4 flex justify-between items-center">
         <div className="w-32">
-          {" "}
-          {/* Fixed width container for the button */}
           {filter === "unPaired" && (
             <Button
               color="crimson"
@@ -111,7 +105,7 @@ export default function MatchedResources() {
         </Select.Root>
       </div>
 
-      <Table.Root className="h-[600px]  overflow-y-auto">
+      <Table.Root className="h-[600px] overflow-y-auto">
         <Table.Header>
           <Table.Row>
             <Table.ColumnHeaderCell>电影名称</Table.ColumnHeaderCell>

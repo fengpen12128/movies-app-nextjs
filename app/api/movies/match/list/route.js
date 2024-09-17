@@ -1,9 +1,10 @@
 import prisma from "@/utils/prisma";
 import { NextResponse } from "next/server";
 import dayjs from "dayjs";
-import { X } from "lucide-react";
 
-export async function GET() {
+export async function GET(request) {
+  const { searchParams } = new URL(request.nextUrl);
+  const st = searchParams.get("st");
   try {
     const [movies, movieResources] = await Promise.all([
       prisma.MoviesInfo.findMany({ select: { code: true } }),
@@ -54,6 +55,14 @@ export async function GET() {
         item.isPair = false;
       }
     });
+
+    if (st === "is") {
+      data = data.filter((item) => item.isPair);
+      return NextResponse.json(data, { status: 200 });
+    } else if (st === "un") {
+      data = data.filter((item) => !item.isPair);
+      return NextResponse.json(data, { status: 200 });
+    }
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {
