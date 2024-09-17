@@ -80,6 +80,7 @@ model FilesInfo {
     size       String?     @map("size") @db.VarChar(100)
     moviesId   Int?        @map("movies_id")
     type       Int?        @map("type")
+    onlineUrl  String?     @map("online_url") @db.Text
     movie      MoviesInfo? @relation(fields: [moviesId], references: [id])
 
     @@index([moviesId], map: "files_info_movies_id_index")

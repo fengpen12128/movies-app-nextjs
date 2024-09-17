@@ -1,7 +1,8 @@
-import { Badge, Button } from "@radix-ui/themes";
+import { Badge, Button, Spinner } from "@radix-ui/themes";
 import { message } from "react-message-popup";
 import { useState } from "react";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
+
 const MoviesInfo = ({
   code,
   coverUrl,
@@ -16,20 +17,30 @@ const MoviesInfo = ({
 }) => {
   const displayMode = useDisplayMode();
   const [isCollected, setIsCollected] = useState(initialCollected);
+  const [isCollecting, setIsCollecting] = useState(false);
+
   const handleActressClick = (name) => {
     window.open(`actressMovies/?actressName=${name}`, "_blank");
   };
+
   const toggleCollect = async () => {
-    const resp = await fetch(`/api/movies/collected/${code}`);
-    const data = await resp.json();
+    setIsCollecting(true);
+    try {
+      const resp = await fetch(`/api/movies/collected/${code}`);
+      const data = await resp.json();
 
-    if (resp.status === 500) {
-      message.error(data.message, 1000);
-      return;
+      if (resp.status === 500) {
+        message.error(data.message, 1000);
+        return;
+      }
+
+      setIsCollected(!isCollected);
+      message.success(data.message, 1000);
+    } catch (error) {
+      message.error("操作失败，请重试", 1000);
+    } finally {
+      setIsCollecting(false);
     }
-
-    setIsCollected(!isCollected);
-    message.success(data.message, 1000);
   };
 
   const codeSplit = code.split("-");
@@ -126,8 +137,9 @@ const MoviesInfo = ({
             className="cursor-pointer"
             color="crimson"
             variant="soft"
+            disabled={isCollecting}
           >
-            {isCollected ? "取消收藏" : "收藏"}
+            {isCollecting ? <Spinner /> : isCollected ? "取消收藏" : "收藏"}
           </Button>
         </div>
       </div>

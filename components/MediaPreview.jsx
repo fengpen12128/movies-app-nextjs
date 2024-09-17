@@ -7,6 +7,7 @@ import PortalComponent from "@/components/PortalComponent";
 import Xgplayer from "xgplayer-react";
 import { nanoid } from "nanoid";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
+import { message } from "react-message-popup";
 
 const MoviesPreview = ({ mediaUrls = [] }) => {
   const displayMode = useDisplayMode();
@@ -17,11 +18,11 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
       setIsMobile(window.innerWidth <= 768);
     };
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const videoUrl = mediaUrls.find((x) => x.type == 3)?.path;
+  const videoUrl = mediaUrls.find((x) => x.type == 3);
   const coverUrl = mediaUrls.find((x) => x.type == 2)?.path;
   const introUrls = mediaUrls
     .filter((x) => x.type == 1)
@@ -32,22 +33,38 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
 
   const config = {
     url:
-      displayMode === "normal" ? videoUrl : process.env.NEXT_PUBLIC_DEMO_VIDEO,
+      displayMode === "normal"
+        ? videoUrl?.path
+        : process.env.NEXT_PUBLIC_DEMO_VIDEO,
     loop: true,
     autoplay: true,
     volume: 0,
     poster: "",
     muted: false,
-    width: isMobile ? '100%' : 1000,
-    height: isMobile ? 'auto' : 750,
+    width: isMobile ? "100%" : 1000,
+    height: isMobile ? "auto" : 750,
   };
 
-  const handlePlayVideo = () => {
+  const [playerConfig, setPlayerConfig] = useState(config);
+
+  const handlePlayVideo = async () => {
     // if (typeof window !== "undefined" && window.innerWidth <= 768) {
     //   window.open(config.url, "_blank");
     // } else {
     //   setShowPlay(true);
     // }
+
+    if (!videoUrl) {
+      message.error("无预览视频 ");
+      return;
+    }
+
+    const resp = await fetch(videoUrl.path, { method: "HEAD" });
+    const size = resp.headers.get("content-length");
+    if (size < 1024 * 10) {
+      message.info("切换到在线视频源");
+      setPlayerConfig({ ...config, url: videoUrl.onlineUrl });
+    }
 
     setShowPlay(true);
   };
@@ -106,8 +123,12 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
             onClick={() => setShowPlay(false)}
             className="fixed inset-0 bg-black bg-opacity-50  h-screen w-screen flex items-center justify-center z-51"
           >
-            <div className={`flex items-center justify-center rounded-lg shadow-xl ${isMobile ? 'w-full' : ''}`}>
-              <Xgplayer config={config} />
+            <div
+              className={`flex items-center justify-center rounded-lg shadow-xl ${
+                isMobile ? "w-full" : ""
+              }`}
+            >
+              <Xgplayer config={playerConfig} />
             </div>
           </div>
         </PortalComponent>

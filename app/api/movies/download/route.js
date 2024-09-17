@@ -45,6 +45,8 @@ export const GET = async (req) => {
         createdTime: "desc",
       },
       skip,
+      distinct: ["movieCode"], // Add this line to ensure unique movieCode entries
+
       take: pageSize,
     };
 
