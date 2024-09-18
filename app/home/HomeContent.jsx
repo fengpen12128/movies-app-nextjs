@@ -25,6 +25,9 @@ const HomeContent = async ({ page, search }) => {
     body: JSON.stringify({ page, search }),
   });
   const data = await resp.json();
+  data.movies?.forEach((x) => {
+    x.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`;
+  });
   const { totalCount, currentPage, totalPages } = data?.pagination || {};
 
   //   if (error) {
