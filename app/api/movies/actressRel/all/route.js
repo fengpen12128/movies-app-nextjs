@@ -56,9 +56,9 @@ export async function POST(req) {
       {
         pagination: {
           totalCount,
-          currentPage: page,
+          current: page,
           pageSize: limit,
-          totalPages: Math.ceil(totalCount / limit),
+          totalPage: Math.ceil(totalCount / limit),
         },
         movies: formattedActressRel,
       },
