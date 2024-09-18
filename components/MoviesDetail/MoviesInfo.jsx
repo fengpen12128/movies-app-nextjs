@@ -26,7 +26,7 @@ const MoviesInfo = ({
   const toggleCollect = async () => {
     setIsCollecting(true);
     try {
-      const resp = await fetch(`/api/movies/collected/${code}`);
+      const resp = await fetch(`/api/movies/collection/save/${code}`);
       const data = await resp.json();
 
       if (resp.status === 500) {

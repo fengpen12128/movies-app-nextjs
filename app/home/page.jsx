@@ -1,12 +1,11 @@
-"use client";
-
 import { Suspense } from "react";
 import HomeContent from "./HomeContent";
+import ScreenLoading from "@/components/ScreenLoading";
 
-const Home = () => {
+const Home = ({ searchParams }) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HomeContent />
+    <Suspense fallback={<ScreenLoading />}>
+      <HomeContent {...searchParams} />
     </Suspense>
   );
 };

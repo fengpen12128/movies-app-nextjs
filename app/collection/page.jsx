@@ -1,13 +1,10 @@
-"use client";
-
-import React from "react";
 import { Suspense } from "react";
-import CollectionCardSection from './CollectionCardSection.jsx';
-
-const page = () => {
+import CollectionCardSection from "./CollectionCardSection.jsx";
+import ScreenLoading from "@/components/ScreenLoading";
+const page = ({ searchParams }) => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <CollectionCardSection />
+    <Suspense fallback={<ScreenLoading />}>
+      <CollectionCardSection {...searchParams} />
     </Suspense>
   );
 };

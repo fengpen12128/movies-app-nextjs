@@ -1,80 +1,53 @@
-"use client";
-
-import MoviesCard from "@/components/MoviesCard";
-import { useState } from "react";
-import MovieDetailView from "@/components/MovieDetailView";
-import { useRequest } from "ahooks";
-import { Spinner } from "@radix-ui/themes";
-import { useSearchParams } from "next/navigation";
 import MyPagination from "@/components/MyPagination";
+import CommonCardSection from "@/components/MovieCardDisplaySection";
 
-const DownloadContentSection = () => {
-  const searchParams = useSearchParams();
-  const page = parseInt(searchParams.get("page")) || 1;
-  const collectedStatus = searchParams.get("collected") || "all";
+const DownloadContentSection = async ({ page, collectedStatus }) => {
+  //   const { data, loading, error } = useRequest(
+  //     async () => {
+  //       const resp = await fetch(
+  //         `/api/movies/download?page=${page}&collected=${collectedStatus}`
+  //       );
+  //       return await resp.json();
+  //     },
+  //     {
+  //       refreshDeps: [page, collectedStatus],
+  //       onSuccess: (result, params) => {
+  //         result?.movies?.forEach((movie) => {
+  //           movie.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${movie.coverUrl}`;
+  //         });
+  //       },
+  //     }
+  //   );
 
-  const { data, loading, error } = useRequest(
-    async () => {
-      const resp = await fetch(
-        `/api/movies/download?page=${page}&collected=${collectedStatus}`
-      );
-      return await resp.json();
-    },
-    {
-      refreshDeps: [page, collectedStatus],
-      onSuccess: (result, params) => {
-        result?.movies?.forEach((movie) => {
-          movie.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${movie.coverUrl}`;
-        });
-      },
-    }
+  const resp = await fetch(
+    `http://localhost:3000/api/movies/download?page=${page}&collected=${collectedStatus}`
   );
+  const data = await resp.json();
+  data.movies?.forEach((movie) => {
+    movie.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${movie.coverUrl}`;
+  });
 
   const { totalCount, currentPage, totalPages } = data?.pagination || {};
 
-  const [clickedMovie, setClickedMovie] = useState(null);
-  const [open, setOpen] = useState(false);
+  //   if (loading) {
+  //   };
 
-  const colClassDia = `grid gap-8 grid-cols-1 sm:grid-cols-4`;
-
-  const handleClickMoviesCard = (id) => {
-    setClickedMovie(id);
-    setOpen(true);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full w-full">
-        <Spinner size="3" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  //   if (loading) {
+  //     return (
+  //       <div className="flex items-center justify-center h-full w-full">
+  //         <Spinner size="3" />
+  //       </div>
+  //     );
+  //   }
 
   return (
     <>
-      <section className={colClassDia}>
-        {data.movies?.map((x) => (
-          <MoviesCard
-            onClick={() => handleClickMoviesCard(x.id)}
-            key={x.id}
-            {...x}
-          ></MoviesCard>
-        ))}
-      </section>
+      <CommonCardSection movies={data?.movies || []} />
 
       <MyPagination
         current={currentPage}
         totalPage={totalPages}
         totleCount={totalCount}
-      />
-      <MovieDetailView
-        open={open}
-        setOpen={setOpen}
-        clickedMovie={clickedMovie}
       />
     </>
   );

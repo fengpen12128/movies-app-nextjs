@@ -48,12 +48,6 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
   const [playerConfig, setPlayerConfig] = useState(config);
 
   const handlePlayVideo = async () => {
-    // if (typeof window !== "undefined" && window.innerWidth <= 768) {
-    //   window.open(config.url, "_blank");
-    // } else {
-    //   setShowPlay(true);
-    // }
-
     if (!videoUrl) {
       message.error("无预览视频 ");
       return;

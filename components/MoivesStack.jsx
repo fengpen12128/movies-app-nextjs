@@ -5,7 +5,7 @@ import MoviesCard from "@/components/MoviesCard";
 import { Card } from "@radix-ui/themes";
 import MovieDetailView from "@/components/MovieDetailView";
 
-export function MoviesStackMy({ moviesList = [], actress = "" }) {
+export default function MoviesStack({ moviesList = [], actress = "" }) {
   const [open, setOpen] = useState(false);
 
   if (moviesList.length < 2) {

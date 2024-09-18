@@ -4,7 +4,7 @@ import { Button, Card, TextField } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import GlobalSettings from "@/components/GlobalSettings";
+import GlobalSettings from "@/components/settings/GlobalSettings";
 
 export default function SearchBar() {
   const router = useRouter();
@@ -12,7 +12,6 @@ export default function SearchBar() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [filterOptions, setFilterOptions] = useState([]);
-
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -25,7 +24,7 @@ export default function SearchBar() {
       if (!searchKeyword) {
         router.push(pathname);
       } else {
-        router.push(`${pathname}?search=${searchKeyword}`);
+        router.push(`/home?search=${searchKeyword}`);
       }
     }
   };

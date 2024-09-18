@@ -10,7 +10,7 @@ export async function GET(request) {
       prisma.MoviesInfo.findMany({ select: { code: true } }),
       prisma.MoviesVideoResource.findMany({ select: { movieCode: true } }),
     ]);
-    let data;
+    let data = [];
     try {
       const response = await fetch(
         "http://192.168.1.22:9101/getDownloadVideo",

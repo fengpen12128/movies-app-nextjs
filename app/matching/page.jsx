@@ -1,7 +1,12 @@
-"use client";
+import { Suspense } from "react";
 
-import ResourceMatching from "@/app/matching/ResourceMatching";
+import ResourceMatching from "./ResourceMatching";
+import ScreenLoading from "@/components/ScreenLoading";
 
 export default function ResourceMatchingPage() {
-  return <ResourceMatching />;
+  return (
+    <Suspense fallback={<ScreenLoading />}>
+      <ResourceMatching />
+    </Suspense>
+  );
 }

@@ -1,5 +1,5 @@
 import { Card } from "@radix-ui/themes";
-import MoviesDetail from "@/components/MoviesDetail";
+import MoviesDetail from "@/components/MoviesDetail/MoviesDetail";
 
 const MovieDetailView = ({ open, clickedMovie, setOpen }) => {
   return (

@@ -1,14 +1,13 @@
-"use client";
-
 import { Suspense } from "react";
 import DownloadContentSection from "./DownloadContentSection.jsx";
+import ScreenLoading from "@/components/ScreenLoading";
 
-const Download = () => {
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <DownloadContentSection />
-        </Suspense>
-    );
+const Download = ({ searchParams }) => {
+  return (
+    <Suspense fallback={<ScreenLoading />}>
+      <DownloadContentSection {...searchParams} />
+    </Suspense>
+  );
 };
 
 export default Download;

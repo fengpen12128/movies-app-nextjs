@@ -1,91 +1,55 @@
 import prisma from "@/utils/prisma";
 import { NextResponse } from "next/server";
+import { DEFAULT_PAGE_SIZE, getCollectionAndDownloadStatus, formatMovie, getPaginationData } from "../../utils";
 
 export const GET = async (req) => {
   const { searchParams } = new URL(req.url);
   const page = Number(searchParams.get("page") || 1);
   const download = searchParams.get("download");
-  const pageSize = 50;
+  const pageSize = DEFAULT_PAGE_SIZE;
 
   const skip = (page - 1) * pageSize;
 
   try {
-    const downloadMovies = await prisma.MoviesVideoResource.findMany({
-      select: {
-        movieCode: true,
-      },
-    });
-
-    const downloadMovieCodes = downloadMovies.map((item) => item.movieCode);
+    const { downloadMovieCode } = await getCollectionAndDownloadStatus();
 
     let q = {
       where: {
-        ...(download === "true" && {
-          movieCode: {
-            in: downloadMovieCodes,
-          },
-        }),
-        ...(download === "false" && {
-          movieCode: {
-            notIn: downloadMovieCodes,
-          },
-        }),
+        ...(download === "true" && { movieCode: { in: Array.from(downloadMovieCode) } }),
+        ...(download === "false" && { movieCode: { notIn: Array.from(downloadMovieCode) } }),
       },
       include: {
         MovieInfo: {
           include: {
-            files: {
-              where: {
-                type: 2,
-              },
-            },
+            files: { where: { type: 2 } },
             actresses: true,
           },
         },
       },
       skip,
       take: pageSize,
-      orderBy: {
-        createdTime: "desc",
-      },
+      orderBy: { createdTime: "desc" },
     };
 
-    console.log("download", download);
-    console.log(JSON.stringify(q));
+    let [collectionMovies, totalCount] = await Promise.all([
+      prisma.MoviesCollection.findMany(q),
+      prisma.MoviesCollection.count({ where: q.where }),
+    ]);
 
-    let collectionMovies = await prisma.MoviesCollection.findMany(q);
-    let totalCount = await prisma.MoviesCollection.count({ where: q.where });
-
-    collectionMovies = collectionMovies.filter((x) => x.MovieInfo);
-    collectionMovies = collectionMovies.map((x) => ({
-      collectedTime: x.createdTime,
-      ...x.MovieInfo,
-    }));
-
-    collectionMovies.forEach((x) => {
-      try {
-        x.actresses = x.actresses.map((actress) => actress.actressName);
-        x.releaseDate = x.releaseDate.toLocaleDateString();
-        x.collected = true;
-        x.downloaded = downloadMovieCodes.includes(x.code);
-        x.coverUrl = x.files[0]?.path;
-        delete x.files;
-      } catch (e) {
-        console.error(e);
-      }
-    });
+    collectionMovies = collectionMovies
+      .filter(x => x.MovieInfo)
+      .map(x => ({
+        collectedTime: x.createdTime,
+        ...formatMovie(x.MovieInfo, { collectedMovieCode: new Set([x.movieCode]), downloadMovieCode }),
+        actresses: x.MovieInfo.actresses.map(actress => actress.actressName),
+      }));
 
     return NextResponse.json({
-      pagination: {
-        totalCount,
-        currentPage: page,
-        pageSize,
-        totalPages: Math.ceil(totalCount / pageSize),
-      },
+      pagination: getPaginationData(totalCount, page, pageSize),
       data: collectionMovies,
     });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ error: ` ${error.message}` }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 };

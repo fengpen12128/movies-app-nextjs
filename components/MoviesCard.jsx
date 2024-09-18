@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, Inset, Badge } from "@radix-ui/themes";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
 

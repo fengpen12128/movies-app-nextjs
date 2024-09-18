@@ -1,7 +1,7 @@
 "use client";
 
 import SharedLayout from "../shared-layout/layout";
-import DownloadSettings from "@/components/DownloadSettings";
+import DownloadSettings from "@/components/SubFilterBar/DownloadFilter";
 import { Suspense } from "react";
 
 export default function DownloadLayout({ children }) {
