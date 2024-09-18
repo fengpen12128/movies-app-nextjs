@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import "@/styles/siderbar.css";
 import "@radix-ui/themes/styles.css";
+import SidesBar from "@/components/SidesBar";
 import { Theme } from "@radix-ui/themes";
 export const metadata = {
   title: "MoviesAdminNext",
@@ -16,11 +17,11 @@ const RootLayout = ({ children }) => (
         grayColor="mauve"
         radius="small"
       >
+        <SidesBar />
         <main>{children}</main>
       </Theme>
     </body>
   </html>
 );
-
 
 export default RootLayout;

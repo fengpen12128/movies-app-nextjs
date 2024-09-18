@@ -17,7 +17,6 @@ export default function SharedLayout({ children }) {
     <div
       className={`px-4 sm:px-8 mx-auto sm:w-[90%] pt-6 no-scrollbar sm:h-screen sm:overflow-auto`}
     >
-      <SidesBar />
       <SearchBar />
       <main>{children}</main>
     </div>
