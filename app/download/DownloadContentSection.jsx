@@ -1,7 +1,7 @@
 import MyPagination from "@/components/MyPagination";
 import CommonCardSection from "@/components/MovieCardDisplaySection";
 
-const DownloadContentSection = async ({ page, collectedStatus }) => {
+const DownloadContentSection = async ({ page = 1, collectedStatus }) => {
   //   const { data, loading, error } = useRequest(
   //     async () => {
   //       const resp = await fetch(
@@ -23,11 +23,6 @@ const DownloadContentSection = async ({ page, collectedStatus }) => {
     `http://localhost:3000/api/movies/download?page=${page}&collected=${collectedStatus}`
   );
   const data = await resp.json();
-  data.movies?.forEach((movie) => {
-    movie.coverUrl = `${process.env.NEXT_PUBLIC_MINIO_PATH}/${movie.coverUrl}`;
-  });
-
-  const { totalCount, currentPage, totalPages } = data?.pagination || {};
 
   //   if (loading) {
   //   };
@@ -42,13 +37,8 @@ const DownloadContentSection = async ({ page, collectedStatus }) => {
 
   return (
     <>
-      <CommonCardSection movies={data?.movies || []} />
-
-      <MyPagination
-        current={currentPage}
-        totalPage={totalPages}
-        totleCount={totalCount}
-      />
+        <CommonCardSection movies={data?.movies || []} />
+      <MyPagination  {...data?.pagination}/>
     </>
   );
 };

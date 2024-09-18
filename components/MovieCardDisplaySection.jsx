@@ -4,7 +4,7 @@ import { useState } from "react";
 import MoviesCard from "./MoviesCard";
 import MovieDetailView from "./MovieDetailView";
 import MoviesStack from "./MoivesStack";
-export const StackArrange = ({ moviesList = [] }) => {
+export const StackArrange = ({ movies = [] }) => {
   const [open, setOpen] = useState(false);
   const [clickedMovie, setClickedMovie] = useState(null);
 
@@ -18,7 +18,7 @@ export const StackArrange = ({ moviesList = [] }) => {
   return (
     <>
       <section className={colClassDia}>
-        {moviesList.map((x) =>
+        {movies.map((x) =>
           x.movies.length === 1 ? (
             <MoviesCard
               key={x.movies[0].id}
@@ -69,6 +69,8 @@ const CommonCardSection = ({ movies = [] }) => {
             onClick={() => handleClickMoviesCard(x.id)}
             key={x.id}
             {...x}
+            coverUrl={`${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`}
+
           ></MoviesCard>
         ))}
       </section>

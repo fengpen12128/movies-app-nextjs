@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export const GET = async (req) => {
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams } = new URL(req.nextUrl);
     const page = Number(searchParams.get("page") || 1);
     const pageSize = 50;
     const collected = searchParams.get("collected");
@@ -78,9 +78,9 @@ export const GET = async (req) => {
       {
         pagination: {
           totalCount,
-          currentPage: page,
+          current: page,
           pageSize,
-          totalPages: Math.ceil(totalCount / pageSize),
+          totalPage: Math.ceil(totalCount / pageSize),
         },
         movies: downloadMovies,
       },

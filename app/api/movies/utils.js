@@ -29,7 +29,7 @@ export const formatMovie = (movie, { collectedMovieCode, downloadMovieCode }) =>
 
 export const getPaginationData = (totalCount, page, limit) => ({
   totalCount,
-  currentPage: page,
+  current: page,
   pageSize: limit,
-  totalPages: Math.ceil(totalCount / limit),
+  totalPage: Math.ceil(totalCount / limit),
 });

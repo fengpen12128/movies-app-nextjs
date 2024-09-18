@@ -1,4 +1,5 @@
 import { Badge, Button, Spinner } from "@radix-ui/themes";
+import { Image } from "@nextui-org/image";
 import { message } from "react-message-popup";
 import { useState } from "react";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
@@ -50,8 +51,6 @@ const MoviesInfo = ({
       message.error("没有播放资源", 1000);
       return;
     }
-
-    // const url = `https://ommsjjjwtgpdklis.public.blob.vercel-storage.com/douying_sample-JOrHnYGM2XTUzq1qZLMIZt8OfWKcIW.mp4`;
     window.open(videoFirst, "_blank", "noopener,noreferrer");
   };
 
@@ -61,19 +60,29 @@ const MoviesInfo = ({
   };
 
   return (
-    <div className="flex gap-4 mt-5  flex-col  sm:flex-row sm:gap">
-      <img
+    <div className="flex p-2 gap-4 mt-5  flex-col  sm:flex-row sm:gap">
+      {/* <img
         // className="w-1/2 mr-10 object-contain bg-gray-100 dark:bg-gray-800 "
-        className="w-full sm:w-1/2 mr-10  object-contain  "
+        className="w-full sm:w-1/2 mr-10 bg-red-600  object-contain  "
         src={
           displayMode === "normal"
             ? coverUrl
             : process.env.NEXT_PUBLIC_DEMO_IMAGE
         }
         alt=""
-      />
+      /> */}
+      <div className="sm:w-[60%] mr-10 flex items-center ">
+        <Image
+          isBlurred
+          src={
+            displayMode === "normal"
+              ? coverUrl
+              : process.env.NEXT_PUBLIC_DEMO_IMAGE
+          }
+        />
+      </div>
 
-      <div className="w-full sm:w-1/2">
+      <div className="w-full sm:w-[40%]">
         <ul className="space-y-4">
           <li className="font-suse text-3xl text-secondary">
             <span

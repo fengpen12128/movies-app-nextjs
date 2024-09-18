@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { DEFAULT_PAGE_SIZE, getCollectionAndDownloadStatus, formatMovie, getPaginationData } from "../../utils";
 
 export const GET = async (req) => {
-  const { searchParams } = new URL(req.url);
+  const { searchParams } = new URL(req.nextUrl);
   const page = Number(searchParams.get("page") || 1);
   const download = searchParams.get("download");
   const pageSize = DEFAULT_PAGE_SIZE;
