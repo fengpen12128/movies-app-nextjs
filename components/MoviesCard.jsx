@@ -31,7 +31,7 @@ const MoviesCard = ({
         <Image
           onClick={onClick}
           width={400}
-        //   loading="eager"
+          loading="eager"
           height={270}
           layout="responsive"
           src={
