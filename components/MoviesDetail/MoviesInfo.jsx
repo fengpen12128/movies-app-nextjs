@@ -71,9 +71,10 @@ const MoviesInfo = ({
         }
         alt=""
       /> */}
-      <div className="sm:w-[60%] mr-10 flex items-center ">
+      <div className=" w-full sm:w-[60%] mr-10 flex items-center ">
         <Image
           isBlurred
+          alt="preview"
           src={
             displayMode === "normal"
               ? coverUrl

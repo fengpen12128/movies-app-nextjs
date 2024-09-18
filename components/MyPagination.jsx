@@ -1,26 +1,36 @@
 "use client";
 import { Pagination } from "@nextui-org/react";
-import { usePathname, useRouter } from "next/navigation";
-
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 const MyPagination = ({ current, totalPage, totalCount }) => {
-  const router = useRouter();
+  const { replace } = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(current);
+
+  useEffect(() => {
+    setCurrentPage(current);
+  }, [current]);
+
   const handlePageChange = (page) => {
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set("page", page);
-    router.push(`${pathname}?${searchParams.toString()}`);
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("page", page);
+    replace(`${pathname}?${newSearchParams.toString()}`);
   };
+
+  if (totalPage <= 1) {
+    return null;
+  }
 
   return (
     <div className="mt-8 mb-10 flex justify-between items-center">
       <div className="self-start">
-        <span>共{totalCount}条</span>
+        <span>共{totalCount || 0}条</span>
       </div>
-      <div className="flex-grow  flex justify-center">
+      <div className="flex-grow flex justify-center">
         <Pagination
-          showControls
           onChange={handlePageChange}
-          page={current}
+          page={currentPage}
           total={totalPage}
           initialPage={1}
         />

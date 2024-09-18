@@ -29,17 +29,18 @@ const MoviesCard = ({
           className="object-contain cursor-pointer "
         /> */}
         <Image
+          alt="preview"
           onClick={onClick}
           width={400}
           loading="eager"
           height={270}
-          layout="responsive"
+          priority
           src={
             displayMode === "normal"
               ? coverUrl
               : process.env.NEXT_PUBLIC_DEMO_IMAGE
           }
-          className=" cursor-pointer "
+          className=" cursor-pointer object-contain "
         />
       </Inset>
 

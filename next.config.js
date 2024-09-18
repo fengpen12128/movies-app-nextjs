@@ -5,7 +5,7 @@ const nextConfig = {
   reactStrictMode: false,
   output: "standalone",
   images: {
-    domains: ["192.168.1.37"], // 允许加载的外部图片源
+    domains: ["192.168.1.37", "192.168.1.12"], // 允许加载的外部图片源
   },
   webpack: (config) => {
     config.resolve.alias = {

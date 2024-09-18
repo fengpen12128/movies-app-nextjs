@@ -24,6 +24,7 @@ const HomeContent = async ({ page, search }) => {
     body: JSON.stringify({ page, search }),
   });
   const data = await resp.json();
+  const { pagination = {} } = data;
 
   //   if (error) {
   //     console.error("Error fetching movies:", error);
@@ -40,7 +41,7 @@ const HomeContent = async ({ page, search }) => {
   return (
     <>
       <CommonCardSection movies={data?.movies || []} />
-      <MyPagination {...data?.pagination}/>
+      {pagination && <MyPagination {...pagination} />}
     </>
   );
 };
