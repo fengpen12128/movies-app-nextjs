@@ -2,6 +2,7 @@
 
 import { Card, Inset, Badge } from "@radix-ui/themes";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
+import Image from "next/image";
 
 const MoviesCard = ({
   code,
@@ -18,7 +19,7 @@ const MoviesCard = ({
   return (
     <Card>
       <Inset clip="padding-box" side="top" pb="current">
-        <img
+        {/* <img
           onClick={onClick}
           src={
             displayMode === "normal"
@@ -26,6 +27,19 @@ const MoviesCard = ({
               : process.env.NEXT_PUBLIC_DEMO_IMAGE
           }
           className="object-contain cursor-pointer "
+        /> */}
+        <Image
+          onClick={onClick}
+          width={400}
+          loading="eager"
+          height={270}
+          layout="responsive"
+          src={
+            displayMode === "normal"
+              ? coverUrl
+              : process.env.NEXT_PUBLIC_DEMO_IMAGE
+          }
+          className=" cursor-pointer "
         />
       </Inset>
 

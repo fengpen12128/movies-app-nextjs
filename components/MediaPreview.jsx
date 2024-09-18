@@ -8,6 +8,7 @@ import Xgplayer from "xgplayer-react";
 import { nanoid } from "nanoid";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
 import { message } from "react-message-popup";
+import Image from "next/image";
 
 const MoviesPreview = ({ mediaUrls = [] }) => {
   const displayMode = useDisplayMode();
