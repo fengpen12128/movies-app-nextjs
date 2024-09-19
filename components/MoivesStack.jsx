@@ -18,7 +18,7 @@ export default function MoviesStack({ moviesList = [], actress = "" }) {
     "rotate-12 w-[80%]",
   ];
 
-  const [clickedMovie, setClickMovieed] = useState(null);
+  const [clickMovie, setClickMovie] = useState(null);
   const [openDetail, setOpenDetail] = useState(false);
 
   return (
@@ -26,8 +26,9 @@ export default function MoviesStack({ moviesList = [], actress = "" }) {
       <MovieDetailView
         open={openDetail}
         setOpen={setOpenDetail}
-        clickedMovie={clickedMovie}
+        clickedMovie={clickMovie}
       />
+
       <div onClick={() => setOpen(true)} className="relative h-[350px]">
         {moviesList.slice(0, 3).map((x, index) => (
           <div
@@ -55,7 +56,6 @@ export default function MoviesStack({ moviesList = [], actress = "" }) {
           onClick={(e) => e.stopPropagation()}
         >
           <h1 className="pb-3 text-xl font-ma">{actress}</h1>
-          {/* <div className="h-[85vh] sm:h-[85vh]  overflow-y-auto no-scrollbar"> */}
           <div className="max-h-[75vh]  overflow-y-auto no-scrollbar">
             <div className="grid grid-cols-1  gap-4 sm:grid-cols-3">
               {moviesList.map((x) => (
@@ -64,7 +64,7 @@ export default function MoviesStack({ moviesList = [], actress = "" }) {
                   {...x}
                   coverUrl={`${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`}
                   onClick={() => {
-                    setClickMovieed(x.id);
+                    setClickMovie(x.id);
                     setOpenDetail(true);
                   }}
                 ></MoviesCard>

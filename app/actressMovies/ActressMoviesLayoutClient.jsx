@@ -9,7 +9,7 @@ export default function ActressMoviesLayoutClient({ children }) {
 
   return (
     <div
-      className={`px-4 no-scrollbar sm:px-8 container mx-auto pt-6 sm:h-screen sm:overflow-auto`}
+      className={`px-4 no-scrollbar sm:px-8 sm:w-[90%] mx-auto pt-6 sm:h-screen sm:overflow-auto`}
     >
       <Card>
         <span className="text-2xl font-suse font-bold">{actressName}</span>

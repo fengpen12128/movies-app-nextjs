@@ -50,7 +50,6 @@ const MoviesCard = ({
           className="font-suse  text-xl  cursor-pointer hover:underline"
         >
           {code}
-          Temp
         </h4>
 
         <div className="flex items-center  text-sm text-gray-400">
