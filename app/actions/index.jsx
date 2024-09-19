@@ -4,6 +4,8 @@ import prisma from "@/app/lib/prisma";
 import { revalidatePath } from "next/cache";
 import dayjs from "dayjs";
 
+const DEFAULT_PAGE_SIZE = 50;
+
 const getCollectionAndDownloadStatus = async () => {
   const [downloadMovies, collectedMovies] = await Promise.all([
     prisma.MoviesVideoResource.findMany({ select: { movieCode: true } }),
@@ -39,6 +41,60 @@ const getPaginationData = (totalCount, page, limit) => ({
   pageSize: limit,
   totalPage: Math.ceil(totalCount / limit),
 });
+
+export async function getCollectionMovies({ page = 1, download }) {
+  const skip = (page - 1) * DEFAULT_PAGE_SIZE;
+
+  try {
+    const { downloadMovieCode } = await getCollectionAndDownloadStatus();
+
+    let q = {
+      where: {
+        ...(download === "true" && {
+          movieCode: { in: Array.from(downloadMovieCode) },
+        }),
+        ...(download === "false" && {
+          movieCode: { notIn: Array.from(downloadMovieCode) },
+        }),
+      },
+      include: {
+        MovieInfo: {
+          include: {
+            files: { where: { type: 2 } },
+            actresses: true,
+          },
+        },
+      },
+      skip,
+      take: DEFAULT_PAGE_SIZE,
+      orderBy: { createdTime: "desc" },
+    };
+
+    let [collectionMovies, totalCount] = await Promise.all([
+      prisma.moviesCollection.findMany(q),
+      prisma.moviesCollection.count({ where: q.where }),
+    ]);
+
+    collectionMovies = collectionMovies
+      .filter((x) => x.MovieInfo)
+      .map((x) => ({
+        collectedTime: x.createdTime,
+        ...formatMovie(x.MovieInfo, {
+          collectedMovieCode: new Set([x.movieCode]),
+          downloadMovieCode,
+        }),
+        actresses: x.MovieInfo.actresses.map((actress) => actress.actressName),
+      }));
+
+    return {
+      pagination: getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE),
+      movies: collectionMovies,
+    };
+  } catch (error) {
+    console.log(error);
+    return { error: error.message };
+  }
+}
 
 export async function getMovies({
   page = 1,
