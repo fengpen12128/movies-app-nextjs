@@ -49,7 +49,8 @@ const MoviesCard = ({
           onClick={onClick}
           className="font-suse  text-xl  cursor-pointer hover:underline"
         >
-          {code}
+          {/* {code} */}
+          Temp
         </h4>
 
         <div className="flex items-center  text-sm text-gray-400">
@@ -60,7 +61,7 @@ const MoviesCard = ({
           {releaseDate ? <span>{releaseDate}</span> : "2000-01-01"}
         </div>
 
-        <div className="flex gap-2  ">
+        <div className="flex gap-2 min-h-5 ">
           {collected && <Badge color="crimson">已收藏</Badge>}
           {downloaded && <Badge color="green">已下载</Badge>}
         </div>

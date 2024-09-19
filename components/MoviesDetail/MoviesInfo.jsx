@@ -3,6 +3,8 @@ import { Image } from "@nextui-org/image";
 import { message } from "react-message-popup";
 import { useState } from "react";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
+import { toggleCollection } from "@/app/actions";
+import { usePathname } from "next/navigation";
 
 const MoviesInfo = ({
   code,
@@ -16,6 +18,7 @@ const MoviesInfo = ({
   tags,
   videoFirst,
 }) => {
+  const pathname = usePathname();
   const displayMode = useDisplayMode();
   const [isCollected, setIsCollected] = useState(initialCollected);
   const [isCollecting, setIsCollecting] = useState(false);
@@ -24,27 +27,39 @@ const MoviesInfo = ({
     window.open(`actressMovies/?actressName=${name}`, "_blank");
   };
 
+  //   const toggleCollect = async () => {
+  //     setIsCollecting(true);
+  //     try {
+  //       const resp = await fetch(`/api/movies/collection/save/${code}`);
+  //       const data = await resp.json();
+
+  //       if (resp.status === 500) {
+  //         message.error(data.message, 1000);
+  //         return;
+  //       }
+
+  //       setIsCollected(!isCollected);
+  //       message.success(data.message, 1000);
+  //     } catch (error) {
+  //       message.error("操作失败，请重试", 1000);
+  //     } finally {
+  //       setIsCollecting(false);
+  //     }
+  //   };
+
   const toggleCollect = async () => {
     setIsCollecting(true);
-    try {
-      const resp = await fetch(`/api/movies/collection/save/${code}`);
-      const data = await resp.json();
-
-      if (resp.status === 500) {
-        message.error(data.message, 1000);
-        return;
-      }
-
+    const [isSuccess, msg] = await toggleCollection(code, pathname);
+    if (isSuccess) {
       setIsCollected(!isCollected);
-      message.success(data.message, 1000);
-    } catch (error) {
-      message.error("操作失败，请重试", 1000);
-    } finally {
-      setIsCollecting(false);
+      message.success(msg, 1000);
+    } else {
+      message.error(msg, 1000);
     }
+    setIsCollecting(false);
   };
 
-  const codeSplit = code.split("-");
+  const [prefix, suffix] = code.split("-");
 
   const handlePlay = () => {
     if (!videoFirst) {
@@ -60,18 +75,8 @@ const MoviesInfo = ({
   };
 
   return (
-    <div className="flex p-2 gap-4 mt-5  flex-col  sm:flex-row sm:gap">
-      {/* <img
-        // className="w-1/2 mr-10 object-contain bg-gray-100 dark:bg-gray-800 "
-        className="w-full sm:w-1/2 mr-10 bg-red-600  object-contain  "
-        src={
-          displayMode === "normal"
-            ? coverUrl
-            : process.env.NEXT_PUBLIC_DEMO_IMAGE
-        }
-        alt=""
-      /> */}
-      <div className=" w-full sm:w-[60%] mr-10 flex items-center ">
+    <div className="flex p-2 gap-4 flex-col sm:flex-row">
+      <div className="w-full sm:w-[60%] mr-10 flex items-center">
         <Image
           isBlurred
           alt="preview"
@@ -88,50 +93,49 @@ const MoviesInfo = ({
           <li className="font-suse text-3xl text-secondary">
             <span
               className="hover:underline cursor-pointer"
-              onClick={() => handlePrefixClick(codeSplit[0])}
+              onClick={() => handlePrefixClick(prefix)}
             >
-              {codeSplit[0]}
+              {prefix}
             </span>
-            -{codeSplit[1]}
+            -{suffix}
           </li>
-          <li>
-            <span className="text-gray-500 text-sm">评分：</span>
-            {rate}
-          </li>
-          <li>
-            <span className="text-gray-500 text-sm">评分数：</span>
-            {rateNum}
-          </li>
-          <li>
-            <span className="text-gray-500 text-sm">时长：</span>
-            {duration}
-          </li>
-          <li>
-            <span className="text-gray-500 text-sm">演员：</span>
-            {actresses?.map((item) => (
-              <span
-                key={item.id}
-                onClick={() => handleActressClick(item.actressName)}
-                className="hover:underline cursor-pointer ml-1"
-              >
-                <Badge variant="surface" color="blue">
-                  {item.actressName}
-                </Badge>
-              </span>
-            ))}
-          </li>
-          <li>
-            <span className="text-gray-500 text-sm">发行时间：</span>
-            {new Date(releaseDate)?.toISOString().split("T")[0]}
-          </li>
-          <li>
-            <span className="text-gray-500 text-sm">标签：</span>
-            {tags?.map((item) => (
-              <div key={item.id} className="badge badge-accent">
-                {item.tagName}
-              </div>
-            ))}
-          </li>
+          <InfoItem label="评分" value={rate} />
+          <InfoItem label="评分数" value={rateNum} />
+          <InfoItem label="时长" value={duration} />
+          <InfoItem
+            label="演员"
+            value={
+              <>
+                {actresses?.map((item) => (
+                  <span
+                    key={item.id}
+                    onClick={() => handleActressClick(item.actressName)}
+                    className="hover:underline cursor-pointer ml-1"
+                  >
+                    <Badge variant="surface" color="blue">
+                      {item.actressName}
+                    </Badge>
+                  </span>
+                ))}
+              </>
+            }
+          />
+          <InfoItem
+            label="发行时间"
+            value={new Date(releaseDate)?.toISOString().split("T")[0]}
+          />
+          <InfoItem
+            label="标签"
+            value={
+              <>
+                {tags?.map((item) => (
+                  <div key={item.id} className="badge badge-accent">
+                    {item.tagName}
+                  </div>
+                ))}
+              </>
+            }
+          />
         </ul>
         <div className="flex space-x-2 ml-0 sm:ml-10 mt-4 sm:mt-12">
           <Button
@@ -156,5 +160,12 @@ const MoviesInfo = ({
     </div>
   );
 };
+
+const InfoItem = ({ label, value }) => (
+  <li>
+    <span className="text-gray-500 text-sm">{label}：</span>
+    {value}
+  </li>
+);
 
 export default MoviesInfo;

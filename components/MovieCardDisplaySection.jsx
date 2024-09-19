@@ -53,7 +53,7 @@ const CommonCardSection = ({ movies = [] }) => {
     setClickMovie(code);
   };
 
-  const colClassDia = `grid mt-8 gap-5 grid-cols-1 sm:grid-cols-4`;
+  const colClassDia = `grid mt-4 gap-5 grid-cols-1 sm:grid-cols-4`;
 
   return (
     <>
@@ -70,7 +70,6 @@ const CommonCardSection = ({ movies = [] }) => {
             key={x.id}
             {...x}
             coverUrl={`${process.env.NEXT_PUBLIC_MINIO_PATH}/${x.coverUrl}`}
-
           ></MoviesCard>
         ))}
       </section>

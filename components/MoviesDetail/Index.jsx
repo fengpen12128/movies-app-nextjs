@@ -43,6 +43,9 @@ const Index = ({ code: initialCode }) => {
       </div>
     );
   }
+  if (!movies) {
+    return <div>No movie selected</div>;
+  }
 
   const { actresses, magnetLinks, files, videoResource } = movies;
 

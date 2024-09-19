@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "next dev -H 0.0.0.0",
+        "dev": "next dev",
         "build": "next build",
         "start": "next start",
         "lint": "next lint"
@@ -32,6 +32,8 @@
         "react-message-popup": "^2.0.0-alpha.0",
         "react-photo-view": "^1.2.6",
         "redis": "^4.7.0",
+        "server-only": "^0.0.1",
+        "sharp": "^0.33.5",
         "xgplayer-react": "^2.4.0"
     },
     "devDependencies": {

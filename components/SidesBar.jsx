@@ -13,7 +13,7 @@ export default function SidesBar() {
     {
       title: "首页",
       icon: "home",
-      path: "/",
+      path: "/home",
     },
     {
       title: "我的收藏",
@@ -48,7 +48,9 @@ export default function SidesBar() {
                 key={title}
                 draggable={false}
                 onClick={() => {
-                  router.push(path);
+                  if (pathname !== path) {
+                    router.push(path);
+                  }
                 }}
               >
                 <div>
