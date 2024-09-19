@@ -4,12 +4,41 @@ import prisma from "@/app/lib/prisma";
 import { revalidatePath } from "next/cache";
 import dayjs from "dayjs";
 
-import {
-  DEFAULT_PAGE_SIZE,
-  getCollectionAndDownloadStatus,
-  formatMovie,
-  getPaginationData,
-} from "./utils";
+const getCollectionAndDownloadStatus = async () => {
+  const [downloadMovies, collectedMovies] = await Promise.all([
+    prisma.MoviesVideoResource.findMany({ select: { movieCode: true } }),
+    prisma.MoviesCollection.findMany({ select: { movieCode: true } }),
+  ]);
+
+  const collectedMovieCode = new Set(
+    collectedMovies.map((item) => item.movieCode)
+  );
+  const downloadMovieCode = new Set(
+    downloadMovies.map((item) => item.movieCode)
+  );
+
+  return { collectedMovieCode, downloadMovieCode };
+};
+
+const formatMovie = (movie, { collectedMovieCode, downloadMovieCode }) => {
+  const formattedMovie = {
+    ...movie,
+    coverUrl: movie.files?.find((file) => file.type === 2)?.path || "",
+    releaseDate: dayjs(movie.releaseDate).format("YYYY-MM-DD"),
+    collected: collectedMovieCode.has(movie.code),
+    downloaded: downloadMovieCode.has(movie.code),
+    rate: String(movie.rate),
+  };
+  delete formattedMovie.files;
+  return formattedMovie;
+};
+
+const getPaginationData = (totalCount, page, limit) => ({
+  totalCount,
+  current: page,
+  pageSize: limit,
+  totalPage: Math.ceil(totalCount / limit),
+});
 
 export async function getMovies({
   page = 1,
@@ -17,6 +46,7 @@ export async function getMovies({
   prefix,
   actressName,
 }) {
+  const DEFAULT_PAGE_SIZE = 50;
   try {
     const skip = (page - 1) * DEFAULT_PAGE_SIZE;
     let moviesQuery = {
