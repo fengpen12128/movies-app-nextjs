@@ -49,7 +49,7 @@ const MoviesCard = ({
           onClick={onClick}
           className="font-suse  text-xl  cursor-pointer hover:underline"
         >
-          {/* {code} */}
+          {code}
           Temp
         </h4>
 
