@@ -1,8 +1,20 @@
 import prisma from "@/utils/prisma";
-import { DEFAULT_PAGE_SIZE, getCollectionAndDownloadStatus, formatMovie, getPaginationData } from "./utils";
+import {
+  DEFAULT_PAGE_SIZE,
+  getCollectionAndDownloadStatus,
+  formatMovie,
+  getPaginationData,
+} from "./utils";
 
 export const POST = async (request) => {
-  const { search, page = 1, limit = DEFAULT_PAGE_SIZE, prefix, actressName } = await request.json();
+  const {
+    search,
+    page = 1,
+    limit = DEFAULT_PAGE_SIZE,
+    prefix,
+    actressName,
+  } = await request.json();
+  console.log("page", page);
 
   try {
     const skip = (page - 1) * limit;
@@ -14,12 +26,22 @@ export const POST = async (request) => {
         ...(search && {
           OR: [
             { code: { contains: search, mode: "insensitive" } },
-            { actresses: { some: { actressName: { contains: search, mode: "insensitive" } } } },
+            {
+              actresses: {
+                some: {
+                  actressName: { contains: search, mode: "insensitive" },
+                },
+              },
+            },
           ],
         }),
         ...(prefix && { prefix }),
         ...(actressName && {
-          actresses: { some: { actressName: { contains: actressName, mode: "insensitive" } } },
+          actresses: {
+            some: {
+              actressName: { contains: actressName, mode: "insensitive" },
+            },
+          },
         }),
       },
       include: {
@@ -33,16 +55,25 @@ export const POST = async (request) => {
       prisma.moviesInfo.count({ where: moviesQuery.where }),
     ]);
 
-    const { collectedMovieCode, downloadMovieCode } = await getCollectionAndDownloadStatus();
+    const { collectedMovieCode, downloadMovieCode } =
+      await getCollectionAndDownloadStatus();
 
-    const formattedMovies = movies.map(movie => formatMovie(movie, { collectedMovieCode, downloadMovieCode }));
+    const formattedMovies = movies.map((movie) =>
+      formatMovie(movie, { collectedMovieCode, downloadMovieCode })
+    );
 
-    return Response.json({
-      movies: formattedMovies,
-      pagination: getPaginationData(totalCount, page, limit),
-    }, { status: 200 });
+    return Response.json(
+      {
+        movies: formattedMovies,
+        pagination: getPaginationData(totalCount, page, limit),
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error fetching movies:", error);
-    return Response.json({ error: `Failed to load movies: ${error.message}` }, { status: 500 });
+    return Response.json(
+      { error: `Failed to load movies: ${error.message}` },
+      { status: 500 }
+    );
   }
 };

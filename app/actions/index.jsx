@@ -4,6 +4,74 @@ import prisma from "@/app/lib/prisma";
 import { revalidatePath } from "next/cache";
 import dayjs from "dayjs";
 
+import {
+  DEFAULT_PAGE_SIZE,
+  getCollectionAndDownloadStatus,
+  formatMovie,
+  getPaginationData,
+} from "./utils";
+
+export async function getMovies({
+  page = 1,
+  searchKeyword,
+  prefix,
+  actressName,
+}) {
+  try {
+    const skip = (page - 1) * DEFAULT_PAGE_SIZE;
+    let moviesQuery = {
+      skip,
+      take: DEFAULT_PAGE_SIZE,
+      orderBy: { releaseDate: "desc" },
+      where: {
+        ...(searchKeyword && {
+          OR: [
+            { code: { contains: searchKeyword, mode: "insensitive" } },
+            {
+              actresses: {
+                some: {
+                  actressName: { contains: searchKeyword, mode: "insensitive" },
+                },
+              },
+            },
+          ],
+        }),
+        ...(prefix && { prefix }),
+        ...(actressName && {
+          actresses: {
+            some: {
+              actressName: { contains: actressName, mode: "insensitive" },
+            },
+          },
+        }),
+      },
+      include: {
+        tags: true,
+        files: { where: { type: 2 } },
+      },
+    };
+
+    const [movies, totalCount] = await Promise.all([
+      prisma.moviesInfo.findMany(moviesQuery),
+      prisma.moviesInfo.count({ where: moviesQuery.where }),
+    ]);
+
+    const { collectedMovieCode, downloadMovieCode } =
+      await getCollectionAndDownloadStatus();
+
+    const formattedMovies = movies.map((movie) =>
+      formatMovie(movie, { collectedMovieCode, downloadMovieCode })
+    );
+
+    return {
+      movies: formattedMovies,
+      pagination: getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE),
+    };
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+  }
+}
+
 export async function getDownloadMovies(page = 1, collected) {
   try {
     const pageSize = 50;

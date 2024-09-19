@@ -1,17 +1,16 @@
 // import { useRequest } from "ahooks";
 import MyPagination from "@/components/MyPagination";
 import CommonCardSection from "@/components/MovieCardDisplaySection";
+import { getMovies } from "../actions";
 
 const HomeContent = async ({ page, search }) => {
-  const resp = await fetch(`http://localhost:3000/api/movies`, {
-    method: "POST",
-    body: JSON.stringify({ page, search }),
+  const { movies, pagination } = await getMovies({
+    page,
+    searchKeyword: search,
   });
-  const data = await resp.json();
-  const { pagination = {} } = data;
   return (
     <>
-      <CommonCardSection movies={data?.movies || []} />
+      <CommonCardSection movies={movies || []} />
       {pagination && <MyPagination {...pagination} />}
     </>
   );
