@@ -3,7 +3,8 @@
 import { useState } from "react";
 import MoviesCard from "@/components/MoviesCard";
 import { Card } from "@radix-ui/themes";
-import MovieDetailView from "@/components/MovieDetailView";
+import MoviesDetail from "@/components/MoviesDetail";
+import MoviesPreviewModal from "@/components/MoviesPreviewModal";
 
 export default function MoviesStack({ moviesList = [], actress = "" }) {
   const [open, setOpen] = useState(false);
@@ -23,11 +24,9 @@ export default function MoviesStack({ moviesList = [], actress = "" }) {
 
   return (
     <>
-      <MovieDetailView
-        open={openDetail}
-        setOpen={setOpenDetail}
-        clickedMovie={clickMovie}
-      />
+      <MoviesPreviewModal open={openDetail} setOpen={setOpenDetail}>
+        {open && <MoviesDetail code={clickMovie} />}
+      </MoviesPreviewModal>
 
       <div onClick={() => setOpen(true)} className="relative h-[350px]">
         {moviesList.slice(0, 3).map((x, index) => (
@@ -52,7 +51,7 @@ export default function MoviesStack({ moviesList = [], actress = "" }) {
         style={{ display: open ? "flex" : "none" }}
       >
         <Card
-          className="w-full sm:w-2/3    "
+          className="w-full sm:w-2/3"
           onClick={(e) => e.stopPropagation()}
         >
           <h1 className="pb-3 text-xl font-ma">{actress}</h1>

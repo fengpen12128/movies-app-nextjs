@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import MoviesCard from "./MoviesCard";
-import MovieDetailView from "./MovieDetailView";
 import MoviesStack from "./MoivesStack";
+// import MoviesPreviewModal from "./MoviesPreviewModal";
+// import MoviesDetail from "./MoviesDetail/MoviesDetail";
+
 export const StackArrange = ({ movies = [] }) => {
   const [open, setOpen] = useState(false);
   const [clickedMovie, setClickedMovie] = useState(null);
@@ -36,11 +38,9 @@ export const StackArrange = ({ movies = [] }) => {
         )}
       </section>
 
-      <MovieDetailView
-        open={open}
-        setOpen={setOpen}
-        clickedMovie={clickedMovie}
-      />
+      <MoviesPreviewModal open={open} setOpen={setOpen}>
+        {open && <MoviesDetail code={clickedMovie} />}
+      </MoviesPreviewModal>
     </>
   );
 };
@@ -57,11 +57,9 @@ const CommonCardSection = ({ movies = [] }) => {
 
   return (
     <>
-      <MovieDetailView
-        open={open}
-        setOpen={setOpen}
-        clickedMovie={clickedMovie}
-      />
+      <MoviesPreviewModal open={open} setOpen={setOpen}>
+        {open && <MoviesDetail code={clickedMovie} />}
+      </MoviesPreviewModal>
 
       <section className={colClassDia}>
         {movies.map((x) => (

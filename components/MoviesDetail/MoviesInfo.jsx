@@ -24,7 +24,7 @@ const MoviesInfo = ({
   const [isCollecting, setIsCollecting] = useState(false);
 
   const handleActressClick = (name) => {
-    window.open(`actressMovies/?actressName=${name}`, "_blank");
+    window.open(`actressMovies/?name=${name}`, "_blank");
   };
 
   //   const toggleCollect = async () => {

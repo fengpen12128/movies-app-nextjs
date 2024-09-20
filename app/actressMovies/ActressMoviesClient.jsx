@@ -1,17 +1,21 @@
 import MyPagination from "@/components/MyPagination";
 import CommonCardSection from "@/components/MovieCardDisplaySection";
+import { getMoviesByActress } from "../actions";
 
-export default async function ActressMoviesClient({ page, actressName }) {
-  const resp = await fetch(`http://localhost:3000/api/movies/actressRel/all`, {
-    method: "POST",
-    body: JSON.stringify({ page, actressName }),
+export default async function ActressMoviesClient({ page, name }) {
+  const data = await getMoviesByActress({
+    page,
+    name,
   });
-  const data = await resp.json();
 
+  if (data.error) {
+    return <div>{data.error}</div>;
+  }
+  const { movies, pagination } = data;
   return (
     <>
-      <CommonCardSection movies={data?.movies || []} />
-      <MyPagination {...data?.pagination} />
+      <CommonCardSection movies={movies || []} />
+      <MyPagination {...pagination} />
     </>
   );
 }

@@ -42,7 +42,144 @@ const getPaginationData = (totalCount, page, limit) => ({
   totalPage: Math.ceil(totalCount / limit),
 });
 
-export async function getCollectionMovies({ page = 1, download }) {
+// 根据 category 数组的每个元素进行分组
+const groupByActress = (arr, key) => {
+  return arr.reduce((result, item) => {
+    // 遍历 category 数组的每个值
+
+    item[key].forEach((category) => {
+      // 如果 result 中还没有该 category 的分组，则初始化为一个空数组
+      if (!result[category]) {
+        result[category] = [];
+      }
+
+      // 将当前对象放入对应的分组
+      result[category].push(item);
+    });
+
+    return result;
+  }, {});
+};
+
+const createStack = (collectionMovies) => {
+  // 提取actresses数量大于2 的不参与stack
+  let multiActresses = collectionMovies
+    .filter((x) => x.actresses.length > 2)
+    .map((x) => ({
+      actress: "",
+      movies: [x],
+    }));
+
+  collectionMovies = collectionMovies.filter((x) => x.actresses.length <= 2);
+
+  const groupedData = groupByActress(collectionMovies, "actresses");
+
+  // stack 中的movies 收藏时间排序
+  let p = Object.keys(groupedData).map((x) => ({
+    actress: x,
+    movies:
+      groupedData[x].length > 1
+        ? groupedData[x].sort(
+            (a, b) => new Date(b.collectedTime) - new Date(a.collectedTime)
+          )
+        : groupedData[x],
+  }));
+
+  // 将 单个movies 也转化成数组形式
+  let single = p
+    .filter((x) => x.movies.length === 1)
+    .map((x) => x.movies[0])
+    .filter(
+      (movie, index, self) =>
+        index === self.findIndex((t) => t.code === movie.code)
+    )
+    .map((x) => ({
+      actress: "",
+      movies: [x],
+    }));
+
+  // 合并
+  let result = [
+    ...single,
+    ...p.filter((x) => x.movies.length > 1),
+    ...multiActresses,
+  ].sort(
+    (a, b) =>
+      new Date(b.movies[0].collectedTime) - new Date(a.movies[0].collectedTime)
+  );
+
+  return result;
+};
+
+export async function getMoviesByActress({ page = 1, name }) {
+  const skip = (page - 1) * DEFAULT_PAGE_SIZE;
+
+  let q = {
+    where: {
+      actresses: {
+        some: {
+          actressName: {
+            in: [name],
+          },
+        },
+      },
+    },
+    select: {
+      id: true,
+      code: true,
+      releaseDate: true,
+      rate: true,
+      rateNum: true,
+      files: {
+        where: {
+          type: 2,
+        },
+        select: {
+          path: true,
+        },
+      },
+    },
+    skip,
+    take: DEFAULT_PAGE_SIZE,
+    orderBy: {
+      releaseDate: "desc",
+    },
+  };
+  try {
+    const [actressRel, totalCount] = await Promise.all([
+      prisma.moviesInfo.findMany(q),
+      prisma.moviesInfo.count({ where: q.where }),
+    ]);
+
+    const formattedActressRel = actressRel.map((movie) => ({
+      id: movie.id,
+      code: movie.code,
+      releaseDate: dayjs(movie.releaseDate).format("YYYY-MM-DD"),
+      rate: String(movie.rate),
+      rateNum: movie.rateNum,
+      coverUrl: movie.files[0]?.path || "",
+    }));
+
+    return {
+      pagination: {
+        totalCount,
+        current: page,
+        pageSize: DEFAULT_PAGE_SIZE,
+        totalPage: Math.ceil(totalCount / DEFAULT_PAGE_SIZE),
+      },
+      movies: formattedActressRel,
+    };
+  } catch (error) {
+    console.error("Error fetching actress related movies:", error);
+    return { error: error.message };
+  }
+}
+
+export async function getCollectionMovies({
+  page = 1,
+  download,
+  isStack = false,
+}) {
   const skip = (page - 1) * DEFAULT_PAGE_SIZE;
 
   try {
@@ -85,6 +222,12 @@ export async function getCollectionMovies({ page = 1, download }) {
         }),
         actresses: x.MovieInfo.actresses.map((actress) => actress.actressName),
       }));
+
+    if (isStack) {
+      return {
+        movies: createStack(collectionMovies),
+      };
+    }
 
     return {
       pagination: getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE),
