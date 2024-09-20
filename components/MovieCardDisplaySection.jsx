@@ -3,8 +3,8 @@
 import { useState } from "react";
 import MoviesCard from "./MoviesCard";
 import MoviesStack from "./MoivesStack";
-// import MoviesPreviewModal from "./MoviesPreviewModal";
-// import MoviesDetail from "./MoviesDetail/MoviesDetail";
+import MoviesPreviewModal from "./MoviesPreviewModal";
+import MoviesDetail from "./MoviesDetail/MoviesDetail";
 
 export const StackArrange = ({ movies = [] }) => {
   const [open, setOpen] = useState(false);
