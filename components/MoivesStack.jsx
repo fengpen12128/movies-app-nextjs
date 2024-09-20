@@ -3,7 +3,7 @@
 import { useState } from "react";
 import MoviesCard from "@/components/MoviesCard";
 import { Card } from "@radix-ui/themes";
-import MoviesDetail from "@/components/MoviesDetail";
+import MoviesDetail from "@/components/MoviesDetail/MoviesDetail";
 import MoviesPreviewModal from "@/components/MoviesPreviewModal";
 
 export default function MoviesStack({ moviesList = [], actress = "" }) {
@@ -50,10 +50,7 @@ export default function MoviesStack({ moviesList = [], actress = "" }) {
         className="no-scrollbar fixed inset-0 bg-black bg-opacity-60 h-screen w-screen flex items-center justify-center z-40"
         style={{ display: open ? "flex" : "none" }}
       >
-        <Card
-          className="w-full sm:w-2/3"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <Card className="w-full sm:w-2/3" onClick={(e) => e.stopPropagation()}>
           <h1 className="pb-3 text-xl font-ma">{actress}</h1>
           <div className="max-h-[75vh]  overflow-y-auto no-scrollbar">
             <div className="grid grid-cols-1  gap-4 sm:grid-cols-3">
