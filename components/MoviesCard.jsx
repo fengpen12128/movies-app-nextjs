@@ -5,6 +5,7 @@ import { useLocalStorageState } from "ahooks";
 import getGlobalSettings from "@/app/globalSetting";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import dayjs from "dayjs";
 
 const MoviesCard = ({
   code,
@@ -15,6 +16,7 @@ const MoviesCard = ({
   downloaded = false,
   coverUrl,
   onClick,
+  createdTime,
 }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [globalSettings] = useLocalStorageState("GlobalSettings", {
@@ -30,6 +32,14 @@ const MoviesCard = ({
       mode === "normal" ? coverUrl : process.env.NEXT_PUBLIC_DEMO_IMAGE;
     setImageUrl(imageUrl);
   }, [mode]);
+
+  const isNewThisWeek = () => {
+    if (!createdTime || !dayjs(createdTime).isValid()) return false;
+    const createdDate = dayjs(createdTime);
+    const threeDaysLater = createdDate.add(3, "day");
+    const currentDate = dayjs();
+    return threeDaysLater.isAfter(currentDate);
+  };
 
   return (
     <Card>
@@ -66,6 +76,7 @@ const MoviesCard = ({
         </div>
 
         <div className="flex gap-2 min-h-5">
+          {isNewThisWeek() && <Badge color="green">本周新片</Badge>}
           {collected && <Badge color="crimson">已收藏</Badge>}
           {downloaded && <Badge color="green">已下载</Badge>}
         </div>

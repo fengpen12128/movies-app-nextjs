@@ -10,10 +10,12 @@ const MoviesPreviewModal = ({ open, setOpen, children }) => {
       style={{ display: open ? "flex" : "none" }}
     >
       <Card
-        className="w-[98%] sm:w-1/2 h-[80vh] sm:h-[95vh] overflow-hidden"
+        className=" sm:w-1/2 h-[80vh] sm:h-[95vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="h-full overflow-y-auto no-scrollbar">{children}</div>
+        <div className="w-[98%] sm:w-full h-full overflow-y-auto no-scrollbar">
+          {children}
+        </div>
       </Card>
     </div>
   );
