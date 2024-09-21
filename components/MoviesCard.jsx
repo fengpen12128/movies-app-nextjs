@@ -49,27 +49,12 @@ const MoviesCard = ({
           <div className="min-h-[250px]"></div>
         )}
       </Inset>
-
-      {/* <Inset clip="padding-box" side="top" pb="current">
-        <Image
-          alt="preview"
-          onClick={onClick}
-          width={400}
-          loading="eager"
-          height={270}
-          priority
-          src={imageUrl}
-          className="cursor-pointer object-contain"
-        />
-      </Inset> */}
-
-      <div className="flex flex-col items-start gap-2">
+      <div className="  flex flex-col items-start gap-2 min-h-[84px]">
         <h4
           onClick={onClick}
           className="font-suse text-xl cursor-pointer hover:underline"
         >
           {code}
-          {/* Temp {JSON.stringify(globalSettings?.displayMode)} */}
         </h4>
 
         <div className="flex items-center text-sm text-gray-400">
