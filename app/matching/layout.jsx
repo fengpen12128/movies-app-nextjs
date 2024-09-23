@@ -1,4 +1,6 @@
-import SidesBar from "@/components/SidesBar";
+export const metadata = {
+  title: "资源匹配",
+};
 
 export default function CollectionLayout({ children }) {
   return (

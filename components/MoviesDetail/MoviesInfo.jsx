@@ -22,30 +22,13 @@ const MoviesInfo = ({
   const displayMode = useDisplayMode();
   const [isCollected, setIsCollected] = useState(initialCollected);
   const [isCollecting, setIsCollecting] = useState(false);
+  const [open, setOpen] = useState(false);
+  coverUrl =
+    displayMode === "normal" ? coverUrl : process.env.NEXT_PUBLIC_DEMO_IMAGE;
 
   const handleActressClick = (name) => {
     window.open(`actressMovies/?name=${name}`, "_blank");
   };
-
-  //   const toggleCollect = async () => {
-  //     setIsCollecting(true);
-  //     try {
-  //       const resp = await fetch(`/api/movies/collection/save/${code}`);
-  //       const data = await resp.json();
-
-  //       if (resp.status === 500) {
-  //         message.error(data.message, 1000);
-  //         return;
-  //       }
-
-  //       setIsCollected(!isCollected);
-  //       message.success(data.message, 1000);
-  //     } catch (error) {
-  //       message.error("操作失败，请重试", 1000);
-  //     } finally {
-  //       setIsCollecting(false);
-  //     }
-  //   };
 
   const toggleCollect = async () => {
     setIsCollecting(true);
@@ -80,11 +63,10 @@ const MoviesInfo = ({
         <Image
           isBlurred
           alt="preview"
-          src={
-            displayMode === "normal"
-              ? coverUrl
-              : process.env.NEXT_PUBLIC_DEMO_IMAGE
-          }
+          src={coverUrl}
+          onClick={() => {
+            setOpen(true);
+          }}
         />
       </div>
 

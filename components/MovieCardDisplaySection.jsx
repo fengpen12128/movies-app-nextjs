@@ -33,6 +33,7 @@ export const StackArrange = ({ movies = [] }) => {
               key={x.movies[0].id}
               moviesList={x.movies}
               actress={x.actress}
+              handleClickMoviesCard={handleClickMoviesCard}
             />
           )
         )}

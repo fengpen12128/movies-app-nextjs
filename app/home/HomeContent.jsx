@@ -1,4 +1,3 @@
-// import { useRequest } from "ahooks";
 import MyPagination from "@/components/MyPagination";
 import CommonCardSection from "@/components/MovieCardDisplaySection";
 import { getMovies } from "../actions";

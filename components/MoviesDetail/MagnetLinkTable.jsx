@@ -1,4 +1,4 @@
-import { IconButton, Table } from "@radix-ui/themes";
+import { IconButton, Table, Text, Flex } from "@radix-ui/themes";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { message } from "react-message-popup";
 import { CopyIcon } from "@radix-ui/react-icons";
@@ -15,16 +15,16 @@ export default function MagnetLinkTable({ links = [] }) {
         <Table.Root variant="surface">
           <Table.Header>
             <Table.Row align="center">
-              <Table.ColumnHeaderCell>链接名称</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>大小</Table.ColumnHeaderCell>
-              <Table.ColumnHeaderCell>添加时间</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell justify='center'>链接名称</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell justify='center'>大小</Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell justify='center'>添加时间</Table.ColumnHeaderCell>
             </Table.Row>
           </Table.Header>
 
           <Table.Body className="overflow-x-auto">
             {links.map((link, index) => (
               <Table.Row key={index}>
-                <Table.RowHeaderCell>
+                <Table.RowHeaderCell width={'50%'} maxWidth={'250px'}>
                   <div className="flex items-center space-x-2 overflow-hidden">
                     <a
                       className="hover:underline truncate"
@@ -50,10 +50,10 @@ export default function MagnetLinkTable({ links = [] }) {
                     </CopyToClipboard>
                   </div>
                 </Table.RowHeaderCell>
-                <Table.Cell className="whitespace-nowrap">
+                <Table.Cell width={'25%'} justify='center' className="whitespace-nowrap">
                   {link.size}
                 </Table.Cell>
-                <Table.Cell className="whitespace-nowrap">
+                <Table.Cell width={'25%'} justify='center' className="whitespace-nowrap">
                   {link.uploadTime}
                 </Table.Cell>
               </Table.Row>

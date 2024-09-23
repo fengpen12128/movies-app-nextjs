@@ -111,6 +111,73 @@ const createStack = (collectionMovies) => {
   return result;
 };
 
+export async function deleteActressFav(name) {
+  try {
+    await prisma.actressFav.delete({
+      where: {
+        actressName: name,
+      },
+    });
+    revalidatePath("/actressFav");
+    return [true, "删除成功"];
+  } catch (error) {
+    console.log(error);
+    return [false, "删除失败"];
+  }
+}
+
+export async function saveActressFav(name) {
+  try {
+    const existingFav = await prisma.actressFav.findUnique({
+      where: {
+        actressName: name,
+      },
+    });
+
+    if (existingFav) {
+      return [false, "已收藏"];
+    }
+    await prisma.actressFav.create({
+      data: {
+        actressName: name,
+      },
+    });
+    revalidatePath("/actressFav");
+
+    return [true, "收藏成功"];
+  } catch (error) {
+    console.log(error);
+    return [false, "收藏失败"];
+  }
+}
+
+export async function getActressFavList({ page = 1 }) {
+  const skip = (page - 1) * DEFAULT_PAGE_SIZE;
+
+  try {
+    let q = {
+      skip,
+      take: DEFAULT_PAGE_SIZE,
+      orderBy: {
+        createdTime: "desc",
+      },
+    };
+
+    const [actressFav, totalCount] = await Promise.all([
+      prisma.actressFav.findMany(q),
+      prisma.actressFav.count(),
+    ]);
+
+    return {
+      pagination: getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE),
+      favActresses: actressFav,
+    };
+  } catch (error) {
+    console.log(error);
+    return { error: error.message };
+  }
+}
+
 export async function getMoviesByActress({ page = 1, name }) {
   const skip = (page - 1) * DEFAULT_PAGE_SIZE;
 

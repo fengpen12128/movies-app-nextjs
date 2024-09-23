@@ -23,7 +23,10 @@ const MoviesPreview = ({ mediaUrls = [] }) => {
   }, []);
 
   const videoUrl = mediaUrls.find((x) => x.type == 3);
-  const coverUrl = mediaUrls.find((x) => x.type == 2)?.path;
+  const coverUrl =
+    displayMode === "normal"
+      ? mediaUrls.find((x) => x.type == 2)?.path
+      : process.env.NEXT_PUBLIC_DEMO_IMAGE;
   const introUrls = mediaUrls
     .filter((x) => x.type == 1)
     .map((x) => ({

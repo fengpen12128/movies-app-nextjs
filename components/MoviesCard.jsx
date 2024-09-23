@@ -4,7 +4,7 @@ import { Card, Inset, Badge } from "@radix-ui/themes";
 import { useLocalStorageState } from "ahooks";
 import getGlobalSettings from "@/app/globalSetting";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import dayjs from "dayjs";
 
 const MoviesCard = ({
@@ -33,13 +33,13 @@ const MoviesCard = ({
     setImageUrl(imageUrl);
   }, [mode]);
 
-  const isNewThisWeek = () => {
+  const isNewThisWeek = useMemo(() => {
     if (!createdTime || !dayjs(createdTime).isValid()) return false;
     const createdDate = dayjs(createdTime);
     const threeDaysLater = createdDate.add(3, "day");
     const currentDate = dayjs();
     return threeDaysLater.isAfter(currentDate);
-  };
+  }, [createdTime]);
 
   return (
     <Card>
@@ -76,7 +76,7 @@ const MoviesCard = ({
         </div>
 
         <div className="flex gap-2 min-h-5">
-          {isNewThisWeek() && <Badge color="green">本周新片</Badge>}
+          {isNewThisWeek && <Badge color="blue">本周新片</Badge>}
           {collected && <Badge color="crimson">已收藏</Badge>}
           {downloaded && <Badge color="green">已下载</Badge>}
         </div>

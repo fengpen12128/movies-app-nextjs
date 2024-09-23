@@ -4,10 +4,10 @@ import { MdFavorite } from "react-icons/md";
 import { AiFillHome } from "react-icons/ai";
 import { IoDownload } from "react-icons/io5";
 import { GoFileDirectoryFill } from "react-icons/go";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function SidesBar() {
-  const router = useRouter();
   const pathname = usePathname();
   const list = [
     {
@@ -20,6 +20,12 @@ export default function SidesBar() {
       icon: "favorites",
       active: false,
       path: "/collection",
+    },
+    {
+      title: "收藏演员",
+      icon: "favorites",
+      active: false,
+      path: "/actressFav",
     },
     {
       title: "已下载",
@@ -43,15 +49,10 @@ export default function SidesBar() {
               pathname === path || (path === "/" && pathname === "/home");
 
             return (
-              <div
+              <Link
+                href={path}
                 className={isActive ? "active sidebar__item" : "sidebar__item"}
                 key={title}
-                draggable={false}
-                onClick={() => {
-                  if (pathname !== path) {
-                    router.push(path);
-                  }
-                }}
               >
                 <div>
                   {icon === "home" && <AiFillHome />}
@@ -59,8 +60,8 @@ export default function SidesBar() {
                   {icon === "download" && <IoDownload />}
                   {icon === "match" && <GoFileDirectoryFill />}
                 </div>
-                <div className="font-ma sidebar__title">{title}</div>
-              </div>
+                <p className="font-ma sidebar__title">{title}</p>
+              </Link>
             );
           })}
         </div>
