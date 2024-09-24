@@ -22,6 +22,7 @@ const getCollectionAndDownloadStatus = async () => {
   return { collectedMovieCode, downloadMovieCode };
 };
 
+
 const formatMovie = (movie, { collectedMovieCode, downloadMovieCode }) => {
   const formattedMovie = {
     ...movie,
