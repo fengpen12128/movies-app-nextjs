@@ -3,7 +3,7 @@
 import { Button, Card, TextField } from "@radix-ui/themes";
 import { useRequest } from "ahooks";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import GlobalSettings from "@/components/settings/GlobalSettings";
 import _ from "lodash";
@@ -16,6 +16,7 @@ export default function SearchBar() {
   const [filterOptions, setFilterOptions] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
   const [expandedOptions, setExpandedOptions] = useState({});
+  const optionsRefs = useRef({});
 
   useRequest(
     async () => {
@@ -79,6 +80,11 @@ export default function SearchBar() {
     }));
   };
 
+  const shouldShowExpandButton = (title) => {
+    const ref = optionsRefs.current[title];
+    return ref && ref.scrollHeight > 35;
+  };
+
   return (
     <Card className="mt-10 mb-5 relative" size="4">
       <div className="absolute right-0 top-0 p-4 ">
@@ -117,16 +123,19 @@ export default function SearchBar() {
                 <label className="font-suse text-xl font-bold text-gray-300 mr-2">
                   {_.capitalize(x.title)}
                 </label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => toggleOptions(x.title)}
-                >
-                  {expandedOptions[x.title] ? "Show Less" : "Show More"}
-                  {expandedOptions[x.title] ? <ChevronUpIcon /> : <ChevronDownIcon />}
-                </Button>
+                {shouldShowExpandButton(x.title) && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => toggleOptions(x.title)}
+                  >
+                    {expandedOptions[x.title] ? "Show Less" : "Show More"}
+                    {expandedOptions[x.title] ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                  </Button>
+                )}
               </div>
               <div
+                ref={el => optionsRefs.current[x.title] = el}
                 className="flex flex-wrap gap-3 transition-all duration-300 ease-in-out"
                 style={{
                   maxHeight: expandedOptions[x.title] ? "1000px" : "35px",

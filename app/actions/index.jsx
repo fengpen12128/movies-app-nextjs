@@ -161,6 +161,13 @@ export async function getActressFavList({ page = 1 }) {
       orderBy: {
         createdTime: "desc",
       },
+      include: {
+        Actress: {
+          select: {
+            avatarBase64: true,
+          },
+        },
+      },
     };
 
     const [actressFav, totalCount] = await Promise.all([
@@ -168,9 +175,16 @@ export async function getActressFavList({ page = 1 }) {
       prisma.actressFav.count(),
     ]);
 
+    const handledActressFav = actressFav.map((x) => ({
+      id: x.id,
+      actressName: x.actressName,
+      createdTime: x.createdTime,
+      avatarBase64: x.Actress.avatarBase64,
+    }));
+
     return {
       pagination: getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE),
-      favActresses: actressFav,
+      favActresses: handledActressFav,
     };
   } catch (error) {
     console.log(error);
@@ -311,6 +325,8 @@ export async function getMovies({
   searchKeyword,
   prefix,
   actressName,
+  years,
+  tags,
 }) {
   const DEFAULT_PAGE_SIZE = 50;
   try {
@@ -337,6 +353,14 @@ export async function getMovies({
           actresses: {
             some: {
               actressName: { contains: actressName, mode: "insensitive" },
+            },
+          },
+        }),
+        ...(years && { releaseYear: Number(years) }),
+        ...(tags && {
+          tags: {
+            some: {
+              tagName: { contains: tags, mode: "insensitive" },
             },
           },
         }),

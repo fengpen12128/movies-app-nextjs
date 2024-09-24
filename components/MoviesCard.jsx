@@ -17,6 +17,7 @@ const MoviesCard = ({
   coverUrl,
   onClick,
   createdTime,
+  tags,
 }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [globalSettings] = useLocalStorageState("GlobalSettings", {
@@ -59,7 +60,7 @@ const MoviesCard = ({
           <div className="min-h-[250px]"></div>
         )}
       </Inset>
-      <div className="  flex flex-col items-start gap-2 min-h-[84px]">
+      <div className="flex flex-col items-start gap-2 min-h-[84px]">
         <h4
           onClick={onClick}
           className="font-suse text-xl cursor-pointer hover:underline"
@@ -79,6 +80,11 @@ const MoviesCard = ({
           {isNewThisWeek && <Badge color="blue">本周新片</Badge>}
           {collected && <Badge color="crimson">已收藏</Badge>}
           {downloaded && <Badge color="green">已下载</Badge>}
+          {tags?.map((tag) => (
+            <Badge key={tag} color="blue">
+              {tag.tagName}
+            </Badge>
+          ))}
         </div>
       </div>
     </Card>

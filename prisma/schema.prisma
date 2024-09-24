@@ -43,6 +43,7 @@ model Actress {
     id          Int          @id @default(autoincrement()) @map("id")
     actressName String?      @unique @map("actress_name") @db.VarChar(100)
     birthDay    DateTime?    @map("birth_day") @db.Date
+    avatarBase64 String?    @map("avatar_base64") @db.Text
     isBlock     String?      @default("0") @map("is_block") @db.VarChar(10)
     movies      MoviesInfo[] @relation("actress_on_movie")
     actressFavs ActressFav[]
