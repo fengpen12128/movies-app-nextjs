@@ -6,7 +6,7 @@ export async function getRedisClient() {
   if (!client) {
     client = createClient({
       database: 1,
-      url: `redis://${process.env.NEXT_PUBLIC_REDIS_DB}`,
+      url: `redis://127.0.0.1:6379`,
     });
     await client.connect();
   }
