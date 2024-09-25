@@ -2,7 +2,7 @@ import MyPagination from "@/components/MyPagination";
 import CommonCardSection, {
   StackArrange,
 } from "@/components/MovieCardDisplaySection.jsx";
-import { getCollectionMovies } from "../actions/index.jsx";
+import { getCollectionMovies } from "../actions/index_bak.jsx";
 
 export const StackCollection = async ({ page = 1, download }) => {
   const resp = await getCollectionMovies({ page, download, isStack: true });

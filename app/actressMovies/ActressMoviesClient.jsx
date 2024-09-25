@@ -1,11 +1,21 @@
 import MyPagination from "@/components/MyPagination";
 import CommonCardSection from "@/components/MovieCardDisplaySection";
-import { getMoviesByActress } from "../actions";
+import { getMoviesByActress } from "../actions/index";
+import MovieEmpty from "@/components/MovieEmpty";
 
-export default async function ActressMoviesClient({ page, name }) {
+export default async function ActressMoviesClient({
+  page,
+  name,
+  collected,
+  single,
+  download,
+}) {
   const data = await getMoviesByActress({
     page,
     name,
+    collected,
+    single,
+    download,
   });
 
   if (data.error) {
@@ -13,9 +23,15 @@ export default async function ActressMoviesClient({ page, name }) {
   }
   const { movies, pagination } = data;
   return (
-    <>
-      <CommonCardSection movies={movies || []} />
+    <div>
+      {movies.length > 0 ? (
+        <CommonCardSection movies={movies} />
+      ) : (
+        <>
+          <MovieEmpty />
+        </>
+      )}
       <MyPagination {...pagination} />
-    </>
+    </div>
   );
 }

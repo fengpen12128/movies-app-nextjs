@@ -1,7 +1,6 @@
 import MyPagination from "@/components/MyPagination";
 import CommonCardSection from "@/components/MovieCardDisplaySection";
-import { getMovies } from "../actions";
-
+import { getMovies } from "../actions/index";
 
 const HomeContent = async ({ page, search, prefix, years, tags }) => {
   const { movies, pagination } = await getMovies({
@@ -12,10 +11,9 @@ const HomeContent = async ({ page, search, prefix, years, tags }) => {
     tags,
   });
 
-
   return (
     <>
-      <CommonCardSection movies={movies || []} />
+      <CommonCardSection movies={movies} />
       {pagination && <MyPagination {...pagination} />}
     </>
   );

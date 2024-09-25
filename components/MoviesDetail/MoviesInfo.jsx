@@ -3,7 +3,7 @@ import { Image } from "@nextui-org/image";
 import { message } from "react-message-popup";
 import { useState } from "react";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
-import { toggleCollection } from "@/app/actions";
+import { toggleCollection } from "@/app/actions/index_bak";
 import { usePathname } from "next/navigation";
 
 const MoviesInfo = ({
@@ -111,9 +111,9 @@ const MoviesInfo = ({
             value={
               <>
                 {tags?.map((item) => (
-                  <div key={item.id} className="badge badge-accent">
+                  <Badge variant="surface" color="cyan">
                     {item.tagName}
-                  </div>
+                  </Badge>
                 ))}
               </>
             }

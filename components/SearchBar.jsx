@@ -27,7 +27,7 @@ export default function SearchBar() {
       onSuccess: (data) => {
         setFilterOptions(data);
         const initialExpandedState = {};
-        data.forEach(x => {
+        data.forEach((x) => {
           initialExpandedState[x.title] = false;
         });
         setExpandedOptions(initialExpandedState);
@@ -46,7 +46,7 @@ export default function SearchBar() {
       if (!searchKeyword) {
         router.push(pathname);
       } else {
-        router.push(`/home?search=${searchKeyword}`);
+        router.push(`/home?search=${searchKeyword.trim()}`);
       }
     }
   };
@@ -74,9 +74,9 @@ export default function SearchBar() {
   };
 
   const toggleOptions = (title) => {
-    setExpandedOptions(prev => ({
+    setExpandedOptions((prev) => ({
       ...prev,
-      [title]: !prev[title]
+      [title]: !prev[title],
     }));
   };
 
@@ -130,12 +130,16 @@ export default function SearchBar() {
                     onClick={() => toggleOptions(x.title)}
                   >
                     {expandedOptions[x.title] ? "Show Less" : "Show More"}
-                    {expandedOptions[x.title] ? <ChevronUpIcon /> : <ChevronDownIcon />}
+                    {expandedOptions[x.title] ? (
+                      <ChevronUpIcon />
+                    ) : (
+                      <ChevronDownIcon />
+                    )}
                   </Button>
                 )}
               </div>
               <div
-                ref={el => optionsRefs.current[x.title] = el}
+                ref={(el) => (optionsRefs.current[x.title] = el)}
                 className="flex flex-wrap gap-3 transition-all duration-300 ease-in-out"
                 style={{
                   maxHeight: expandedOptions[x.title] ? "1000px" : "35px",

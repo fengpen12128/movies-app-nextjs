@@ -8,7 +8,7 @@ export async function GET(req, res) {
   try {
     client = await getRedisClient();
 
-    const tags = await client.zRange("movies_admin:searchTag:brandTag", 0, -1);
+    const tags = await client.zRangeByScore("movies_admin:searchTag:brandTag", 100, "+inf");
     const yearTags = await client.hKeys("movies_admin:searchTag:year");
     const moviesTag = await prisma.MoviesTag.findMany({
       select: {

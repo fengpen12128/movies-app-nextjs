@@ -1,5 +1,5 @@
 import SharedLayout from "../shared-layout/layout";
-import DownloadSettings from "@/components/SubFilterBar/DownloadFilter";
+import DownloadFilter from "@/components/SubFilterBar/DownloadFilter";
 
 export const metadata = {
   title: "movies (我的下载)",
@@ -8,7 +8,7 @@ export const metadata = {
 export default function DownloadLayout({ children }) {
   return (
     <SharedLayout>
-      <DownloadSettings />
+      <DownloadFilter />
       {children}
     </SharedLayout>
   );

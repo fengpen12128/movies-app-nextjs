@@ -22,7 +22,6 @@ const getCollectionAndDownloadStatus = async () => {
   return { collectedMovieCode, downloadMovieCode };
 };
 
-
 const formatMovie = (movie, { collectedMovieCode, downloadMovieCode }) => {
   const formattedMovie = {
     ...movie,
@@ -193,8 +192,17 @@ export async function getActressFavList({ page = 1 }) {
   }
 }
 
-export async function getMoviesByActress({ page = 1, name }) {
+export async function getMoviesByActress({
+  page = 1,
+  name,
+  collected,
+  single,
+  download,
+}) {
   const skip = (page - 1) * DEFAULT_PAGE_SIZE;
+
+  const { collectedMovieCode, downloadMovieCode } =
+    await getCollectionAndDownloadStatus();
 
   let q = {
     where: {
@@ -205,6 +213,42 @@ export async function getMoviesByActress({ page = 1, name }) {
           },
         },
       },
+      ...(collected === "true" && {
+        code: {
+          in: Array.from(collectedMovieCode),
+        },
+      }),
+      ...(collected === "false" && {
+        code: {
+          notIn: Array.from(collectedMovieCode),
+        },
+      }),
+      ...(single === "true" && {
+        actresses: {
+          every: {
+            actressName: name,
+          },
+        },
+      }),
+      ...(single === "false" && {
+        actresses: {
+          some: {
+            actressName: {
+              not: name,
+            },
+          },
+        },
+      }),
+      ...(download === "true" && {
+        code: {
+          in: Array.from(downloadMovieCode),
+        },
+      }),
+      ...(download === "false" && {
+        code: {
+          notIn: Array.from(downloadMovieCode),
+        },
+      }),
     },
     select: {
       id: true,
@@ -385,7 +429,7 @@ export async function getMovies({
     );
 
     return {
-      movies: formattedMovies,
+      movies: formattedMovies || [],
       pagination: getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE),
     };
   } catch (error) {
