@@ -2,7 +2,8 @@ import MyPagination from "@/components/MyPagination";
 import CommonCardSection, {
   StackArrange,
 } from "@/components/MovieCardDisplaySection.jsx";
-import { getCollectionMovies } from "../actions/index_bak.jsx";
+import { getCollectionMovies } from "../actions/index";
+import useCommonstore from "@/utils/commonStore";
 
 export const StackCollection = async ({ page = 1, download }) => {
   const resp = await getCollectionMovies({ page, download, isStack: true });
@@ -20,10 +21,12 @@ export const FlexCollection = async ({ page = 1, download }) => {
   }
   const { movies, pagination } = resp;
 
+  // Update the store with the new pagination data
+  useCommonstore.getState().setPagination(pagination);
+
   return (
     <>
       <CommonCardSection movies={movies} />
-
       <MyPagination {...pagination} />
     </>
   );

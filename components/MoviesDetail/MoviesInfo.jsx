@@ -3,7 +3,7 @@ import { Image } from "@nextui-org/image";
 import { message } from "react-message-popup";
 import { useState } from "react";
 import { useDisplayMode } from "@/hooks/useDisplayMode";
-import { toggleCollection } from "@/app/actions/index_bak";
+import { toggleCollection } from "@/app/actions/index";
 import { usePathname } from "next/navigation";
 
 const MoviesInfo = ({

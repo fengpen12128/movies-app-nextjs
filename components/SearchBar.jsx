@@ -20,8 +20,20 @@ export default function SearchBar() {
 
   useRequest(
     async () => {
-      const res = await fetch("/api/tags/list");
-      return await res.json();
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      try {
+        const res = await fetch("/api/tags/list", {
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+        return await res.json();
+      } catch (error) {
+        if (error.name === "AbortError") {
+          throw new Error("Request timed out after 10 seconds");
+        }
+        throw error;
+      }
     },
     {
       onSuccess: (data) => {
@@ -31,6 +43,9 @@ export default function SearchBar() {
           initialExpandedState[x.title] = false;
         });
         setExpandedOptions(initialExpandedState);
+      },
+      onError: (error) => {
+        setFilterOptions([]);
       },
     }
   );

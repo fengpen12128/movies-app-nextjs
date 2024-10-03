@@ -1,5 +1,11 @@
 import SharedLayout from "../shared-layout/layout";
+import HomeFilter from "@/components/SubFilterBar/HomeFilter";
 
 export default function CollectionLayout({ children }) {
-  return <SharedLayout>{children}</SharedLayout>;
+  return (
+    <SharedLayout>
+      <HomeFilter />
+      {children}
+    </SharedLayout>
+  );
 }

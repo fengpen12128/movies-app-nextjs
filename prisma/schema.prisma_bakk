@@ -109,7 +109,7 @@ model MoviesTag {
 
 model MoviesVideoResource {
     id          Int       @id @default(autoincrement()) @map("id")
-    movieCode   String    @map("movie_code") @db.VarChar(100)
+    movieCode   String    @map("movies_code") @db.VarChar(100)
     path        String?   @map("path") @db.VarChar(400)
     size        String?   @map("size") @db.VarChar(100)
     createdTime DateTime? @default(now()) @map("created_time") @db.Timestamp(0)

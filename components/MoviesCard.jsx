@@ -47,6 +47,9 @@ const MoviesCard = ({
       <Inset clip="padding-box" side="top" pb="current">
         {imageUrl !== null ? (
           <Image
+            style={{
+              maxHeight: "270px",
+            }}
             alt="preview"
             onClick={onClick}
             width={400}

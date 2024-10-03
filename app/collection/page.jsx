@@ -1,6 +1,7 @@
 import CollectionCardSection from "./CollectionCardSection";
-const page = ({ searchParams }) => {
+
+const Page = ({ searchParams }) => {
   return <CollectionCardSection {...searchParams} />;
 };
 
-export default page;
+export default Page;

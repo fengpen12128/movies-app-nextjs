@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { deleteActressFav } from "@/app/actions/index_bak";
+import { deleteActressFav } from "@/app/actions/index";
 
 export async function DELETE(req, { params }) {
   try {

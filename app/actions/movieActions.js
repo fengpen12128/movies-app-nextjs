@@ -9,7 +9,6 @@ import {
   getPaginationData,
 } from "./utils";
 import dayjs from "dayjs";
-import { movieQuery, downloadMovieQuery } from "./queryObjects";
 
 export async function getMovies({
   page = 1,
@@ -135,6 +134,7 @@ export async function getDownloadMovies(page = 1, collected) {
     const downloadMovies = result.map((x) => {
       const m = x.MovieInfo;
       return {
+        id: m?.id,
         downloadTime: m?.createdTime,
         releaseDate: dayjs(m?.releaseDate || "2000-01-01").format("YYYY-MM-DD"),
         code: m?.code,

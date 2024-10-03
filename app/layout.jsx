@@ -4,7 +4,7 @@ import "@radix-ui/themes/styles.css";
 import SidesBar from "@/components/SidesBar";
 import { Theme } from "@radix-ui/themes";
 export const metadata = {
-  title: "MoviesAdminNext",
+  title: "Index",
 };
 
 const RootLayout = ({ children }) => (
