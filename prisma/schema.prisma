@@ -40,13 +40,13 @@ model MoviesInfo {
 }
 
 model Actress {
-    id          Int          @id @default(autoincrement()) @map("id")
-    actressName String?      @unique @map("actress_name") @db.VarChar(100)
-    birthDay    DateTime?    @map("birth_day") @db.Date
-    avatarBase64 String?    @map("avatar_base64") @db.Text
-    isBlock     String?      @default("0") @map("is_block") @db.VarChar(10)
-    movies      MoviesInfo[] @relation("actress_on_movie")
-    actressFavs ActressFav[]
+    id           Int          @id @default(autoincrement()) @map("id")
+    actressName  String?      @unique @map("actress_name") @db.VarChar(100)
+    birthDay     DateTime?    @map("birth_day") @db.Date
+    avatarBase64 String?      @map("avatar_base64") @db.Text
+    isBlock      String?      @default("0") @map("is_block") @db.VarChar(10)
+    movies       MoviesInfo[] @relation("actress_on_movie")
+    actressFavs  ActressFav[]
 
     @@map("actress")
 }
@@ -121,7 +121,7 @@ model MoviesVideoResource {
     @@map("movies_video_resource")
 }
 
-model download_statistics {
+model DownloadStatistics {
     id            Int       @id @default(autoincrement())
     total_size    BigInt
     start_time    DateTime  @db.Timestamptz(6)
@@ -132,17 +132,21 @@ model download_statistics {
     total_count   Int
     batch_id      String?   @db.VarChar(100)
     created_at    DateTime? @db.Date
+
+    @@map("download_statistics")
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
-model download_urls {
-    id       Int     @id(map: "downloads_urls_pkey") @default(autoincrement())
-    batch_id String?
-    url      String
-    code     String
-    status   Int     @default(0)
-    size     Int?
-    type     Int?
+model DownloadUrls {
+    id      Int     @id(map: "downloads_urls_pkey") @default(autoincrement())
+    batchId String? @map("batch_id")
+    url     String
+    code    String
+    status  Int     @default(0)
+    size    Int?
+    type    Int?
+
+    @@map("download_urls")
 }
 
 model ActressFav {
@@ -153,4 +157,28 @@ model ActressFav {
     Actress Actress? @relation(fields: [actressName], references: [actressName])
 
     @@map("actress_fav")
+}
+
+model CrawlSourceData {
+    id          Int     @id @default(autoincrement())
+    data        Json
+    code        String? @default(dbgenerated("(data ->> 'code'::text)"))
+    batchId     String? @default(dbgenerated("(data ->> 'batch_id'::text)")) @map("batch_id")
+    createdTime String? @default(dbgenerated("(data ->> 'created_time'::text)")) @map("created_time")
+    updatedTime String? @default(dbgenerated("(data ->> 'updated_time'::text)")) @map("updated_time")
+
+    @@map("crawl_source_data")
+}
+
+model CrawlStat {
+    id             Int       @id @default(autoincrement())
+    batchId        String?   @unique @map("batch_id")
+    status         Int?      @default(0)
+    transStatus    Int?      @default(0) @map("trans_status")
+    downloadStatus Int?      @default(0) @map("download_status")
+    startedTime    DateTime? @map("started_time") @db.Timestamp(6)
+    endTime        DateTime? @map("end_time") @db.Timestamp(6)
+    crawlParams    Json?     @map("crawl_params")
+
+    @@map("crawl_stat")
 }

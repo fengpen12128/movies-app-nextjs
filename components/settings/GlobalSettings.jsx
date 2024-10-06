@@ -1,6 +1,5 @@
 "use client";
 
-import Cookies from "js-cookie";
 import { Button, DropdownMenu } from "@radix-ui/themes";
 import { GearIcon } from "@radix-ui/react-icons";
 import ThemeSettings from "./ThemeSettings";
@@ -19,20 +18,10 @@ const GlobalSettings = () => {
 
   const handleThemeChange = (newTheme) => {
     setGlobalSettings({ ...globalSettings, theme: newTheme });
-    Cookies.set(
-      "USER_CONFIG",
-      { ...globalSettings, theme: newTheme },
-      { expires: 7, path: "/" }
-    );
   };
 
   const handleDisplayModeChange = (newMode) => {
     setGlobalSettings({ ...globalSettings, displayMode: newMode });
-    Cookies.set(
-      "USER_CONFIG",
-      { ...globalSettings, displayMode: newMode },
-      { expires: 7, path: "/" }
-    );
   };
 
   return (
@@ -43,6 +32,7 @@ const GlobalSettings = () => {
             <GearIcon />
           </Button>
         </DropdownMenu.Trigger>
+
         <DropdownMenu.Content>
           <ThemeSettings
             theme={globalSettings.theme}
@@ -54,6 +44,7 @@ const GlobalSettings = () => {
             onDisplayModeChange={handleDisplayModeChange}
           />
         </DropdownMenu.Content>
+        
       </DropdownMenu.Root>
     </>
   );

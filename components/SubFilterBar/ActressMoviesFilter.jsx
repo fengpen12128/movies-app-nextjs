@@ -9,6 +9,7 @@ import {
 import SelectItem from "./SelectItem";
 import { useFilterState } from "./Common";
 import PageationInfo from "../PageationInfo";
+import SelectItem from "@/components/SubFilterBar/SelectItem";
 
 export default function ActressMoviesFilter() {
   const [collected, setCollected] = useFilterState("collected", "all");
@@ -34,7 +35,7 @@ export default function ActressMoviesFilter() {
   };
 
   return (
-    <Flex direction="row" align="center">
+    <Flex direction="row" justify="between" align="center">
       <div className="flex gap-6">
         <SelectItem
           label="收藏状态"
