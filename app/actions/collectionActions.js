@@ -8,7 +8,8 @@ import {
   getPaginationData,
   createStack,
 } from "./utils";
-import { collectionMovieQuery } from './queryObjects';
+import { collectionMovieQuery } from "./queryObjects";
+import { revalidatePath } from "next/cache";
 
 export async function getCollectionMovies({
   page = 1,

@@ -54,7 +54,7 @@ const MoviesInfo = ({
 
   const handlePrefixClick = (prefix) => {
     if (!prefix) return;
-    window.open(`/?prefix=${prefix}`, "_blank");
+    window.open(`/home/?prefix=${prefix}`, "_blank");
   };
 
   return (
@@ -72,14 +72,14 @@ const MoviesInfo = ({
 
       <div className="w-full sm:w-[40%]">
         <ul className="space-y-4">
-          <li className="font-suse text-3xl text-secondary">
+          <li className="font-suse text-3xl text-[#0abab5] flex items-baseline">
             <span
-              className="hover:underline cursor-pointer"
+              className="hover:underline cursor-pointer  text-[1.15em] transition-colors duration-200 ease-in-out hover:text-[#08a19d]"
               onClick={() => handlePrefixClick(prefix)}
             >
               {prefix}
             </span>
-            -{suffix}
+            <span>-{suffix}</span>
           </li>
           <InfoItem label="评分" value={rate} />
           <InfoItem label="评分数" value={rateNum} />

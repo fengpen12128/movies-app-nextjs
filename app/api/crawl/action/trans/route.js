@@ -1,18 +1,11 @@
 import prisma from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
-import { insertMovieData } from "../utils";
+import { insertMovieData } from "./utils";
 
 export async function GET(req, { params }) {
-  const { batchId } = params;
-
-  if (!batchId) {
-    return NextResponse.json({ msg: "batchId is empty" }, { status: 500 });
-  }
-
   try {
     const movieDataArray = await prisma.crawlSourceData.findMany({
       select: { data: true },
-      where: { batchId: batchId },
     });
 
     console.log("margined num : ", movieDataArray.length);
