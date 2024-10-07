@@ -52,53 +52,106 @@ function getUrlBasename(code, url) {
 }
 
 async function insertMovieData(movie) {
-  // 如果MoviesInfo存在，先删除
-  await prisma.moviesInfo.deleteMany({
+  // 查找是否存在MoviesInfo
+  const existingMovie = await prisma.moviesInfo.findUnique({
     where: { code: movie.code },
-  });
-
-  // 插入MoviesInfo
-  const newMovie = await prisma.moviesInfo.create({
-    data: {
-      code: movie.code,
-      prefix: movie.code.split("-")[0],
-      duration: movie.duration,
-      rate: parseFloat(movie.score),
-      rateNum: parseInt(movie.voters),
-      releaseDate: new Date(movie.release_date),
-      releaseYear: new Date(movie.release_date).getFullYear(),
-      crawlWebsite: movie.crawl_website,
-      crawlUrl: movie.crawl_url,
-      batchNum: movie.batch_id,
-      updatedTime: new Date(),
-      actresses: {
-        connectOrCreate: movie.actress?.map((name) => ({
-          where: { actressName: name },
-          create: { actressName: name },
-        })),
-      },
-      files: {
-        create: movie.media_urls?.map((media) => ({
-          path: getUrlBasename(movie.code, media.url),
-          type: media.type,
-          onlineUrl: media.url,
-        })),
-      },
-      magnetLinks: {
-        create: movie.links?.map((link) => ({
-          linkUrl: link.magnet_link,
-          size: link.size,
-          uploadTime: link.upload,
-        })),
-      },
-      tags: {
-        connectOrCreate: movie.tags?.map((tag) => ({
-          where: { tagName: tag },
-          create: { tagName: tag },
-        })),
-      },
+    include: {
+      actresses: true,
+      files: true,
+      magnetLinks: true,
+      tags: true,
     },
   });
 
-  console.log(`Inserted movie: ${newMovie.code}`);
+  if (existingMovie) {
+    // 如果MoviesInfo存在，更新moviesInfo和关联数据
+    const updatedMovie = await prisma.moviesInfo.update({
+      where: { code: movie.code },
+      data: {
+        prefix: movie.code.split("-")[0],
+        duration: movie.duration,
+        rate: parseFloat(movie.score),
+        rateNum: parseInt(movie.voters),
+        releaseDate: new Date(movie.release_date),
+        releaseYear: new Date(movie.release_date).getFullYear(),
+        crawlWebsite: movie.crawl_website,
+        crawlUrl: movie.crawl_url,
+        batchNum: movie.batch_id,
+        updatedTime: new Date(),
+        actresses: {
+          connectOrCreate: movie.actress?.map((name) => ({
+            where: { actressName: name },
+            create: { actressName: name },
+          })),
+        },
+        files: {
+          deleteMany: {},
+          create: movie.media_urls?.map((media) => ({
+            path: getUrlBasename(movie.code, media.url),
+            type: media.type,
+            onlineUrl: media.url,
+          })),
+        },
+        magnetLinks: {
+          deleteMany: {},
+          create: movie.links?.map((link) => ({
+            linkUrl: link.magnet_link,
+            size: link.size,
+            uploadTime: link.upload,
+          })),
+        },
+        tags: {
+          connectOrCreate: movie.tags?.map((tag) => ({
+            where: { tagName: tag },
+            create: { tagName: tag },
+          })),
+        },
+      },
+    });
+    console.log(`Updated movie: ${updatedMovie.code}`);
+  } else {
+    // 如果MoviesInfo不存在，创建新的记录
+    const newMovie = await prisma.moviesInfo.create({
+      data: {
+        code: movie.code,
+        prefix: movie.code.split("-")[0],
+        duration: movie.duration,
+        rate: parseFloat(movie.score),
+        rateNum: parseInt(movie.voters),
+        releaseDate: new Date(movie.release_date),
+        releaseYear: new Date(movie.release_date).getFullYear(),
+        crawlWebsite: movie.crawl_website,
+        crawlUrl: movie.crawl_url,
+        batchNum: movie.batch_id,
+        updatedTime: new Date(),
+        actresses: {
+          connectOrCreate: movie.actress?.map((name) => ({
+            where: { actressName: name },
+            create: { actressName: name },
+          })),
+        },
+        files: {
+          create: movie.media_urls?.map((media) => ({
+            path: getUrlBasename(movie.code, media.url),
+            type: media.type,
+            onlineUrl: media.url,
+          })),
+        },
+        magnetLinks: {
+          create: movie.links?.map((link) => ({
+            linkUrl: link.magnet_link,
+            size: link.size,
+            uploadTime: link.upload,
+          })),
+        },
+        tags: {
+          connectOrCreate: movie.tags?.map((tag) => ({
+            where: { tagName: tag },
+            create: { tagName: tag },
+          })),
+        },
+      },
+    });
+    console.log(`Inserted new movie: ${newMovie.code}`);
+  }
 }
