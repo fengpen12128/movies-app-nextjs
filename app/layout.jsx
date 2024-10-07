@@ -17,7 +17,6 @@ const RootLayout = ({ children }) => (
         grayColor="mauve"
         radius="small"
       >
-        <SidesBar />
         <main>{children}</main>
       </Theme>
     </body>

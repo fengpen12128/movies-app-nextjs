@@ -16,16 +16,14 @@ const ClawerLogView = ({ jobId }) => {
       return;
     }
 
-    const res = await fetch(`http://localhost:8001/spider-log/${jobId}`, {
-      cache: "no-store",
-    });
+    const res = await fetch(`/api/crawl/action/log?jobId=${jobId}`);
     const data = await res.text();
     setJobLog(data);
   };
 
   const checkStatus = async () => {
     try {
-      const res = await fetch(`http://localhost:8001/spider-status/${jobId}`);
+      const res = await fetch(`/api/crawl/action/statusGet?jobId=${jobId}`);
       const status = await res.json();
       if (status.status === "finished") {
         // 在设置完成状态之前，再次获取日志

@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 
-// ... 其他现有代码 ...
-
 export async function PATCH(request) {
   try {
     const { batchId, transStatus } = await request.json();
@@ -14,9 +12,31 @@ export async function PATCH(request) {
       );
     }
 
+    // 使用 Promise.all 并行查询新增数和更新数
+    const [newCount, updateCount] = await Promise.all([
+      prisma.crawlSourceData.count({
+        where: {
+          batchId: batchId,
+          updatedTime: null,
+        },
+      }),
+      prisma.crawlSourceData.count({
+        where: {
+          batchId: batchId,
+          updatedTime: {
+            not: null,
+          },
+        },
+      }),
+    ]);
+
     const updatedCrawlStat = await prisma.crawlStat.update({
       where: { batchId: batchId },
-      data: { transStatus: transStatus },
+      data: {
+        transStatus: transStatus,
+        newlyIncreasedNum: newCount,
+        updatedNum: updateCount,
+      },
     });
 
     return NextResponse.json(updatedCrawlStat);

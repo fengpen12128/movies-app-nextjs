@@ -7,7 +7,14 @@ import {
   ScrollArea,
   Badge,
 } from "@radix-ui/themes";
-import { Plus, Trash2, Play, StopCircle, FileText } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Play,
+  StopCircle,
+  FileText,
+  Calendar,
+} from "lucide-react";
 import { AlertDialog, Button as RadixButton, DataList } from "@radix-ui/themes";
 import { message } from "react-message-popup";
 import ClawerLogView from "@/app/clawerLogView/ClawerLogView";
@@ -31,6 +38,9 @@ const CrawlerManager = ({ batchId }) => {
   const { runAsync: handleDownloadData } = useRequest(
     async () => {
       await fetch(`/api/crawl/action/download/${batchNumber}?mode=sync`);
+      const response = await fetch("/api/crawl/action/download/process");
+      const data = await response.json();
+      await updateMediaDownloadStatus({ downloadSize: data.total_size });
     },
     {
       manual: true,
@@ -53,6 +63,32 @@ const CrawlerManager = ({ batchId }) => {
       },
     }
   );
+
+  const updateMediaDownloadStatus = async ({ downloadSize }) => {
+    try {
+      const response = await fetch("/api/crawl/action/download/updateStatus", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          batchId: String(batchNumber),
+          downloadStatus: 1,
+          downloadSize,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update download status");
+      }
+
+      const result = await response.json();
+      console.log("Download status updated:", result);
+    } catch (error) {
+      console.error("Error updating download status:", error);
+      message.error("更新下载状态失败");
+    }
+  };
 
   const updateTransStatus = async (batchNumber) => {
     try {
@@ -99,6 +135,36 @@ const CrawlerManager = ({ batchId }) => {
     }
   );
 
+  const { runAsync: fetchScheduledUrls } = useRequest(
+    async () => {
+      const response = await fetch("/api/crawl/scheduled/config");
+      if (!response.ok) {
+        throw new Error("Failed to fetch scheduled URLs");
+      }
+      const data = await response.json();
+      return data.scheduledUrls;
+    },
+    {
+      manual: true,
+      onSuccess: (scheduledUrls) => {
+        if (scheduledUrls && scheduledUrls.length > 0) {
+          const formattedUrls = scheduledUrls.map(([url, maxPages]) => ({
+            url,
+            maxPages,
+          }));
+          setCrawlTargets(formattedUrls);
+          message.success("Scheduled URLs fetched successfully");
+        } else {
+          message.info("No scheduled URLs found");
+        }
+      },
+      onError: (error) => {
+        console.error("Error fetching scheduled URLs:", error);
+        message.error("Failed to fetch scheduled URLs");
+      },
+    }
+  );
+
   useEffect(() => {
     console.log("batchId in useEffect is ", batchId);
     if (batchId) {
@@ -137,9 +203,6 @@ const CrawlerManager = ({ batchId }) => {
   };
 
   const startCrawling = async () => {
-    setCrawlStatus("running");
-    setCrawlTime(0);
-
     const timer = setInterval(() => {
       setCrawlTime((prevTime) => prevTime + 1);
     }, 1000);
@@ -152,7 +215,7 @@ const CrawlerManager = ({ batchId }) => {
     };
 
     try {
-      const response = await fetch("http://localhost:8001/run-spider", {
+      const response = await fetch("/api/crawl/action/run", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -160,16 +223,29 @@ const CrawlerManager = ({ batchId }) => {
         body: JSON.stringify(handleCrawlParams()),
       });
 
+      if (!response.ok) {
+        message.error("Failed to start spider");
+        return;
+      }
+
+      setCrawlStatus("running");
+      setCrawlTime(0);
+
       const res = await response.json();
-      setJobId(res.jobId);
+
+      console.log("res_xxxx", res);
+
+      setJobId(res.jobId.jobid);
       setBatchNumber(res.batchId);
       setSharedData({ ...sharedData, batchNum: res.batchId });
       // Start checking spider status
-      const statusInterval = setInterval(
-        () => checkSpiderStatus(res.jobId),
-        1000
-      );
-      setStatusCheckInterval(statusInterval);
+      if (res.jobId) {
+        const statusInterval = setInterval(
+          () => checkSpiderStatus(res.jobId.jobid),
+          1000
+        );
+        setStatusCheckInterval(statusInterval);
+      }
     } catch (err) {
       console.error("Error:", err);
       message.error("Failed to start spider");
@@ -179,7 +255,7 @@ const CrawlerManager = ({ batchId }) => {
   const checkSpiderStatus = async (jobId) => {
     try {
       const response = await fetch(
-        `http://localhost:8001/spider-status/${jobId}`
+        `/api/crawl/action/statusGet?jobId=${jobId}`
       );
       const data = await response.json();
 
@@ -300,10 +376,16 @@ const CrawlerManager = ({ batchId }) => {
 
       {/* 按钮区域 */}
       <div className="flex justify-between mt-4">
-        <Button onClick={addCrawlTarget} variant="outline">
-          <Plus className="mr-2 h-4 w-4" />
-          Add URL
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={addCrawlTarget} variant="outline">
+            <Plus className="mr-2 h-4 w-4" />
+            Add URL
+          </Button>
+          <Button onClick={fetchScheduledUrls} variant="outline">
+            <Calendar className="mr-2 h-4 w-4" />
+            Fetch Scheduled
+          </Button>
+        </div>
         <div className="flex gap-2">
           <Button
             onClick={crawlStatus === "running" ? stopCrawling : startCrawling}

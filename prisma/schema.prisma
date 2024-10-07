@@ -171,14 +171,18 @@ model CrawlSourceData {
 }
 
 model CrawlStat {
-    id             Int       @id @default(autoincrement())
-    batchId        String?   @unique @map("batch_id")
-    status         Int?      @default(0)
-    transStatus    Int?      @default(0) @map("trans_status")
-    downloadStatus Int?      @default(0) @map("download_status")
-    startedTime    DateTime? @map("started_time") @db.Timestamp(6)
-    endTime        DateTime? @map("end_time") @db.Timestamp(6)
-    crawlParams    Json?     @map("crawl_params")
+    id                Int       @id @default(autoincrement())
+    batchId           String?   @unique @map("batch_id")
+    status            Int?      @default(0)
+    transStatus       Int?      @default(0) @map("trans_status")
+    downloadStatus    Int?      @default(0) @map("download_status")
+    startedTime       DateTime? @map("started_time") @db.Timestamp(6)
+    endTime           DateTime? @map("end_time") @db.Timestamp(6)
+    crawlParams       Json?     @map("crawl_params")
+    executeType       String?      @map("execute_type")
+    newlyIncreasedNum Int?      @default(0) @map("newly_increased_num")
+    updatedNum        Int?      @default(0) @map("updated_num")
+    downloadSize      String?   @map("download_size")
 
     @@map("crawl_stat")
 }

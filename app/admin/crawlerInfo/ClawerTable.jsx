@@ -24,11 +24,14 @@ import {
 import dayjs from "dayjs";
 import { message } from "react-message-popup";
 import { useRequest } from "ahooks";
+import { Badge } from "@radix-ui/themes";
+import { filesize } from "filesize";
 
 const ClawerTable = ({ data }) => {
   const [transLoading, setTransLoading] = useState({});
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [downloadProcess, setDownloadProcess] = useState("");
+
   const { runAsync: handleDownloadData } = useRequest(
     async () => {
       setDownloadLoading(true);
@@ -111,6 +114,10 @@ const ClawerTable = ({ data }) => {
     1: "成功结束",
     2: "手动中断",
   };
+  const exeTypeStatus = {
+    temp: "手动执行",
+    scheduled: "定时执行",
+  };
 
   const renderTransButton = (transStatus, batchId) => {
     if (transLoading[batchId] === "loading") {
@@ -182,8 +189,12 @@ const ClawerTable = ({ data }) => {
         <TableHeader>
           <TableRow className="dark:border-gray-700">
             <TableHead className="dark:text-gray-300">批次号</TableHead>
+            <TableHead className="dark:text-gray-300">新增</TableHead>
+            <TableHead className="dark:text-gray-300">更新</TableHead>
+            <TableHead className="dark:text-gray-300">下载大小</TableHead>
             <TableHead className="dark:text-gray-300">开始时间</TableHead>
             <TableHead className="dark:text-gray-300">结束时间</TableHead>
+            <TableHead className="dark:text-gray-300">执行类别</TableHead>
             <TableHead className="dark:text-gray-300">状态</TableHead>
             <TableHead className="dark:text-gray-300">操作</TableHead>
           </TableRow>
@@ -193,17 +204,30 @@ const ClawerTable = ({ data }) => {
             <TableRow key={row.id} className="dark:border-gray-700">
               <TableCell className="dark:text-gray-300">
                 <Link
-                  href={`/admin/clawer?batchId=${row.batchId}`}
+                  href={`/admin/crawlerManager?batchId=${row.batchId}`}
                   className="text-blue-500 hover:underline dark:text-blue-400"
                 >
                   {row.batchId}
                 </Link>
               </TableCell>
               <TableCell className="dark:text-gray-300">
+                {row.newlyIncreasedNum}
+              </TableCell>
+              <TableCell className="dark:text-gray-300">
+                {row.updatedNum}
+              </TableCell>
+              <TableCell className="dark:text-gray-300">
+                {filesize(row.downloadSize)}
+              </TableCell>
+
+              <TableCell className="dark:text-gray-300">
                 {dayjs(row.startedTime).format("YYYY-MM-DD HH:mm:ss")}
               </TableCell>
               <TableCell className="dark:text-gray-300">
                 {dayjs(row.endTime).format("YYYY-MM-DD HH:mm:ss")}
+              </TableCell>
+              <TableCell className="dark:text-gray-300">
+                <Badge color="cyan">{exeTypeStatus[row.executeType]}</Badge>
               </TableCell>
               <TableCell className="dark:text-gray-300">
                 {statusMap[row.status] ?? "未知状态"}
@@ -219,14 +243,6 @@ const ClawerTable = ({ data }) => {
                     className="dark:bg-gray-700 dark:text-white"
                   >
                     下载资源
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleShowData(row.batchId)}
-                    className="dark:bg-gray-700 dark:text-white"
-                  >
-                    显示数据
                   </Button>
                 </div>
               </TableCell>

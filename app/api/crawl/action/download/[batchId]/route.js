@@ -12,10 +12,9 @@ export async function GET(req, { params }) {
   try {
     const url =
       mode === "async"
-        ? "http://localhost:8001/start-download-async"
-        : "http://localhost:8001/start-download-sync";
+        ? `${process.env.CRAWLER_SERVER}/start-download-async`
+        : `${process.env.CRAWLER_SERVER}/start-download-sync`;
 
-    console.log("url =>> ", url);
 
     const taskInfo = await fetch(url, {
       method: "POST",

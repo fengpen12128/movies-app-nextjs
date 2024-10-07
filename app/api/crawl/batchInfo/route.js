@@ -16,7 +16,6 @@ const getPaginationData = (totalCount, page, limit) => ({
 
 export async function POST(req) {
   const { batchId, page = 1, limit = 30 } = await req.json();
-  console.log("batchId is ", batchId);
 
   const skip = (page - 1) * limit;
 
