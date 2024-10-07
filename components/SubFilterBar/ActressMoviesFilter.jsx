@@ -9,7 +9,6 @@ import {
 import SelectItem from "./SelectItem";
 import { useFilterState } from "./Common";
 import PageationInfo from "../PageationInfo";
-import SelectItem from "@/components/SubFilterBar/SelectItem";
 
 export default function ActressMoviesFilter() {
   const [collected, setCollected] = useFilterState("collected", "all");
