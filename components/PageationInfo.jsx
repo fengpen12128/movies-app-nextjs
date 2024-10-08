@@ -1,7 +1,7 @@
 "use client";
 
 import { Flex, Text } from "@radix-ui/themes";
-import usePageStore from "@/utils/commonStore";
+import usePageStore from "@/store/commonStore";
 
 const PageationInfo = () => {
   const p = usePageStore((state) => state.pagination);

@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import PortalComponent from "@/components/PortalComponent";
 import Xgplayer from "xgplayer-react";
 import { nanoid } from "nanoid";
-import { useDisplayMode } from "@/hooks/useDisplayMode";
+import { useDisplayMode } from "@/app/hooks/useDisplayMode";
 import { message } from "react-message-popup";
 
 const MoviesPreview = ({ mediaUrls = [] }) => {

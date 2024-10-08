@@ -10,22 +10,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import dayjs from "dayjs";
 import { message } from "react-message-popup";
 import { useRequest } from "ahooks";
 import { Badge } from "@radix-ui/themes";
-import { filesize } from "filesize";
+import ConfirmAlertDialog from "@/components/radix/ConfirmAlertDialog";
 
 const ClawerTable = ({ data }) => {
   const [transLoading, setTransLoading] = useState({});
@@ -64,7 +53,6 @@ const ClawerTable = ({ data }) => {
       setTransLoading((prev) => ({ ...prev, [batchId]: "completed" }));
       message.success("数据迁移成功");
 
-      // 调用新的 API 接口来更新 downloadStatus
       await updateTransStatus(batchId);
     },
     {
@@ -102,18 +90,7 @@ const ClawerTable = ({ data }) => {
     }
   };
 
-  const handleDownloadResource = (batchId) => {
-    // 实现下载资源逻辑
-  };
 
-  const handleShowData = (batchId) => {
-    // 实现显示数据逻辑
-  };
-
-  const statusMap = {
-    1: "成功结束",
-    2: "手动中断",
-  };
   const exeTypeStatus = {
     temp: "手动执行",
     scheduled: "定时执行",
@@ -130,28 +107,12 @@ const ClawerTable = ({ data }) => {
 
     if (transStatus == 1 || transLoading[batchId] === "completed") {
       return (
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="outline" size="sm">
-              已完成
-            </Button>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>确认重新迁移</AlertDialogTitle>
-              <AlertDialogDescription>
-                该批次数据已经完成迁移。您确定要重新迁移吗？
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>取消</AlertDialogCancel>
-              <AlertDialogAction onClick={() => handleTransData(batchId)}>
-                确认
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <ConfirmAlertDialog
+          triggerText="已完成"
+          title="确认重新迁移"
+          description="该批次数据已经完成迁移。您确定要重新迁移吗？"
+          onConfirm={() => handleTransData(batchId)}
+        />
       );
     }
 
@@ -191,7 +152,6 @@ const ClawerTable = ({ data }) => {
             <TableHead className="dark:text-gray-300">批次号</TableHead>
             <TableHead className="dark:text-gray-300">新增</TableHead>
             <TableHead className="dark:text-gray-300">更新</TableHead>
-            <TableHead className="dark:text-gray-300">下载大小</TableHead>
             <TableHead className="dark:text-gray-300">开始时间</TableHead>
             <TableHead className="dark:text-gray-300">结束时间</TableHead>
             <TableHead className="dark:text-gray-300">执行类别</TableHead>
@@ -216,34 +176,20 @@ const ClawerTable = ({ data }) => {
               <TableCell className="dark:text-gray-300">
                 {row.updatedNum}
               </TableCell>
-              <TableCell className="dark:text-gray-300">
-                {filesize(row.downloadSize)}
-              </TableCell>
 
               <TableCell className="dark:text-gray-300">
                 {dayjs(row.startedTime).format("YYYY-MM-DD HH:mm:ss")}
               </TableCell>
               <TableCell className="dark:text-gray-300">
-                {dayjs(row.endTime).format("YYYY-MM-DD HH:mm:ss")}
+                {row.endTime ? dayjs(row.endTime).format("YYYY-MM-DD HH:mm:ss") : "-"}
               </TableCell>
               <TableCell className="dark:text-gray-300">
                 <Badge color="cyan">{exeTypeStatus[row.executeType]}</Badge>
               </TableCell>
-              <TableCell className="dark:text-gray-300">
-                {statusMap[row.status] ?? "未知状态"}
-              </TableCell>
+              <TableCell className="dark:text-gray-300">{row.status}</TableCell>
               <TableCell>
                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   {renderTransButton(row.transStatus, row.batchId)}
-
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => handleDownloadResource(row.batchId)}
-                    className="dark:bg-gray-700 dark:text-white"
-                  >
-                    下载资源
-                  </Button>
                 </div>
               </TableCell>
             </TableRow>

@@ -3,6 +3,14 @@ import { NextResponse } from "next/server";
 import { insertMovieData } from "./utils";
 
 export async function GET(req, { params }) {
+  // Check if the trigger parameter is present
+  if (!params.trigger) {
+    return NextResponse.json(
+      { error: "Missing trigger parameter" },
+      { status: 400 }
+    );
+  }
+
   try {
     const movieDataArray = await prisma.crawlSourceData.findMany({
       select: { data: true },

@@ -1,6 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request) {
+interface SpiderStatusResponse {
+  task_id: string;
+  status: "running" | "pending" | "finished" | "not_found";
+}
+
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const jobId = searchParams.get("jobId");
 
@@ -17,7 +22,7 @@ export async function GET(request) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json();
+    const data: SpiderStatusResponse = await response.json();
 
     return NextResponse.json(data, { status: 200 });
   } catch (error) {

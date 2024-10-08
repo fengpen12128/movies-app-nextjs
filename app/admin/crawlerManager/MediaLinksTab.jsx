@@ -6,7 +6,8 @@ import { Download, RefreshCw } from "lucide-react";
 import { Progress, Pagination } from "@nextui-org/react";
 import { useRequest } from "ahooks";
 import { message } from "react-message-popup";
-import MyContext from "./MyContext";
+import useCrawlStore from "@/store/crawlStore";
+
 
 const DataDownloadTab = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,7 +16,7 @@ const DataDownloadTab = () => {
   const [downloadTime, setDownloadTime] = useState(0);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const { sharedData } = useContext(MyContext);
+  const { batchId } = useCrawlStore();
 
   const {
     data,
@@ -23,11 +24,11 @@ const DataDownloadTab = () => {
     run: getDownloadData,
   } = useRequest(
     async () => {
-      if (!sharedData.batchNum) {
+      if (!batchId) {
         return null;
       }
       const res = await fetch(
-        `/api/crawl/data/mediaLink/${sharedData.batchNum}?page=${currentPage}`,
+        `/api/crawl/data/mediaLink/${batchId}?page=${currentPage}`,
         {
           cache: "no-store",
         }
@@ -35,7 +36,7 @@ const DataDownloadTab = () => {
       return await res.json();
     },
     {
-      refreshDeps: [currentPage, sharedData.batchNum],
+      refreshDeps: [currentPage, batchId],
     }
   );
 

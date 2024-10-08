@@ -7,10 +7,10 @@ import { RefreshCw } from "lucide-react";
 import { Pagination } from "@nextui-org/react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import MyContext from "./MyContext";
+import useCrawlStore from "@/store/crawlStore";
 
 const ScrapedDataTab = () => {
-  const { sharedData } = useContext(MyContext);
+  const { batchId } = useCrawlStore();
   const [currentPage, setCurrentPage] = useState(1);
   const {
     data,
@@ -18,11 +18,11 @@ const ScrapedDataTab = () => {
     run: getScrapedData,
   } = useRequest(
     async () => {
-      if (!sharedData.batchNum) {
+      if (!batchId) {
         return null;
       }
       const res = await fetch(
-        `/api/crawl/data/crawlData/${sharedData.batchNum}?page=${currentPage}`,
+        `/api/crawl/data/crawlData/${batchId}?page=${currentPage}`,
         {
           cache: "no-store",
         }
@@ -30,7 +30,7 @@ const ScrapedDataTab = () => {
       return await res.json();
     },
     {
-      refreshDeps: [currentPage, sharedData.batchNum],
+      refreshDeps: [currentPage, batchId],
     }
   );
 

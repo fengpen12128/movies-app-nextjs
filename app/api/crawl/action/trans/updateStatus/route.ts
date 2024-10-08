@@ -1,9 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
 
-export async function PATCH(request) {
+interface UpdateTransStatusRequest {
+  batchId: string;
+  transStatus: string;
+}
+
+export async function PATCH(request: NextRequest): Promise<NextResponse> {
   try {
-    const { batchId, transStatus } = await request.json();
+    const { batchId, transStatus }: UpdateTransStatusRequest = await request.json();
 
     if (!batchId || transStatus === undefined) {
       return NextResponse.json(

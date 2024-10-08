@@ -1,8 +1,14 @@
 import prisma from "@/app/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { insertMovieData } from "../utils";
 
-export async function GET(req, { params }) {
+interface RouteParams {
+  params: {
+    batchId: string;
+  };
+}
+
+export async function GET(req: NextRequest, { params }: RouteParams) {
   const { batchId } = params;
 
   if (!batchId) {
@@ -27,6 +33,6 @@ export async function GET(req, { params }) {
     );
   } catch (error) {
     console.error("Error:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: (error as Error).message }, { status: 500 });
   }
 }

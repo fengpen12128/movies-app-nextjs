@@ -3,7 +3,7 @@ import CommonCardSection, {
   StackArrange,
 } from "@/components/MovieCardDisplaySection.jsx";
 import { getCollectionMovies } from "../actions/index";
-import useCommonstore from "@/utils/commonStore";
+import useCommonstore from "@/store/commonStore";
 
 export const StackCollection = async ({ page = 1, download }) => {
   const resp = await getCollectionMovies({ page, download, isStack: true });

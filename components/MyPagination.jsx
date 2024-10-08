@@ -3,7 +3,7 @@
 import { Pagination, Input } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import usePageStore from "@/utils/commonStore";
+import usePageStore from "@/store/commonStore";
 
 const MyPagination = ({ current, totalPage }) => {
   const { replace } = useRouter();

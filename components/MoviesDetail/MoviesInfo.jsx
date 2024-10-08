@@ -2,7 +2,7 @@ import { Badge, Button, Spinner } from "@radix-ui/themes";
 import { Image } from "@nextui-org/image";
 import { message } from "react-message-popup";
 import { useState } from "react";
-import { useDisplayMode } from "@/hooks/useDisplayMode";
+import { useDisplayMode } from "@/app/hooks/useDisplayMode";
 import { toggleCollection } from "@/app/actions/index";
 import { usePathname } from "next/navigation";
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button, Card, Text, ScrollArea } from "@radix-ui/themes";
 import { Play, StopCircle } from "lucide-react";
 import { Progress } from "@nextui-org/react";
-import MyContext from "./[...slug]/MyContext";
+import useCrawlStore from "@/store/crawlStore";
 
 const DataMigrationTab = () => {
   const [migrationStatus, setMigrationStatus] = useState("idle");
@@ -10,7 +10,7 @@ const DataMigrationTab = () => {
   const [migrationLogs, setMigrationLogs] = useState([]);
   const [migrationTime, setMigrationTime] = useState(0);
   const [migrationTimer, setMigrationTimer] = useState(null);
-  const { sharedData } = useContext(MyContext);
+  const { batchId } = useCrawlStore();
 
   const startMigration = async () => {
     setMigrationStatus("running");

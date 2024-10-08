@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
- const usePageStore = create((set) => ({
+const usePageStore = create((set) => ({
   pagination: null,
   setPagination: (pagination) => set({ pagination }),
 }));
 
-export default usePageStore
+export default usePageStore;
