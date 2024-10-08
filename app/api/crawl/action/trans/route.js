@@ -3,10 +3,12 @@ import { NextResponse } from "next/server";
 import { insertMovieData } from "./utils";
 
 export async function GET(req, { params }) {
-  // Check if the trigger parameter is present
-  if (!params.trigger) {
+  const { searchParams } = new URL(req.url);
+  const start = searchParams.get("start");
+
+  if (!start || start !== "true") {
     return NextResponse.json(
-      { error: "Missing trigger parameter" },
+      { msg: "start parameter is required" },
       { status: 400 }
     );
   }
