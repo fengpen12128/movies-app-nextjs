@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export const GET = async (req) => {
   try {
-    const { searchParams } = new URL(req.nextUrl);
+    const { searchParams } = new URL(req.url);
     const page = Number(searchParams.get("page") || 1);
     const pageSize = 50;
     const collected = searchParams.get("collected");

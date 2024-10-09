@@ -6,11 +6,9 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 const ClawerLogView = ({ jobId }) => {
   const [jobLog, setJobLog] = useState("");
-  const [isFinished, setIsFinished] = useState(false);
   const logContainerRef = useRef(null);
 
   const getLogs = async () => {
-    console.log("jobId is ", jobId);
     if (!jobId) {
       message.error("jobId is empty");
       return;
@@ -28,7 +26,6 @@ const ClawerLogView = ({ jobId }) => {
       if (status.status === "finished") {
         // 在设置完成状态之前，再次获取日志
         await getLogs();
-        setIsFinished(true);
         return true;
       } else {
         await getLogs();

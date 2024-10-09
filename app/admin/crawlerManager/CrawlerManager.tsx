@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import {
   TextField,
   Button,
@@ -25,6 +25,8 @@ import AlertDialogCommon from "@/components/radix/AlertDialog";
 import { useCrawlTargets } from '@/app/hooks/useCrawlTargets';
 import { useSpiderActions } from '@/app/hooks/useSpiderActions';
 import { useCrawlerOperations } from '@/app/hooks/useCrawlerOperations';
+import { useTime } from 'react-timer-hook';
+
 
 interface CrawlerManagerProps {
   batchId: string;
@@ -47,8 +49,9 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
 
   const {
     crawlState,
-    setCrawlState,
     showStopDialog,
+    setCrawlState,
+    intervalCheckSpiderStatus,
     setShowStopDialog,
     startCrawling,
     stopCrawling,
@@ -80,6 +83,9 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
           jobId: data.jobId || "",
         }));
         setAllTargets(data.urls || []);
+        if (data.status === "running") {
+          intervalCheckSpiderStatus(data.jobId, executeSpiderEndActions, data.batchId);
+        }
       },
       onError: (error: Error) => {
         console.error("Error fetching crawl params:", error);
@@ -231,6 +237,13 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
               <Badge color={crawlState.status === "running" ? "red" : "green"}>
                 {crawlState.status}
               </Badge>
+            </DataList.Value>
+          </DataList.Item>
+          <DataList.Item>
+            <DataList.Label minWidth="88px">Timing</DataList.Label>
+            <DataList.Value>
+
+
             </DataList.Value>
           </DataList.Item>
           <DataList.Item>

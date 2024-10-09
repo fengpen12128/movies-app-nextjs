@@ -70,7 +70,6 @@ export const useSpiderActions = () => {
     };
 
     const executeSpiderEndActions = async (newBatchId: string | null) => {
-        message.info("执行爬虫结束操作，batchId：" + newBatchId);
         await handleTransData(newBatchId);
         await handleDownloadData(newBatchId);
     };

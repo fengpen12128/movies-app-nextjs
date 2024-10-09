@@ -14,6 +14,9 @@ import dayjs from "dayjs";
 import { message } from "react-message-popup";
 import { useRequest } from "ahooks";
 import { Badge } from "@radix-ui/themes";
+import { Chip } from "@nextui-org/react";
+import _ from "lodash";
+
 import ConfirmAlertDialog from "@/components/radix/ConfirmAlertDialog";
 
 const ClawerTable = ({ data }) => {
@@ -89,7 +92,6 @@ const ClawerTable = ({ data }) => {
       message.error("更新下载状态失败");
     }
   };
-
 
   const exeTypeStatus = {
     temp: "手动执行",
@@ -181,12 +183,24 @@ const ClawerTable = ({ data }) => {
                 {dayjs(row.startedTime).format("YYYY-MM-DD HH:mm:ss")}
               </TableCell>
               <TableCell className="dark:text-gray-300">
-                {row.endTime ? dayjs(row.endTime).format("YYYY-MM-DD HH:mm:ss") : "-"}
+                {row.endTime
+                  ? dayjs(row.endTime).format("YYYY-MM-DD HH:mm:ss")
+                  : "-"}
               </TableCell>
               <TableCell className="dark:text-gray-300">
                 <Badge color="cyan">{exeTypeStatus[row.executeType]}</Badge>
               </TableCell>
-              <TableCell className="dark:text-gray-300">{row.status}</TableCell>
+              <TableCell className="dark:text-gray-300">
+                {row.status === "running" ? (
+                <Chip color="danger" variant="dot">
+                    {_.capitalize(row.status)}
+                  </Chip>
+                ) : (
+                  <Chip color="success" variant="dot">
+                    {_.capitalize(row.status)}
+                  </Chip>
+                )}
+              </TableCell>
               <TableCell>
                 <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   {renderTransButton(row.transStatus, row.batchId)}

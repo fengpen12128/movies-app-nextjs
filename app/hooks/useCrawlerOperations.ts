@@ -42,6 +42,18 @@ export const useCrawlerOperations = (
         }
     }, [statusCheckInterval]);
 
+    const intervalCheckSpiderStatus = (jobId: string, onFinished: (batchId: string) => void, batchId: string) => {
+        if (!jobId || !batchId) {
+            message.error("jobId or batchId is empty");
+            return;
+        }
+        const statusInterval = setInterval(
+            () => checkSpiderStatus(jobId, onFinished, batchId),
+            1000
+        );
+        setStatusCheckInterval(statusInterval);
+    }
+
     const startCrawling = async (onFinished: (batchId: string) => void) => {
         const handleCrawlParams = () => ({
             urls: targets.map(({ url, maxPages }) => [url, maxPages]),
@@ -106,8 +118,9 @@ export const useCrawlerOperations = (
 
     return {
         crawlState,
-        setCrawlState,
         showStopDialog,
+        setCrawlState,
+        intervalCheckSpiderStatus,
         setShowStopDialog,
         startCrawling,
         stopCrawling,

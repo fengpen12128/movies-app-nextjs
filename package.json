@@ -48,6 +48,7 @@
         "react-message-popup": "^2.0.0-alpha.0",
         "react-photo-view": "^1.2.6",
         "react-syntax-highlighter": "^15.5.0",
+        "react-timer-hook": "^3.0.7",
         "redis": "^4.7.0",
         "server-only": "^0.0.1",
         "shadcn": "^2.1.0",
