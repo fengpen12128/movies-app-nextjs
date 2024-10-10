@@ -1,13 +1,13 @@
 "use client";
 
 import { Card, Button } from "@radix-ui/themes";
-import { useSearchParams } from "next/navigation";
+import { useQueryState } from "nuqs";
+
 import { saveActressFav } from "../actions/index";
 import { message } from "react-message-popup";
 import ActressMoviesFilter from "@/components/SubFilterBar/ActressMoviesFilter";
 export default function ActressMoviesLayoutClient({ children }) {
-  const searchParams = useSearchParams();
-  const name = searchParams.get("name") || "";
+  const [name] = useQueryState("name");
 
   const handleSaveFav = async () => {
     const [success, msg] = await saveActressFav(name);

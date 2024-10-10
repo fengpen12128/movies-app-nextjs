@@ -9,8 +9,9 @@ export default function SharedLayout({ children }) {
       className={`px-4 sm:px-8 mx-auto sm:w-[90%] pt-6 no-scrollbar sm:h-screen sm:overflow-auto`}
     >
       {/* <CrawlInfoAlert /> */}
-      <SearchBar />
+
       <Suspense fallback={<ScreenLoading />}>
+        <SearchBar />
         <main>{children}</main>
       </Suspense>
     </div>
