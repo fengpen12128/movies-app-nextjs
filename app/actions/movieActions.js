@@ -17,9 +17,21 @@ export async function getMovies({
   actressName,
   years,
   tags,
+  batchId, // 添加 batchId 参数
 }) {
   try {
     const skip = (page - 1) * DEFAULT_PAGE_SIZE;
+
+    // 如果提供了 batchId，先查询 CrawlBatchRecord 获取相关的 code
+    let relevantCodes = [];
+    if (batchId) {
+      const batchRecords = await prisma.crawlBatchRecord.findMany({
+        where: { batchId: batchId },
+        select: { code: true },
+      });
+      relevantCodes = batchRecords.map((record) => record.code);
+    }
+
     let moviesQuery = {
       skip,
       take: DEFAULT_PAGE_SIZE,
@@ -53,6 +65,9 @@ export async function getMovies({
             },
           },
         }),
+        ...(batchId && {
+          code: { in: relevantCodes },
+        }),
       },
       include: {
         tags: true,
@@ -72,10 +87,12 @@ export async function getMovies({
       formatMovie(movie, { collectedMovieCode, downloadMovieCode })
     );
 
-    return {
+    let a = {
       movies: formattedMovies || [],
       pagination: getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE),
     };
+
+    return a;
   } catch (error) {
     console.error("Error fetching movies:", error);
     return {

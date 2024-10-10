@@ -56,3 +56,15 @@ export interface CrawlParams {
     batchId: string;
     status?: CrawlStatus['status'];
 }
+
+export interface OptionGroup {
+    title: string;
+    options: string[];
+}
+
+
+export interface DataResponse<T> {
+    data?: T;
+    code: 200 | 500;
+    msg?: string;
+}

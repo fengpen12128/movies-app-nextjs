@@ -1,13 +1,13 @@
 "use client";
 
 import { Card } from "@radix-ui/themes";
-import PageationInfo from "../PageationInfo";
+import PaginationInfo from "@/components/PaginationInfo";
 
 const HomeFilter = () => {
   return (
     <Card>
       <div className="flex justify-end">
-        <PageationInfo />
+        <PaginationInfo />
       </div>
     </Card>
   );

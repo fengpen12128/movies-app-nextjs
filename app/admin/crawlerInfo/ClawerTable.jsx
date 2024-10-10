@@ -16,6 +16,7 @@ import { useRequest } from "ahooks";
 import { Badge } from "@radix-ui/themes";
 import { Chip } from "@nextui-org/react";
 import _ from "lodash";
+import { Eye } from "lucide-react";
 
 import ConfirmAlertDialog from "@/components/radix/ConfirmAlertDialog";
 
@@ -192,7 +193,7 @@ const ClawerTable = ({ data }) => {
               </TableCell>
               <TableCell className="dark:text-gray-300">
                 {row.status === "running" ? (
-                <Chip color="danger" variant="dot">
+                  <Chip color="danger" variant="dot">
                     {_.capitalize(row.status)}
                   </Chip>
                 ) : (
@@ -202,8 +203,17 @@ const ClawerTable = ({ data }) => {
                 )}
               </TableCell>
               <TableCell>
-                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                <div className="flex flex-row items-center space-x-2">
                   {renderTransButton(row.transStatus, row.batchId)}
+                  <Link
+                    href={`/home?batchId=${row.batchId}`}
+                    className="flex items-center text-blue-500 hover:underline dark:text-blue-400"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Eye className="w-4 h-4 mr-1" />
+                    查看
+                  </Link>
                 </div>
               </TableCell>
             </TableRow>

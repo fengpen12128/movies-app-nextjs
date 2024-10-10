@@ -27,7 +27,6 @@ import { useSpiderActions } from '@/app/hooks/useSpiderActions';
 import { useCrawlerOperations } from '@/app/hooks/useCrawlerOperations';
 import { useTime } from 'react-timer-hook';
 
-
 interface CrawlerManagerProps {
   batchId: string;
 }
@@ -161,30 +160,34 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
             radius="medium"
             placeholder="Enter URL to crawl"
             className="flex-grow"
-            disabled={crawlState.status === "running"}
+            disabled={crawlState.status === "running" || !!batchId}
           />
           <TextField.Root
             size="3"
-            value={target.maxPages}
-            onChange={(e) =>
-              updateTarget(index, "maxPages", parseInt(e.target.value, 10))
-            }
+            value={target.maxPages || ''}
+            onChange={(e) => {
+              const value = e.target.value;
+              const parsedValue = value === '' ? '' : parseInt(value, 10);
+              updateTarget(index, "maxPages", parsedValue);
+            }}
             radius="medium"
             placeholder="Max pages"
             className="w-32"
-            disabled={crawlState.status === "running"}
+            disabled={crawlState.status === "running" || !!batchId}
           />
-          <Button
-            onClick={() => removeTarget(index)}
-            disabled={targets.length === 1}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          {crawlState.status === "idle" && (
+            <Button
+              onClick={() => removeTarget(index)}
+              disabled={targets.length === 1}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       ))}
 
       <div className="flex justify-between mt-4">
-        <div className="flex gap-2" style={{ visibility: crawlState.status === "running" ? "hidden" : "visible" }}>
+        <div className="flex gap-2" style={{ visibility: (crawlState.status === "running" || !!batchId) ? "hidden" : "visible" }}>
           <Button onClick={addTarget} variant="outline">
             <Plus className="mr-2 h-4 w-4" />
             Add URL
@@ -195,33 +198,35 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
           </Button>
         </div>
         <div className="flex gap-2">
-          <Button
-            onClick={crawlState.status === "running" ? stopCrawling : handleStartCrawling}
-            color={crawlState.status === "running" ? "red" : "green"}
-            disabled={isTransferring || isDownloading}
-          >
-            {crawlState.status === "running" ? (
-              <>
-                <StopCircle className="mr-1 h-4 w-4" />
-                Stop Crawling
-              </>
-            ) : isTransferring ? (
-              <>
-                <FileText className="mr-1 h-4 w-4" />
-                Trans Data...
-              </>
-            ) : isDownloading ? (
-              <>
-                <FileText className="mr-1 h-4 w-4" />
-                Media Downloading...
-              </>
-            ) : (
-              <>
-                <Play className="mr-1 h-4 w-4" />
-                Start Crawling
-              </>
-            )}
-          </Button>
+          { !batchId && (
+            <Button
+              onClick={crawlState.status === "running" ? stopCrawling : handleStartCrawling}
+              color={crawlState.status === "running" ? "red" : "green"}
+              disabled={isTransferring || isDownloading}
+            >
+              {crawlState.status === "running" ? (
+                <>
+                  <StopCircle className="mr-1 h-4 w-4" />
+                  Stop Crawling
+                </>
+              ) : isTransferring ? (
+                <>
+                  <FileText className="mr-1 h-4 w-4" />
+                  Trans Data...
+                </>
+              ) : isDownloading ? (
+                <>
+                  <FileText className="mr-1 h-4 w-4" />
+                  Media Downloading...
+                </>
+              ) : (
+                <>
+                  <Play className="mr-1 h-4 w-4" />
+                  Start Crawling
+                </>
+              )}
+            </Button>
+          )}
           <Button disabled={!crawlState.jobId} color="cyan" onClick={handleViewLogs}>
             <FileText className="mr-1 h-4 w-4" />
             View Logs
@@ -257,7 +262,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
         </DataList.Root>
       </Card>
 
-      {crawlState.status !== "idle" && (
+      {crawlState.status === "running" && (
         <Accordion variant="splitted" className="mt-4">
           <AccordionItem
             key="1"

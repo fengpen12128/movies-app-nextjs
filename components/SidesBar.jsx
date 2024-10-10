@@ -1,14 +1,16 @@
 "use client";
 
-import { MdFavorite } from "react-icons/md";
-import { AiFillHome } from "react-icons/ai";
-import { IoDownload } from "react-icons/io5";
-import { GoFileDirectoryFill } from "react-icons/go";
+import { Home, Heart, Download, Folder, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 export default function SidesBar() {
   const pathname = usePathname();
+
+  if (pathname.startsWith("/admin")) {
+    return null;
+  }
+
   const list = [
     {
       title: "首页",
@@ -37,6 +39,11 @@ export default function SidesBar() {
       icon: "match",
       path: "/matching",
     },
+    {
+      title: "后台管理",
+      icon: "admin",
+      path: "/admin",
+    },
   ];
 
   return (
@@ -55,10 +62,11 @@ export default function SidesBar() {
                 key={title}
               >
                 <div>
-                  {icon === "home" && <AiFillHome />}
-                  {icon === "favorites" && <MdFavorite />}
-                  {icon === "download" && <IoDownload />}
-                  {icon === "match" && <GoFileDirectoryFill />}
+                  {icon === "home" && <Home size={16} />}
+                  {icon === "favorites" && <Heart size={16} />}
+                  {icon === "download" && <Download size={16} />}
+                  {icon === "match" && <Folder size={16} />}
+                  {icon === "admin" && <Settings size={16} />}
                 </div>
                 <p className="font-ma sidebar__title">{title}</p>
               </Link>

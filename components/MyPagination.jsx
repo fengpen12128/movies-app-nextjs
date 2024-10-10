@@ -2,17 +2,20 @@
 
 import { Pagination, Input } from "@nextui-org/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import usePageStore from "@/store/commonStore";
 
-const MyPagination = ({ current, totalPage }) => {
+const MyPagination = ({ current, totalPage, totalCount }) => {
   const { replace } = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(Number(current));
   const [gotoPage, setGotoPage] = useState("");
   const setPagination = usePageStore((state) => state.setPagination);
-  setPagination({ current, totalPage });
+
+  useEffect(() => {
+    setPagination({ current, totalPage, totalCount });
+  }, [current, totalPage, totalCount, setPagination]);
 
   const handlePageChange = (page) => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -37,9 +40,6 @@ const MyPagination = ({ current, totalPage }) => {
 
   return (
     <div className="my-10 flex justify-center items-center">
-      {/* <div className="self-start">
-        <span>共{totalCount || 0}条</span>
-      </div> */}
       <Pagination
         onChange={handlePageChange}
         page={currentPage}

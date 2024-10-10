@@ -37,7 +37,9 @@
     // 指定模块导入的路径别名
     "paths": {
       "@/*": ["./*"]
-    }
+    },
+    // 指定类型根目录
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
   // 指定要包含的文件
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next.config.js"],

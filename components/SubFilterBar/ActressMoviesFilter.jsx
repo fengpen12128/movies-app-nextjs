@@ -8,7 +8,7 @@ import {
 } from "@radix-ui/react-icons";
 import SelectItem from "./SelectItem";
 import { useFilterState } from "./Common";
-import PageationInfo from "../PageationInfo";
+import PageationInfo from "../PaginationInfo";
 
 export default function ActressMoviesFilter() {
   const [collected, setCollected] = useFilterState("collected", "all");

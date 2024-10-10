@@ -23,6 +23,15 @@ export const useSpiderActions = () => {
         }
     };
 
+    const handleSaveCrawlBatchRecord = async (batchId: string | null) => {
+        if (!batchId) return;
+        try {
+            await fetch(`/api/crawl/action/crawl-batch-record/${batchId}`);
+        } catch (error) {
+            console.error("Error transferring data:", error);
+        }
+    };
+
     const handleDownloadData = async (batchId: string | null) => {
         if (!batchId) return;
         setIsDownloading(true);
@@ -71,12 +80,31 @@ export const useSpiderActions = () => {
 
     const executeSpiderEndActions = async (newBatchId: string | null) => {
         await handleTransData(newBatchId);
-        await handleDownloadData(newBatchId);
+        await handleSaveCrawlBatchRecord(newBatchId);
+        // await handleDownloadData(newBatchId);
+    };
+
+    const processCrawlBatchRecord = async (batchId: string) => {
+        try {
+            const response = await fetch(`/api/crawl/action/crawl-batch-record/${batchId}`, {
+                method: 'GET',
+            });
+            const data = await response.json();
+            if (data.success) {
+                message.success(`Processed ${data.totalRecords} records, inserted ${data.recordsCreated} records for batch ${batchId}`);
+            } else {
+                message.error(`Failed to process crawl batch record: ${data.error}`);
+            }
+        } catch (error) {
+            console.error('Error processing crawl batch record:', error);
+            message.error('Failed to process crawl batch record');
+        }
     };
 
     return {
         isTransferring,
         isDownloading,
         executeSpiderEndActions,
+        processCrawlBatchRecord,
     };
 };

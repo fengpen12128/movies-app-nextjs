@@ -179,10 +179,19 @@ model CrawlStat {
     startedTime       DateTime? @map("started_time") @db.Timestamp(6)
     endTime           DateTime? @map("end_time") @db.Timestamp(6)
     crawlParams       Json?     @map("crawl_params")
-    executeType       String?      @map("execute_type")
+    executeType       String?   @map("execute_type")
     newlyIncreasedNum Int?      @default(0) @map("newly_increased_num")
     updatedNum        Int?      @default(0) @map("updated_num")
     downloadSize      String?   @map("download_size")
 
     @@map("crawl_stat")
+}
+
+model CrawlBatchRecord {
+    id       Int     @id @default(autoincrement())
+    batchId  String  @map("batch_id")
+    code     String
+    type     Int     @map("type")
+
+    @@map("crawl_batch_record")
 }
