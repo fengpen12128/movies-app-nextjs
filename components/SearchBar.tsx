@@ -4,7 +4,6 @@ import { Button, Card, TextField } from "@radix-ui/themes";
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useSearchParams } from "next/navigation";
 import { useQueryState } from "nuqs";
 import GlobalSettings from "@/components/settings/GlobalSettings";
 import _ from "lodash";
@@ -19,7 +18,6 @@ interface ExpandedOptions {
 export default function SearchBar() {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [searchKeyword, setSearchKeyword] = useQueryState("search");
   const [showFilters, setShowFilters] = useState(false);
   const [filterOptions, setFilterOptions] = useState<OptionGroup[]>([]);
@@ -54,11 +52,11 @@ export default function SearchBar() {
     getFilterOptions();
   }, [getFilterOptions]);
 
-  useEffect(() => {
-    const search = searchParams.get("search");
-    if (!search) return;
-    setSearchKeyword(search);
-  }, [searchParams, setSearchKeyword]);
+//   useEffect(() => {
+//     const search = searchParams.get("search");
+//     if (!search) return;
+//     setSearchKeyword(search);
+//   }, [searchParams, setSearchKeyword]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
