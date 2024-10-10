@@ -6,8 +6,8 @@ export const metadata = {
 
 export default function ActressCollectionMain({ children }) {
   return (
-    <>
+    <Suspense fallback={<ScreenLoading />}>
       <SharedLayout>{children}</SharedLayout>
-    </>
+    </Suspense>
   );
 }
