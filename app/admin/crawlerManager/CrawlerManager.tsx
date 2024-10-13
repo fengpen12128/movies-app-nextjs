@@ -20,12 +20,11 @@ import { message } from "react-message-popup";
 import ClawerLogView from "@/app/clawerLogView/ClawerLogView";
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { useRequest } from "ahooks";
-import {  CrawlParams } from "@/app/types/crawlerTypes";
 import AlertDialogCommon from "@/components/radix/AlertDialog";
 import { useCrawlTargets } from '@/app/hooks/useCrawlTargets';
 import { useSpiderActions } from '@/app/hooks/useSpiderActions';
 import { useCrawlerOperations } from '@/app/hooks/useCrawlerOperations';
-import { useTime } from 'react-timer-hook';
+import { getCrawlParamsWithStatus } from "@/app/actions/crawlAction";
 
 interface CrawlerManagerProps {
   batchId: string;
@@ -61,37 +60,24 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
   );
 
 
-  const {run: fetchCrawlParams} = useRequest(
-    async () => {
-      const response = await fetch(`/api/crawl/crawlParams/${batchId}`, {
-        method: "GET",
-      });
-      if (!response.ok) {
-        throw new Error("Failed to fetch crawl params")
+  const getCrawlParamsAndStatus = async () => {
+    const response = await getCrawlParamsWithStatus(batchId);
+    const result = response.data;
+    if (!result) return;
+
+    setCrawlState((prevState) => ({
+        ...prevState,
+        status: result.status ?? "idle",
+        batchId: result.batchId ?? null,
+        jobId: result.jobId ?? "",
+      }));
+      setAllTargets(result.urls || []);
+      if (result.status === "running") {
+        intervalCheckSpiderStatus(result.jobId, executeSpiderEndActions, result.batchId);
       }
-      const res = await response.json();
-      return res.data as CrawlParams;
-    },
-    {
-      manual: true,
-      onSuccess: (data: CrawlParams) => {
-        setCrawlState((prevState) => ({
-          ...prevState,
-          status: data.status || "idle",
-          batchId: data.batchId,
-          jobId: data.jobId || "",
-        }));
-        setAllTargets(data.urls || []);
-        if (data.status === "running") {
-          intervalCheckSpiderStatus(data.jobId, executeSpiderEndActions, data.batchId);
-        }
-      },
-      onError: (error: Error) => {
-        console.error("Error fetching crawl params:", error);
-        message.error("Failed to fetch crawl params");
-      },
-    }
-  );
+  }
+
+
 
   const { run: fetchScheduledUrls } = useRequest(
     async () => {
@@ -125,7 +111,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
 
   useEffect(() => {
     if (batchId) {
-      fetchCrawlParams()
+        getCrawlParamsAndStatus()
     }
   }, [batchId])
 
@@ -198,7 +184,6 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
           </Button>
         </div>
         <div className="flex gap-2">
-          { !batchId && (
             <Button
               onClick={crawlState.status === "running" ? stopCrawling : handleStartCrawling}
               color={crawlState.status === "running" ? "red" : "green"}
@@ -226,7 +211,6 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
                 </>
               )}
             </Button>
-          )}
           <Button disabled={!crawlState.jobId} color="cyan" onClick={handleViewLogs}>
             <FileText className="mr-1 h-4 w-4" />
             View Logs

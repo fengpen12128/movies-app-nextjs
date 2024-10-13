@@ -1,6 +1,5 @@
-import prisma from "@/utils/prisma";
+import prisma from "@/app/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { CrawlParams } from "@/app/types/crawlerTypes";
 import { processCrawlParams } from "../utils";
 
 interface RouteParams {

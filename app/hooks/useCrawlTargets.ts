@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { UrlParams } from '@/app/types/crawlerTypes';
 
 export const useCrawlTargets = (initialTargets: UrlParams[] = [{ url: "", maxPages: 1 }]) => {
     const [targets, setTargets] = useState<UrlParams[]>(initialTargets);

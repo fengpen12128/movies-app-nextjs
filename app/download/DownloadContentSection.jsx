@@ -1,13 +1,21 @@
 import MyPagination from "@/components/MyPagination";
-import CommonCardSection from "@/components/MovieCardDisplaySection";
+import { CommonDisplay } from "@/components/MovieCardDisplay";
 import { getDownloadMovies } from "../actions/index";
 
 const DownloadContentSection = async ({ page = 1, collected }) => {
-  const { movies, pagination } = await getDownloadMovies(page, collected);
+  const {
+    data: movies,
+    pagination,
+    code,
+  } = await getDownloadMovies(page, collected);
+
+  if (code !== 200) {
+    return <div>Not found</div>;
+  }
 
   return (
     <>
-      <CommonCardSection movies={movies} />
+      <CommonDisplay movies={movies} />
       <MyPagination {...pagination} />
     </>
   );

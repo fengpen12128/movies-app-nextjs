@@ -1,4 +1,4 @@
-import prisma from "@/utils/prisma";
+import prisma from "@/app/lib/prisma";
 import { NextResponse } from "next/server";
 import { DEFAULT_PAGE_SIZE, getCollectionAndDownloadStatus, formatMovie, getPaginationData } from "../../utils";
 

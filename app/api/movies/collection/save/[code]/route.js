@@ -1,4 +1,4 @@
-import prisma from "@/utils/prisma";
+import prisma from "@/app/lib/prisma";
 
 export const GET = async (req, { params }) => {
   const { code } = params;

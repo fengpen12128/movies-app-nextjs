@@ -1,6 +1,5 @@
-import { CrawlParams, UrlParams, CrawlStatus } from "@/app/types/crawlerTypes";
 
-export async function getSpiderStatus(jobId: string): Promise<CrawlStatus['status']> {
+export async function getSpiderStatus(jobId: string): Promise<CrawlStatus> {
     try {
         const response = await fetch(
             `${process.env.CRAWLER_SERVER}/spider-status/${jobId}`
@@ -8,7 +7,7 @@ export async function getSpiderStatus(jobId: string): Promise<CrawlStatus['statu
         if (!response.ok) {
             throw new Error(`Failed to fetch spider status: ${response.statusText}`);
         }
-        const data: { status: CrawlStatus['status'] } = await response.json();
+        const data: { status: CrawlStatus } = await response.json();
         return data.status;
     } catch (error) {
         console.error("Error fetching spider status:", error);
@@ -26,7 +25,7 @@ export function parseUrlParams(urls: string): UrlParams[] {
 export async function processCrawlParams(parsedParams: any): Promise<CrawlParams> {
     const urlsArray = parseUrlParams(parsedParams.urls);
 
-    let status: CrawlStatus['status'];
+    let status: CrawlStatus;
     try {
         status = await getSpiderStatus(parsedParams._job);
     } catch (error) {

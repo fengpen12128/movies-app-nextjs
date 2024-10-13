@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, { params }: { params: Params }) 
         await prisma.crawlBatchRecord.createMany({
             data: sourceData.map((item: CrawlSourceData) => ({
                 batchId: batchId,
-                code: item.code,
+                code: item.code ?? '',
                 type: item.updatedTime ? 2 : 1, // 1 for new, 2 for update
             })),
             skipDuplicates: true, // This will skip any duplicates based on unique constraints

@@ -1,4 +1,3 @@
-import { PaginationData } from "@/app/types/crawlerTypes";
 
 export function getPaginationData(totalCount: number, page: number, limit: number): PaginationData {
     return {

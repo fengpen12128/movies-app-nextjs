@@ -4,6 +4,9 @@ import path from "path";
 const nextConfig = {
   reactStrictMode: false,
   output: "standalone",
+  experimental: {
+    typedRoutes: true,
+  },
   images: {
     remotePatterns: [
       {

@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import { message } from 'react-message-popup';
-import { UrlParams } from '@/app/types/crawlerTypes';
 
 interface CrawlState {
     status: string;

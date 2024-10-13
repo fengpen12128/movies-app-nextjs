@@ -1,14 +1,7 @@
 'use server'
 
-import { getRedisClient, disconnectRedis } from "@/utils/redisUtils";
-import prisma from "@/utils/prisma";
-import { OptionGroup } from "../types/crawlerTypes";
-import { DataResponse } from "../types/crawlerTypes";
-
-interface MovieTag {
-    tagName: string;
-}
-
+import { getRedisClient, disconnectRedis } from "@/lib/redisUtils";
+import prisma from "@/app/lib/prisma";
 
 
 export async function getTags(): Promise<DataResponse<OptionGroup[]>> {
@@ -18,13 +11,13 @@ export async function getTags(): Promise<DataResponse<OptionGroup[]>> {
 
         const tags = await client.zRangeByScore("movies_admin:searchTag:brandTag", 100, "+inf");
         const yearTags = await client.hKeys("movies_admin:searchTag:year");
-        const moviesTag = await prisma.MoviesTag.findMany({
+        const moviesTag = await prisma.moviesTag.findMany({
             select: {
                 tagName: true,
             },
         });
 
-        const tagNameList = moviesTag.map((x: MovieTag) => x.tagName);
+        const tagNameList = moviesTag.map((x: any) => x.tagName);
 
         const optionsList: OptionGroup[] = [
             {

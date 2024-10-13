@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/utils/prisma";
+import prisma from "@/app/lib/prisma";
 import { getPaginationData, parsePaginationParams } from "@/app/api/utils";
-import { CrawlStatResponse } from "@/app/types/crawlerTypes";
 import { processCrawlParams } from "./utils";
 
 export async function GET(req: NextRequest): Promise<NextResponse<CrawlStatResponse | { error: string }>> {

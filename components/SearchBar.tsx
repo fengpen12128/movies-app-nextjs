@@ -5,11 +5,9 @@ import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useQueryState } from "nuqs";
-import GlobalSettings from "@/components/settings/GlobalSettings";
+import GlobalSettings from "@/components/settings/GlobalSettingsDropDown";
 import _ from "lodash";
 import { getTags } from "@/app/actions/index";
-import { OptionGroup } from "@/app/types/crawlerTypes";
-
 
 interface ExpandedOptions {
   [key: string]: boolean;
@@ -21,13 +19,15 @@ export default function SearchBar() {
   const [searchKeyword, setSearchKeyword] = useQueryState("search");
   const [showFilters, setShowFilters] = useState(false);
   const [filterOptions, setFilterOptions] = useState<OptionGroup[]>([]);
-  const [selectedFilters, setSelectedFilters] = useState<Record<string, string | null>>({});
+  const [selectedFilters, setSelectedFilters] = useState<
+    Record<string, string | null>
+  >({});
   const [expandedOptions, setExpandedOptions] = useState<ExpandedOptions>({});
   const optionsRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const getFilterOptions = useCallback(async () => {
     try {
-      const resp = await getTags()
+      const resp = await getTags();
       if (resp.code !== 200) {
         console.error("Failed to fetch filter options:", resp.msg);
         return;
@@ -35,7 +35,6 @@ export default function SearchBar() {
 
       const result = resp.data as OptionGroup[];
       setFilterOptions(result);
-      console.log(result);
       if (!result) return;
       const initialExpandedState: ExpandedOptions = {};
       result.forEach((x: OptionGroup) => {
@@ -52,28 +51,25 @@ export default function SearchBar() {
     getFilterOptions();
   }, [getFilterOptions]);
 
-//   useEffect(() => {
-//     const search = searchParams.get("search");
-//     if (!search) return;
-//     setSearchKeyword(search);
-//   }, [searchParams, setSearchKeyword]);
-
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (!searchKeyword) {
-        router.push(pathname);
+        router.push(pathname as any);
       } else {
         router.push(`/home?search=${encodeURIComponent(searchKeyword.trim())}`);
       }
     }
   };
 
-  const handleFilterClick = useCallback((groupTitle: string, option: string) => {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [groupTitle]: prev[groupTitle] === option ? null : option,
-    }));
-  }, []);
+  const handleFilterClick = useCallback(
+    (groupTitle: string, option: string) => {
+      setSelectedFilters((prev) => ({
+        ...prev,
+        [groupTitle]: prev[groupTitle] === option ? null : option,
+      }));
+    },
+    []
+  );
 
   useEffect(() => {
     if (Object.keys(selectedFilters).length > 0) {
@@ -122,8 +118,7 @@ export default function SearchBar() {
           onKeyDown={handleKeyDown}
           className="w-2/3"
           radius="medium"
-        >
-        </TextField.Root>
+        ></TextField.Root>
       </div>
       <div
         className="overflow-hidden transition-all duration-300 ease-in-out"

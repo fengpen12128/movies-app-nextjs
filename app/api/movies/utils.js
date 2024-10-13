@@ -1,4 +1,4 @@
-import prisma from "@/utils/prisma";
+import prisma from "@/app/lib/prisma";
 import dayjs from "dayjs";
 
 export const DEFAULT_PAGE_SIZE = 50;

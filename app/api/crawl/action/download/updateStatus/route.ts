@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/utils/prisma";
+import prisma from "@/app/lib/prisma";
 
 interface UpdateStatusRequest {
   batchId: string;
@@ -21,8 +21,8 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
     await prisma.crawlStat.update({
       where: { batchId: batchId },
       data: {
-        downloadStatus: downloadStatus,
-        downloadSize: downloadSize,
+        downloadStatus: parseInt(downloadStatus),
+        downloadSize: downloadSize?.toString() ?? null,
       },
     });
 

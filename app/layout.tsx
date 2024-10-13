@@ -24,7 +24,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
         radius="small"
       >
         <SidesBar />
-        <main>{children}</main>
+        <main id="app-main">{children}</main>
       </Theme>
     </body>
   </html>

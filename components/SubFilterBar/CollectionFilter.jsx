@@ -2,12 +2,12 @@
 
 import { Card, Flex } from "@radix-ui/themes";
 import {
-  GridIcon,
-  StackIcon,
-  DownloadIcon,
-  CrossCircledIcon,
-  MixerHorizontalIcon,
-} from "@radix-ui/react-icons";
+  LayoutGrid,
+  LayoutList,
+  Download,
+  XCircle,
+  SlidersHorizontal,
+} from "lucide-react";
 import SelectItem from "./SelectItem";
 import { useFilterState } from "./Common";
 import PageationInfo from "../PaginationInfo";
@@ -18,13 +18,13 @@ export default function CollectionFilter() {
 
   const items = {
     arrange: [
-      { value: "flex", label: "Flex", icon: <GridIcon /> },
-      { value: "stack", label: "Stack", icon: <StackIcon /> },
+      { value: "flex", label: "Flex", icon: <LayoutGrid size={16} /> },
+      { value: "stack", label: "Stack", icon: <LayoutList size={16} /> },
     ],
     download: [
-      { value: "all", label: "全部", icon: <MixerHorizontalIcon /> },
-      { value: "true", label: "已下载", icon: <DownloadIcon /> },
-      { value: "false", label: "未下载", icon: <CrossCircledIcon /> },
+      { value: "all", label: "全部", icon: <SlidersHorizontal size={16} /> },
+      { value: "true", label: "已下载", icon: <Download size={16} /> },
+      { value: "false", label: "未下载", icon: <XCircle size={16} /> },
     ],
   };
 

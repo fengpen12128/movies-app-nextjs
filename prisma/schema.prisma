@@ -151,7 +151,7 @@ model DownloadUrls {
 
 model ActressFav {
     id          Int       @id @default(autoincrement()) @map("id")
-    actressName String?   @unique @map("actress_name") @db.VarChar(100)
+    actressName String    @unique @map("actress_name") @db.VarChar(100)
     createdTime DateTime? @default(now()) @map("created_time")
 
     Actress Actress? @relation(fields: [actressName], references: [actressName])
@@ -188,10 +188,10 @@ model CrawlStat {
 }
 
 model CrawlBatchRecord {
-    id       Int     @id @default(autoincrement())
-    batchId  String  @map("batch_id")
-    code     String
-    type     Int     @map("type")
+    id      Int    @id @default(autoincrement())
+    batchId String @map("batch_id")
+    code    String
+    type    Int    @map("type")
 
     @@map("crawl_batch_record")
 }

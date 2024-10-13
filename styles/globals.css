@@ -100,7 +100,7 @@
 }
 
 .modal-content {
-    @apply no-scrollbar fixed inset-0 bg-black bg-opacity-90 h-screen w-screen flex items-center justify-center z-50
+    @apply no-scrollbar fixed inset-0 bg-black bg-opacity-90 h-screen w-screen flex items-center justify-center z-40
 }
 
 @layer base {

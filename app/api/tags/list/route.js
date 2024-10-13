@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
-import { getRedisClient, disconnectRedis } from "@/utils/redisUtils";
-import prisma from "@/utils/prisma";
-
+import { getRedisClient, disconnectRedis } from "@/lib/redisUtils";
+import prisma from "@/app/lib/prisma";
 
 export async function GET(req, res) {
   let client;
   try {
     client = await getRedisClient();
 
-    const tags = await client.zRangeByScore("movies_admin:searchTag:brandTag", 100, "+inf");
+    const tags = await client.zRangeByScore(
+      "movies_admin:searchTag:brandTag",
+      100,
+      "+inf"
+    );
     const yearTags = await client.hKeys("movies_admin:searchTag:year");
     const moviesTag = await prisma.MoviesTag.findMany({
       select: {

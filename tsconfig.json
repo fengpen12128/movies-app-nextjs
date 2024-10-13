@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // 指定 ECMAScript 目标版本
-    "target": "es5",
+    "target": "es2020",
     // 指定要包含的库文件
     "lib": ["dom", "dom.iterable", "esnext"],
     // 允许编译 JavaScript 文件
@@ -39,10 +39,18 @@
       "@/*": ["./*"]
     },
     // 指定类型根目录
-    "typeRoots": ["./node_modules/@types", "./types"]
+    "typeRoots": ["./node_modules/@types", "./types", "./app/types"]
   },
   // 指定要包含的文件
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next.config.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.d.ts",
+    ".next/types/**/*.ts",
+    "next.config.js",
+    "app/collection/page.tsx"
+  ],
   // 指定要排除的文件
   "exclude": ["node_modules"]
 }
