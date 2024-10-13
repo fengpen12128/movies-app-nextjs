@@ -1,6 +1,5 @@
-import MyPagination from "@/components/MyPagination";
 import { CommonDisplay } from "@/components/MovieCardDisplay";
-import { getDownloadMovies } from "../actions/index";
+import { getDownloadMovies } from "@/app/actions";
 
 const DownloadContentSection = async ({ page = 1, collected }) => {
   const {
@@ -13,12 +12,7 @@ const DownloadContentSection = async ({ page = 1, collected }) => {
     return <div>Not found</div>;
   }
 
-  return (
-    <>
-      <CommonDisplay movies={movies} />
-      <MyPagination {...pagination} />
-    </>
-  );
+  return <CommonDisplay movies={movies} pagination={pagination} />;
 };
 
 export default DownloadContentSection;

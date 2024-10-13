@@ -1,14 +1,18 @@
 'use server'
 
-import {getCollectionAndDownloadCode, getPaginationData, handleMovie} from "@/app/actions/utils/commonUtils";
+import { getCollectionAndDownloadCode, getPaginationData, handleMovie } from "@/app/actions/utils/commonUtils";
 import prisma from "@/app/lib/prisma";
+import { cookies } from 'next/headers';
 
-
-export async function getDownloadMovies(page = 1, collected: string) {
+export async function getDownloadMovies(page = 1, collected: string): Promise<DataResponse<Movie[]>> {
     try {
         const skip = (page - 1) * 50;
 
         const { ctCode, dmCode } = await getCollectionAndDownloadCode();
+        const cookieStore = cookies();
+        const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+
 
         let q = {
             where: {
@@ -65,7 +69,7 @@ export async function getDownloadMovies(page = 1, collected: string) {
         const handled = handleMovie(downloadMovies, {
             ctCode,
             dmCode,
-        });
+        }, config);
 
 
 

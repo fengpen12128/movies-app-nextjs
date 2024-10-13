@@ -7,7 +7,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useQueryState } from "nuqs";
 import GlobalSettings from "@/components/settings/GlobalSettingsDropDown";
 import _ from "lodash";
-import { getTags } from "@/app/actions/index";
+import { getTags } from "@/app/actions";
 
 interface ExpandedOptions {
   [key: string]: boolean;

@@ -39,7 +39,9 @@
       "@/*": ["./*"]
     },
     // 指定类型根目录
-    "typeRoots": ["./node_modules/@types", "./types", "./app/types"]
+    "typeRoots": ["./node_modules/@types", "./types",
+      "./types"
+    ]
   },
   // 指定要包含的文件
   "include": [

@@ -13,15 +13,6 @@ export const StackDisplay: React.FC<{
 
   return (
     <>
-      {/* <section className={colClassDia}>
-        {movies.map((x) =>
-          x.size === 1 ? (
-            <MoviesCard key={nanoid()} {...x.movies[0]} />
-          ) : (
-            <MoviesStack key={nanoid()} movies={x.movies} actress={x.actress} />
-          )
-        )}
-      </section> */}
       <section className={colClassDia}>
         {movies.map((x) =>
           x.grouped ? (

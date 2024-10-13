@@ -15,77 +15,7 @@ export const getCollectionAndDownloadCode = async (): Promise<{ ctCode: string[]
 };
 
 
-export const groupByActress = (arr: Movie[], key: keyof Movie) => {
-    return arr.reduce<Record<string, Movie[]>>((result, item) => {
-        const categories = item[key];
-        if (Array.isArray(categories)) {
-            categories.forEach((category) => {
-                if (typeof category === 'string') {
-                    if (!result[category]) {
-                        result[category] = [];
-                    }
-                    result[category].push(item);
-                }
-            });
-        }
-        return result;
-    }, {});
-};
 
-export const createStack = (collectionMovies: Movie[]) => {
-    // 提取actresses数量大于2 的不参与stack
-    let multiActresses = collectionMovies
-        .filter((x) => x.actresses && x.actresses.length > 2)
-        .map((x) => ({
-            actress: "",
-            movies: [x],
-        }));
-
-    collectionMovies = collectionMovies.filter((x) => x.actresses && x.actresses.length <= 2);
-
-    const groupedData = groupByActress(collectionMovies, "actresses");
-
-    // stack 中的movies 收藏时间排序
-    let p = Object.keys(groupedData).map((x) => ({
-        actress: x,
-        movies:
-            groupedData[x].length > 1
-                ? groupedData[x].sort(
-                    (a, b) => {
-                        const dateA = a.collectedTime ? new Date(a.collectedTime).getTime() : 0;
-                        const dateB = b.collectedTime ? new Date(b.collectedTime).getTime() : 0;
-                        return dateB - dateA;
-                    }
-                )
-                : groupedData[x],
-    }));
-
-    // 将 单个movies 也转化成数组形式
-    let single = p
-        .filter((x) => x.movies.length === 1)
-        .map((x) => x.movies[0])
-        .filter(
-            (movie, index, self) =>
-                index === self.findIndex((t) => t.code === movie.code)
-        )
-        .map((x) => ({
-            actress: "",
-            movies: [x],
-        }));
-
-    // 合并
-    let result = [
-        ...single,
-        ...p.filter((x) => x.movies.length > 1),
-        ...multiActresses,
-    ].sort((a, b) => {
-        const dateA = a.movies[0].collectedTime ? new Date(a.movies[0].collectedTime).getTime() : 0;
-        const dateB = b.movies[0].collectedTime ? new Date(b.movies[0].collectedTime).getTime() : 0;
-        return dateB - dateA;
-    });
-
-    return result;
-};
 
 
 export function getPaginationData(totalCount: number, page: number, limit: number): PaginationData {
