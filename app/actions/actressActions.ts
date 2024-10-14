@@ -6,7 +6,6 @@ import {
     DEFAULT_PAGE_SIZE,
     getPaginationData,
 } from "./utils/commonUtils";
-import {ActressFav} from "@prisma/client";
 
 
 
@@ -66,11 +65,11 @@ export async function getActressFavList({ page = 1 }: { page?: number }): Promis
             prisma.actressFav.count(),
         ]);
 
-        const handledActressFav = actressFav.map((x: any ) => ({
-            id:x.id,
-            actressName:x.actressName,
-            createdTime:x.createdTime!,
-            avatarBase64: x.Actress?.avatarBase64 ?? '',
+        const handledActressFav: ActressFav[] = actressFav.map((x: any) => ({
+            id: x.id,
+            actressName: x.actressName,
+            createdTime: x.createdTime!,
+            avatarBase64: x.Actress?.avatarBase64 ?? null,
         }));
 
         return {

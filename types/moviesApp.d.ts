@@ -139,7 +139,7 @@ declare interface ActressFav {
     id: number;
     actressName: string;
     createdTime: Date | null;
-    avatarBase64: string | null | undefined;
+    avatarBase64: string | null;
 }
 
 
