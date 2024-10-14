@@ -32,7 +32,7 @@ def main():
     run_command("git pull")
 
     # Step 4: Build the Docker image without using cache
-    run_command("docker build --no-cache -t movies_app_nextjs .")
+    run_command("docker build  -t movies_app_nextjs .")
 
     # Step 5: Run the Docker container
     run_command(
