@@ -148,6 +148,10 @@ declare interface GlobalSettingsConfig {
     displayMode: 'normal' | 'demo';
 }
 
+type GlobalThemeConfig = GlobalSettingsConfig['theme'];
+type GlobalDisplayModeConfig = GlobalSettingsConfig['displayMode'];
+
+
 
 declare interface ActressGroupedMovies {
     actress: {
@@ -175,4 +179,3 @@ declare interface ResourceServerData {
     size: string;
     createdTime: string;
 }
-

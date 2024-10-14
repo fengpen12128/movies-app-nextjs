@@ -15,8 +15,12 @@ export async function getVideoResource(movieId: number): Promise<DataResponse<Vi
             select: { code: true }
         });
 
+        if (!movie || !movie.code) {
+            return { code: 500, msg: "Error fetching video resource", data: [] };
+        }
+
         const videoResource = await prisma.moviesVideoResource.findMany({
-            where: { movieCode: movie?.code },
+            where: { movieCode: movie.code },
             select: {
                 path: true,
                 createdTime: true,

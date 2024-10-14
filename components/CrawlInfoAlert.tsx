@@ -14,7 +14,7 @@ interface CrawlInfo {
 }
 
 const CrawlInfoAlert: React.FC = () => {
-  const { data: crawlInfo, run: fetchCrawlInfo } = useRequest<CrawlInfo[]>(() =>
+  const { data: crawlInfo, run: fetchCrawlInfo } = useRequest(() =>
     fetch("/api/crawlAction").then((res) => res.json())
   );
 
@@ -38,7 +38,7 @@ const CrawlInfoAlert: React.FC = () => {
   return (
     <>
       {crawlInfo &&
-        crawlInfo.map((info) => (
+        crawlInfo.map((info: any) => (
           <div key={info.id}>
             <Callout.Root color="green">
               <Callout.Icon>

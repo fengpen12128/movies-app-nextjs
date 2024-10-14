@@ -44,19 +44,17 @@ const GlobalSettings: React.FC = () => {
     prevSettingsRef.current = globalSettings;
   }, [globalSettings]);
 
-  const handleThemeChange = (newTheme: GlobalSettingsConfig["theme"]): void => {
+  const handleThemeChange = (newTheme: string): void => {
     setGlobalSettings((prevSettings) => ({
       ...prevSettings,
-      theme: newTheme,
+      theme: newTheme as GlobalThemeConfig,
     }));
   };
 
-  const handleDisplayModeChange = (
-    newMode: GlobalSettingsConfig["displayMode"]
-  ): void => {
+  const handleDisplayModeChange = (newMode: string): void => {
     setGlobalSettings((prevSettings) => ({
       ...prevSettings,
-      displayMode: newMode,
+      displayMode: newMode as GlobalDisplayModeConfig,
     }));
   };
 
