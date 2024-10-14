@@ -3,7 +3,15 @@ import { Trash2 } from "lucide-react";
 import DeleteAlertDialog from "./DeleteAlertDialog";
 import Link from "next/link";
 
-const ActressCard = ({ actressName, avatarBase64 }) => {
+interface ActressCardProps {
+  actressName: string;
+  avatarBase64: string;
+}
+
+const ActressCard: React.FC<ActressCardProps> = ({
+  actressName,
+  avatarBase64,
+}) => {
   return (
     <Box>
       <Card className="cursor-pointer">
@@ -16,7 +24,10 @@ const ActressCard = ({ actressName, avatarBase64 }) => {
               radius="full"
               className="mr-3"
             />
-            <Link className="hover:underline" href={`/actressMovies?name=${actressName}`}>
+            <Link
+              className="hover:underline"
+              href={`/actressMovies?name=${actressName}`}
+            >
               <Text
                 className="font-ma cursor-pointer"
                 as="div"
@@ -31,7 +42,7 @@ const ActressCard = ({ actressName, avatarBase64 }) => {
             <Text as="div" color="gray" size="2">
               {/* Start building your next project in minutes */}
             </Text>
-            <DeleteAlertDialog  actressName={actressName}>
+            <DeleteAlertDialog actressName={actressName}>
               <Button variant="ghost">
                 <Trash2 className="h-5 w-5 cursor-pointer text-gray-500" />
               </Button>

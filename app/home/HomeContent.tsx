@@ -1,6 +1,5 @@
-import MyPagination from "@/components/MyPagination";
 import { CommonDisplay } from "@/components/MovieCardDisplay";
-import { getMovies } from "../actions/index";
+import { getMovies } from "@/app/actions";
 import MovieEmpty from "@/components/MovieEmpty";
 
 const HomeContent: React.FC<MovieQueryParams> = async (params) => {

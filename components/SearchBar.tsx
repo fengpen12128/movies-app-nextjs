@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Card, TextField } from "@radix-ui/themes";
-import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+import { ChevronDown, ChevronUp, FilterIcon } from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useQueryState } from "nuqs";
@@ -106,8 +106,9 @@ export default function SearchBar() {
           color="indigo"
           onClick={() => setShowFilters(!showFilters)}
         >
+          <FilterIcon size={18} className="mr-1" />
           Filters
-          {showFilters ? <ChevronUpIcon /> : <ChevronDownIcon />}
+          {showFilters ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </Button>
 
         <TextField.Root
@@ -138,11 +139,7 @@ export default function SearchBar() {
                     onClick={() => toggleOptions(x.title)}
                   >
                     {expandedOptions[x.title] ? "Show Less" : "Show More"}
-                    {expandedOptions[x.title] ? (
-                      <ChevronUpIcon />
-                    ) : (
-                      <ChevronDownIcon />
-                    )}
+                    {expandedOptions[x.title] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </Button>
                 )}
               </div>

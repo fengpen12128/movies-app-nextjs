@@ -52,7 +52,7 @@
     ".next/types/**/*.ts",
     "next.config.js",
     "app/collection/page.tsx"
-  ],
+, "app/actressMovies/page.tsx", "components/radix/ConfirmAlertDialog.tsx"  ],
   // 指定要排除的文件
   "exclude": ["node_modules"]
 }

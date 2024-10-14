@@ -9,14 +9,25 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import SelectItem from "./SelectItem";
-import { useFilterState } from "./Common";
+import { useFilterState } from "@/app/hooks/useFilterState";
 import PageationInfo from "../PaginationInfo";
+
+interface Item {
+  value: string;
+  label: string;
+  icon: JSX.Element;
+}
+
+interface Items {
+  arrange: Item[];
+  download: Item[];
+}
 
 export default function CollectionFilter() {
   const [arrange, setArrange] = useFilterState("arrange", "flex");
   const [download, setDownload] = useFilterState("download", "all");
 
-  const items = {
+  const items: Items = {
     arrange: [
       { value: "flex", label: "Flex", icon: <LayoutGrid size={16} /> },
       { value: "stack", label: "Stack", icon: <LayoutList size={16} /> },

@@ -1,6 +1,11 @@
 import ActressCollectionMain from "./ActressCollectionMain";
 
-const Page = ({ searchParams }) => {
+
+interface PageProps {
+  searchParams: Record<string, any>;
+}
+
+const Page: React.FC<PageProps> = ({ searchParams }) => {
   return <ActressCollectionMain {...searchParams} />;
 };
 

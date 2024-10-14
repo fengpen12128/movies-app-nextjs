@@ -159,3 +159,19 @@ declare interface ActressGroupedMovies {
     size: number;
     latestCollectedDate: Date;
 }
+
+declare interface MovieResource {
+    matchCode: string;
+    isMatched?: boolean;
+    path: string;
+    size: string;
+    createdTime: Date;
+    isPair?: boolean;
+}
+
+declare interface ResourceServerData {
+    path: string;
+    name: string;
+    size: string;
+    createdTime: string;
+}

@@ -16,9 +16,7 @@ export async function getTags(): Promise<DataResponse<OptionGroup[]>> {
                 tagName: true,
             },
         });
-
         const tagNameList = moviesTag.map((x: any) => x.tagName);
-
         const optionsList: OptionGroup[] = [
             {
                 title: "prefix",

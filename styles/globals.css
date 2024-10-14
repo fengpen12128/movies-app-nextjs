@@ -39,43 +39,6 @@
     /* Chrome, Safari and Opera */
 }
 
-.mac-close-icon {
-    width: 14px;
-    /* 圆圈的宽度 */
-    height: 14px;
-    /* 圆圈的高度 */
-    background-color: #ff5f57;
-    /* 红色背景 */
-    border-radius: 50%;
-    /* 圆形 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    cursor: pointer;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-}
-
-.mac-close-x {
-    color: white;
-    /* “×”的颜色 */
-    font-size: 10px;
-    /* “×”的大小 */
-    line-height: 1;
-    font-weight: bold;
-    visibility: hidden;
-    /* 默认隐藏 */
-}
-
-.mac-close-icon:hover .mac-close-x {
-    visibility: visible;
-    /* 悬停时显示“×” */
-}
-
-/* .app {
-    @apply relative z-10 flex justify-center items-center flex-col  mx-auto sm:px-16 px-6 ;
-  } */
-
 
 .flex-between {
     @apply flex justify-between items-center;

@@ -2,7 +2,9 @@
 
 import { AlertDialog, Button, Flex } from "@radix-ui/themes";
 import { message } from "react-message-popup";
-const DeleteAlertDialog = ({ actressName, children }) => {
+import React, { ReactNode } from "react";
+
+const DeleteAlertDialog: React.FC<{ actressName: string; children: ReactNode }> = ({ actressName, children }) => {
   const handleDeleteFav = async () => {
     const res = await fetch(`/api/movies/actressFav/${actressName}`, {
       method: "DELETE",

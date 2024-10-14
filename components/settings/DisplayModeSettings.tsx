@@ -1,7 +1,13 @@
 import { DropdownMenu, Text } from "@radix-ui/themes";
 import { EyeOpenIcon, StackIcon } from "@radix-ui/react-icons";
+import { FC } from "react";
 
-const DisplayModeSettings = ({ displayMode, onDisplayModeChange }) => {
+interface DisplayModeSettingsProps {
+  displayMode: string;
+  onDisplayModeChange: (value: string) => void;
+}
+
+const DisplayModeSettings: FC<DisplayModeSettingsProps> = ({ displayMode, onDisplayModeChange }) => {
   return (
     <>
       <DropdownMenu.Label>显示模式</DropdownMenu.Label>

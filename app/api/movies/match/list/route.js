@@ -7,8 +7,8 @@ export async function GET(request) {
   const st = searchParams.get("st");
   try {
     const [movies, movieResources] = await Promise.all([
-      prisma.MoviesInfo.findMany({ select: { code: true } }),
-      prisma.MoviesVideoResource.findMany({ select: { movieCode: true } }),
+      prisma.moviesInfo.findMany({ select: { code: true } }),
+      prisma.moviesVideoResource.findMany({ select: { movieCode: true } }),
     ]);
     let data = [];
     try {
@@ -18,7 +18,6 @@ export async function GET(request) {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            // 如果需要认证，添加相应的头部
           },
         }
       );

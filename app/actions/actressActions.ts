@@ -4,36 +4,9 @@ import prisma from "@/app/lib/prisma";
 import { revalidatePath } from "next/cache";
 import {
     DEFAULT_PAGE_SIZE,
-    getCollectionAndDownloadCode,
     getPaginationData,
-    handleMovie,
 } from "./utils/commonUtils";
-const movieSelect = {
 
-    id: true,
-    tags: true,
-    duration: true,
-    code: true,
-    rate: true,
-    rateNum: true,
-    releaseDate: true,
-    releaseYear: true,
-    actresses: {
-        select: {
-            id: true,
-            actressName: true
-        }
-    },
-    files: {
-        where: {
-            type: 2
-        },
-        select: {
-            path: true,
-            onlineUrl: true
-        }
-    },
-}
 
 
 export async function deleteActressFav(name: string): Promise<DataResponse<boolean>> {
@@ -76,7 +49,7 @@ export async function saveActressFav(name: string): Promise<DataResponse<boolean
     }
 }
 
-export async function getActressFavList({ page = 1 }: { page: number }): Promise<DataResponse<ActressFav[]>> {
+export async function getActressFavList({ page = 1 }: { page?: number }): Promise<DataResponse<ActressFav[]>> {
     const skip = (page - 1) * DEFAULT_PAGE_SIZE;
 
     try {
@@ -100,7 +73,7 @@ export async function getActressFavList({ page = 1 }: { page: number }): Promise
         }));
 
         return {
-            data: handledActressFav,
+            data: handledActressFav ?? [],
             pagination: getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE),
             code: 200,
         };
@@ -110,125 +83,46 @@ export async function getActressFavList({ page = 1 }: { page: number }): Promise
     }
 }
 
-
-
-export async function getMoviesByActress({
-    page = 1,
-    name,
-    collected,
-    single,
-    download,
-}: {
-    page: number;
-    name: string;
-    collected: boolean;
-    single: boolean;
-    download: boolean;
-}) {
-    const skip = (page - 1) * DEFAULT_PAGE_SIZE;
-
-    const { ctCode, dmCode } = await getCollectionAndDownloadCode();
-
-    let q = {
-        select: movieSelect,
-        orderBy: {
-            releaseDate: "desc" as const,
-        },
-        where: {
-            ...(!single && {
-                actresses: {
-                    some: {
-                        actressName: name,
-                    },
-                },
-            }),
-
-            ...(collected && {
-                code: {
-                    in: Array.from(ctCode),
-                },
-            }),
-            ...(!collected && {
-                code: {
-                    notIn: Array.from(ctCode),
-                },
-            }),
-            ...(single && {
-                AND: [
-                    {
-                        actresses: {
-                            some: {
-                                actressName: name,
-                            },
-                        },
-                    },
-                    {
-                        actresses: {
-                            none: {
-                                NOT: {
-                                    actressName: name,
-                                },
-                            },
-                        },
-                    },
-                ],
-            }),
-            ...(!single && {
-                AND: [
-                    {
-                        actresses: {
-                            some: {
-                                actressName: name,
-                            },
-                        },
-                    },
-                    {
-                        actresses: {
-                            some: {
-                                NOT: {
-                                    actressName: name,
-                                },
-                            },
-                        },
-                    },
-                ],
-            }),
-            ...(download && {
-                code: {
-                    in: Array.from(dmCode),
-                },
-            }),
-            ...(!download && {
-                code: {
-                    notIn: Array.from(dmCode),
-                },
-            }),
-        },
-        skip,
-        take: DEFAULT_PAGE_SIZE,
-    };
-
+export async function getActressFavStatus(name: string): Promise<DataResponse<boolean>> {
     try {
-        const [actressRel, totalCount] = await Promise.all([
-            prisma.moviesInfo.findMany(q),
-            prisma.moviesInfo.count({ where: q.where }),
-        ]);
+        const existingFav = await prisma.actressFav.findUnique({
+            where: {
+                actressName: name,
+            },
+        });
+        return { code: 200, data: !!existingFav };
+    } catch (error) {
+        console.error('Error fetching actress favorites:', error);
+        return { code: 500, msg: '获取收藏状态失败', data: false };
+    }
+}
 
 
-        const movies = handleMovie(actressRel, {
-            ctCode,
-            dmCode,
+export async function toggleActressFav(name: string): Promise<DataResponse<boolean>> {
+    try {
+        const existingFav = await prisma.actressFav.findUnique({
+            where: {
+                actressName: name,
+            },
         });
 
-        const pagination = getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE);
+        if (existingFav) {
+            await prisma.actressFav.delete({
+                where: {
+                    actressName: name,
+                },
+            });
+            return { code: 200, data: true, msg: "取消收藏成功" };
+        }
 
-        return {
-            data: movies as Movie[] ?? [],
-            pagination,
-            code: 200,
-        };
+        await prisma.actressFav.create({
+            data: {
+                actressName: name,
+            },
+        });
+        return { code: 200, data: true, msg: "收藏成功" };
     } catch (error) {
-        console.error("Error fetching movies:", error);
-        return { code: 500, msg: "Error fetching movies", data: [] };
+        console.error("Error collecting movie:", error);
+        return { code: 500, msg: "操作失败，请重试" };
     }
 }

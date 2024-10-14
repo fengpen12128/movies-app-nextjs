@@ -26,6 +26,8 @@ export async function getMovies({
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
+        // Add a 3-second delay
+   //     await new Promise(resolve => setTimeout(resolve, 1000));
 
         let relevantCodes: string[] = [];
         if (batchId) {
@@ -83,7 +85,6 @@ export async function getMovies({
         ]);
         const { ctCode, dmCode } = await getCollectionAndDownloadCode();
 
-        console.log('config in movieActions', config);
 
         const handled = handleMovie(movies, {
             ctCode,

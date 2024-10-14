@@ -2,33 +2,66 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  const allMoviesWithActress = await prisma.moviesCollection.findMany({
-    include: {
-      MovieInfo: {
-        include: {
-          actresses: {
-            select: {
-              id: true,
-              actressName: true,
+    const q = {
+        select: {
+            id: true,
+            tags: true,
+            duration: true,
+            code: true,
+            rate: true,
+            rateNum: true,
+            releaseDate: true,
+            releaseYear: true,
+            actresses: {
+                select: {
+                    id: true,
+                    actressName: true
+                }
             },
-          }, // 关联演员信息
-          files: {
-            where: {
-              type: 2,
-            },
-            select: {
-              path: true,
-              onlineUrl: true,
-            },
-          },
+            files: {
+                where: {
+                    type: 2
+                },
+                select: {
+                    path: true,
+                    onlineUrl: true
+                }
+            }
         },
-      },
-    },
-    orderBy: {
-      createdTime: "desc", // 按收藏时间倒序
-    },
-  });
-  console.log(allMoviesWithActress);
+        orderBy: {
+            releaseDate: "desc"
+        },
+        where: {
+            actresses: {
+                some: {
+                    actressName: "水原みその"
+                }
+            },
+            code: {
+                notIn: ["HZGD-266"]
+            },
+            AND: [
+                {
+                    actresses: {
+                        some: {
+                            actressName: "水原みその"
+                        }
+                    }
+                },
+                {
+                    actresses: {
+                        some: {
+                            NOT: {
+                                actressName: "水原みその"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+    const movies = await prisma.moviesInfo.findMany(q);
+    console.log(movies);
 }
 
 main()

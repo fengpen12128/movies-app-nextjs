@@ -6,7 +6,7 @@ import MatchedResources from "./MatchedResources";
 import UnmatchedResources from "./UnmatchedResources";
 
 export default function ResourceMatching() {
-  const [activeTab, setActiveTab] = useState("matched");
+  const [activeTab, setActiveTab] = useState<string>("matched");
 
   return (
     <div>

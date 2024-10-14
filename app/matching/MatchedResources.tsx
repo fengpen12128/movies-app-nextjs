@@ -1,30 +1,37 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Button, Table, Select, Card, Spinner } from "@radix-ui/themes";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { useRequest } from "ahooks";
 import { message } from "react-message-popup";
 import { filesize } from "filesize";
+import { nanoid } from "nanoid";
+import { getResourceList, saveResourceList } from "@/app/actions/resource";
+import dayjs from "dayjs";
 
 export default function MatchedResources() {
-  const [filter, setFilter] = useState("unPaired");
-  const [confirmAllLoading, setConfirmAllLoading] = useState(false);
+  const [filter, setFilter] = useState<string>("unPaired");
+  const [confirmAllLoading, setConfirmAllLoading] = useState<boolean>(false);
+  const [matchResult, setMatchResult] = useState<MovieResource[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const {
-    data: matchResult,
-    loading,
-    error,
-    run: fetchMatchResult,
-  } = useRequest(
-    async () => {
-      const response = await fetch("/api/movies/match/list?st=is");
-      return await response.json();
-    },
-    {
-      refreshDeps: [filter],
+  const fetchMatchResult = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { data, code, msg } = await getResourceList("is");
+      if (code !== 200) {
+        message.error(msg!);
+        return;
+      }
+      setMatchResult(data!);
+    } finally {
+      setLoading(false);
     }
-  );
+  }, []);
+
+  useEffect(() => {
+    fetchMatchResult();
+  }, [fetchMatchResult]);
 
   const pairMovies = useMemo(() => {
     if (!matchResult) return [];
@@ -38,47 +45,23 @@ export default function MatchedResources() {
     }
   }, [matchResult, filter]);
 
-  const submitConfirmMatch = async (movie) => {
-    try {
-      const resp = await fetch("/api/movies/match/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matchList: [movie] }),
-      });
-
-      if (resp.ok) {
-        message.success("提交成功");
-        fetchMatchResult();
-      } else {
-        throw new Error("提交失败");
-      }
-    } catch (error) {
-      message.error(error.message);
-    }
-  };
-
-  const confirmAllMatches = async () => {
+  const handleConfirmMatch = useCallback(async (movies: MovieResource | MovieResource[]) => {
     setConfirmAllLoading(true);
     try {
-      const unMatchedMovies = pairMovies.filter((movie) => !movie.isMatched);
-      const resp = await fetch("/api/movies/match/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matchList: unMatchedMovies }),
-      });
-
-      if (resp.ok) {
-        message.success("全部确认成功");
-        fetchMatchResult();
-      } else {
-        throw new Error("全部确认失败");
+      const movieList = Array.isArray(movies) ? movies : [movies];
+      const { code, msg } = await saveResourceList(movieList);
+      if (code !== 200) {
+        message.error(msg!);
+        return;
       }
+      message.success(msg!);
+      fetchMatchResult();
     } catch (error) {
-      message.error(error.message);
+      message.error("保存失败");
     } finally {
       setConfirmAllLoading(false);
     }
-  };
+  }, [fetchMatchResult]);
 
   return (
     <Card className="p-6">
@@ -88,7 +71,7 @@ export default function MatchedResources() {
             <Button
               color="crimson"
               variant="soft"
-              onClick={confirmAllMatches}
+              onClick={() => handleConfirmMatch(pairMovies.filter((movie) => !movie.isMatched))}
               disabled={pairMovies.length === 0 || confirmAllLoading}
             >
               {confirmAllLoading && <Spinner size="1" />} 全部确认
@@ -135,13 +118,15 @@ export default function MatchedResources() {
             </Table.Row>
           ) : (
             pairMovies.map((movie) => (
-              <Table.Row key={movie.id}>
+              <Table.Row key={nanoid()}>
                 <Table.Cell>{movie.matchCode}</Table.Cell>
                 <Table.Cell>{movie.path}</Table.Cell>
                 <Table.Cell>
                   {movie.size ? filesize(movie.size) : ""}
                 </Table.Cell>
-                <Table.Cell>{movie.createdTime}</Table.Cell>
+                <Table.Cell>
+                  {dayjs(movie.createdTime).format("YYYY-MM-DD HH:mm:ss")}
+                </Table.Cell>
                 <Table.Cell>
                   {movie.isMatched ? (
                     <span className="text-green-500">已匹配</span>
@@ -154,7 +139,7 @@ export default function MatchedResources() {
                     <Button
                       color="cyan"
                       variant="soft"
-                      onClick={() => submitConfirmMatch(movie)}
+                      onClick={() => handleConfirmMatch(movie)}
                     >
                       确认匹配
                     </Button>

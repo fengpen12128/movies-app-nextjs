@@ -14,10 +14,6 @@ export const getCollectionAndDownloadCode = async (): Promise<{ ctCode: string[]
     return { ctCode, dmCode };
 };
 
-
-
-
-
 export function getPaginationData(totalCount: number, page: number, limit: number): PaginationData {
     return {
         totalCount,
@@ -39,7 +35,6 @@ export function parsePaginationParams(searchParams: URLSearchParams): Pagination
     const skip = (page - 1) * limit;
     return { page, limit, skip };
 }
-
 
 export const handleMovie = (
     movieInput: any,

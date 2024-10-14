@@ -6,7 +6,7 @@ import {
     handleMovie
 } from "@/app/actions/utils/commonUtils";
 import { movieSelect } from "../querySelect";
-
+import { cookies } from 'next/headers';
 
 
 
@@ -14,6 +14,12 @@ import { movieSelect } from "../querySelect";
 export async function getActressRelMovies(movieId: number): Promise<DataResponse<Movie[]>> {
 
     try {
+
+        const cookieStore = cookies();
+        const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+
+
         const movie = await prisma.moviesInfo.findUnique({
             where: { id: movieId },
             select: {
@@ -59,7 +65,7 @@ export async function getActressRelMovies(movieId: number): Promise<DataResponse
         const handled = handleMovie(filteredRelMovies, {
             ctCode,
             dmCode,
-        });
+        }, config);
 
 
 

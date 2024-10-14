@@ -38,12 +38,12 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
 
       try {
         const [
-          { data: resources },
-          { data: movie },
-          { data: media },
-          { data: magnetLinks },
-          { data: relMovies },
-        ] = await Promise.all([
+          resourcesResult,
+          movieResult,
+          mediaResult,
+          magnetLinksResult,
+          relMoviesResult,
+        ] = await Promise.allSettled([
           getVideoResource(movieId),
           getMovieOne(movieId),
           getMedia(movieId),
@@ -51,11 +51,21 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
           getActressRelMovies(movieId),
         ]);
 
-        setMovie(movie || null);
-        setResources(resources || []);
-        setMedia(media || []);
-        setMagnetLinks(magnetLinks || []);
-        setRelMovies(relMovies || []);
+        if (resourcesResult.status === "fulfilled") {
+          setResources(resourcesResult.value.data || []);
+        }
+        if (movieResult.status === "fulfilled") {
+          setMovie(movieResult.value.data || null);
+        }
+        if (mediaResult.status === "fulfilled") {
+          setMedia(mediaResult.value.data || []);
+        }
+        if (magnetLinksResult.status === "fulfilled") {
+          setMagnetLinks(magnetLinksResult.value.data || []);
+        }
+        if (relMoviesResult.status === "fulfilled") {
+          setRelMovies(relMoviesResult.value.data || []);
+        }
       } catch (error) {
         console.error("Error fetching movie data:", error);
       }

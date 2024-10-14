@@ -1,11 +1,13 @@
-import ActressMoviesClient from "./ActressMoviesClient";
+import ActressMoviesPage from "./ActressMoviesPage";
 
-interface ActressMoviesPageProps {
-  searchParams: Record<string, any>;
+interface PageProps {
+  searchParams: {
+    name: string;
+  };
 }
 
-export default function ActressMoviesPage({
-  searchParams,
-}: ActressMoviesPageProps) {
-  return <ActressMoviesClient {...searchParams} />;
-}
+const Page: React.FC<PageProps> = ({ searchParams }) => {
+  return <ActressMoviesPage {...searchParams} />;
+};
+
+export default Page;

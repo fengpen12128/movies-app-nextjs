@@ -3,14 +3,23 @@
 import { Callout, Button } from "@radix-ui/themes";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import { useRequest } from "ahooks";
+import React from "react";
 
-const CrawlInfoAlert = () => {
-  const { data: crawlInfo, run: fetchCrawlInfo } = useRequest(() =>
+interface CrawlInfo {
+  id: string;
+  batchId: string;
+  newlyIncreasedNum: number;
+  updatedNum: number;
+  createdTime: string;
+}
+
+const CrawlInfoAlert: React.FC = () => {
+  const { data: crawlInfo, run: fetchCrawlInfo } = useRequest<CrawlInfo[]>(() =>
     fetch("/api/crawlAction").then((res) => res.json())
   );
 
   const { run: handleConfirm } = useRequest(
-    (id) =>
+    (id: string) =>
       fetch("/api/crawlAction", {
         method: "POST",
         headers: {

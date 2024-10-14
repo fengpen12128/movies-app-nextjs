@@ -16,25 +16,26 @@ datasource db {
 }
 
 model MoviesInfo {
-    id           Int                   @id @default(autoincrement()) @map("id")
-    code         String?               @unique(map: "code_uni") @map("code") @db.VarChar(100)
-    prefix       String?               @map("prefix") @db.VarChar(100)
-    duration     String?               @map("duration") @db.VarChar(100)
-    rate         Decimal?              @map("rate") @db.Decimal(10, 2)
-    rateNum      Int?                  @map("rate_num")
-    releaseDate  DateTime?             @map("release_date") @db.Date
-    releaseYear  Int?                  @map("release_year")
-    crawlWebsite String?               @map("crawl_website") @db.VarChar(100)
-    crawlUrl     String?               @map("crawl_url") @db.VarChar(200)
-    batchNum     String?               @map("batch_num") @db.VarChar(300)
-    updatedTime  DateTime?             @map("updated_time") @db.Timestamp(6)
-    createdTime  DateTime?             @default(now()) @map("created_time")
-    actresses    Actress[]             @relation("actress_on_movie")
-    tags         MoviesTag[]           @relation("tag_on_movie")
-    files        FilesInfo[]
-    magnetLinks  MagnetLinks[]
-    collections  MoviesCollection[]
-    downloads    MoviesVideoResource[]
+    id              Int                   @id @default(autoincrement()) @map("id")
+    code            String?               @unique(map: "code_uni") @map("code") @db.VarChar(100)
+    prefix          String?               @map("prefix") @db.VarChar(100)
+    duration        String?               @map("duration") @db.VarChar(100)
+    rate            Decimal?              @map("rate") @db.Decimal(10, 2)
+    rateNum         Int?                  @map("rate_num")
+    releaseDate     DateTime?             @map("release_date") @db.Date
+    releaseYear     Int?                  @map("release_year")
+    crawlWebsite    String?               @map("crawl_website") @db.VarChar(100)
+    crawlUrl        String?               @map("crawl_url") @db.VarChar(200)
+    batchNum        String?               @map("batch_num") @db.VarChar(300)
+    updatedTime     DateTime?             @map("updated_time") @db.Timestamp(6)
+    createdTime     DateTime?             @default(now()) @map("created_time")
+    actresses       Actress[]             @relation("actress_on_movie")
+    tags            MoviesTag[]           @relation("tag_on_movie")
+    files           FilesInfo[]
+    magnetLinks     MagnetLinks[]
+    collections     MoviesCollection[]
+    downloads       MoviesVideoResource[]
+    browsingHistory BrowsingHistory[]
 
     @@map("movies_info")
 }
@@ -112,12 +113,13 @@ model MoviesTag {
 
 model MoviesVideoResource {
     id          Int         @id @default(autoincrement()) @map("id")
-    movieCode   String?     @map("movie_code") @db.VarChar(100)
-    path        String?     @map("path") @db.VarChar(400)
+    movieCode   String     @map("movie_code") @db.VarChar(100)
+    path        String     @map("path") @db.VarChar(400)
     size        String?     @map("size") @db.VarChar(100)
     createdTime DateTime?   @default(now()) @map("created_time")
     MovieInfo   MoviesInfo? @relation(fields: [movieCode], references: [code])
 
+    @@unique([movieCode, path])
     @@map("movies_video_resource")
 }
 
@@ -194,4 +196,15 @@ model CrawlBatchRecord {
     type    Int    @map("type")
 
     @@map("crawl_batch_record")
+}
+
+// 添加新的 BrowsingHistory 模型
+model BrowsingHistory {
+    id        Int         @id @default(autoincrement())
+    movieCode String      @map("movie_code") @db.VarChar(100)
+    viewedAt  DateTime    @default(now()) @map("viewed_at")
+    MovieInfo MoviesInfo? @relation(fields: [movieCode], references: [code])
+
+    @@index([movieCode])
+    @@map("browsing_history")
 }

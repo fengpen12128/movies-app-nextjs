@@ -1,7 +1,19 @@
 import React from "react";
 import { Select, Flex, Text } from "@radix-ui/themes";
 
-const SelectItem = ({ label, value, onChange, items = [] }) => {
+interface SelectItemProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  items: { value: string; label: string; icon?: React.ReactNode }[];
+}
+
+const SelectItem: React.FC<SelectItemProps> = ({
+  label,
+  value,
+  onChange,
+  items = [],
+}) => {
   return (
     <Flex align="center" gap="3">
       <Text weight="bold">{label}</Text>
