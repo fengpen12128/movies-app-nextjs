@@ -17,28 +17,29 @@ interface CrawlInfo {
 }
 
 export async function getCrawlInfo(): Promise<CrawlInfo[]> {
-    const crawlInfo = await prisma.crawlInfo.findMany({
-        where: {
-            checked: "0",
-        },
-        orderBy: {
-            createdTime: "desc",
-        },
-    });
+    // const crawlInfo = await prisma.crawlInfo.findMany({
+    //     where: {
+    //         checked: "0",
+    //     },
+    //     orderBy: {
+    //         createdTime: "desc",
+    //     },
+    // });
 
 
-    return crawlInfo.map((x) => ({
-        ...x,
-        createdTime: x.createdTime ? dayjs(x.createdTime).format("YYYY-MM-DD HH:mm:ss") : null,
-        checked: x.checked || "",
-    }));
+    // return crawlInfo.map((x) => ({
+    //     ...x,
+    //     createdTime: x.createdTime ? dayjs(x.createdTime).format("YYYY-MM-DD HH:mm:ss") : null,
+    //     checked: x.checked || "",
+    // }));
+    return []
 }
 
 export async function updateCrawlInfo(id: number): Promise<void> {
-    await prisma.crawlInfo.update({
-        where: { id },
-        data: { checked: "1" },
-    });
+    // await prisma.crawlInfo.update({
+    //     where: { id },
+    //     data: { checked: "1" },
+    // });
     revalidatePath("/home");
 }
 

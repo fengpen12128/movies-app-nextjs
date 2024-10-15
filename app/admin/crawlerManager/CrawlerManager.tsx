@@ -274,7 +274,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
       <AlertDialogCommon
         showStopDialog={showStopDialog}
         setShowStopDialog={setShowStopDialog}
-        confirmStopCrawling={confirmStopCrawling}
+        confirmAction={confirmStopCrawling}
         title="确认停止"
         description="您确定要停止爬虫吗？此操作无法撤销。"
         actionText="停止"

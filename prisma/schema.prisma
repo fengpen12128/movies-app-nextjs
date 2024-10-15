@@ -43,6 +43,7 @@ model MoviesInfo {
     downloads       MoviesVideoResource[]
     browsingHistory BrowsingHistory[]
 
+    @@index([prefix], map: "prefix_index")
     @@map("movies_info")
 }
 
@@ -58,20 +59,6 @@ model Actress {
     @@map("actress")
 }
 
-model CrawlInfo {
-    id                Int       @id @default(autoincrement()) @map("id")
-    batchId           String    @map("batch_id") @db.VarChar(255)
-    newlyIncreasedNum Int?      @default(0) @map("newly_increased_num")
-    updatedNum        Int?      @default(0) @map("updated_num")
-    downloadSize      String?   @map("download_size") @db.VarChar(100)
-    duration          Int?      @map("duration")
-    checked           String?   @default("0") @map("checked") @db.VarChar(10)
-    createdTime       DateTime? @default(now()) @map("created_time")
-
-    @@map("crawl_info")
-}
-
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model FilesInfo {
     id         Int         @id @default(autoincrement()) @map("id")
     bucketName String?     @map("bucket_name") @db.VarChar(100)
@@ -86,7 +73,6 @@ model FilesInfo {
     @@map("files_info")
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model MagnetLinks {
     id         Int         @id @default(autoincrement()) @map("id")
     moviesId   Int?        @map("movies_id")
@@ -144,7 +130,6 @@ model DownloadStatistics {
     @@map("download_statistics")
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model DownloadUrls {
     id      Int     @id(map: "downloads_urls_pkey") @default(autoincrement())
     batchId String? @map("batch_id")
@@ -168,12 +153,12 @@ model ActressFav {
 }
 
 model CrawlSourceData {
-    id   Int  @id @default(autoincrement())
-    data Json
-    // code        String? @default(dbgenerated("(data ->> 'code'::text)"))
-    // batchId     String? @default(dbgenerated("(data ->> 'batch_id'::text)")) @map("batch_id")
-    // createdTime String? @default(dbgenerated("(data ->> 'created_time'::text)")) @map("created_time")
-    // updatedTime String? @default(dbgenerated("(data ->> 'updated_time'::text)")) @map("updated_time")
+    id          Int     @id @default(autoincrement())
+    data        Json
+    code        String? @default(dbgenerated("(data ->> 'code'::text)"))
+    batchId     String? @default(dbgenerated("(data ->> 'batch_id'::text)")) @map("batch_id")
+    createdTime String? @default(dbgenerated("(data ->> 'created_time'::text)")) @map("created_time")
+    updatedTime String? @default(dbgenerated("(data ->> 'updated_time'::text)")) @map("updated_time")
 
     @@map("crawl_source_data")
 }
@@ -191,6 +176,7 @@ model CrawlStat {
     newlyIncreasedNum Int?      @default(0) @map("newly_increased_num")
     updatedNum        Int?      @default(0) @map("updated_num")
     downloadSize      String?   @map("download_size")
+    logText           String?   @map("log_text")
 
     @@map("crawl_stat")
 }

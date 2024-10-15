@@ -32,7 +32,7 @@ const ClawerInfoPage = () => {
 
   return (
     <div className="container mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold mb-4">爬虫信息</h1>
+      <h1 className="text-2xl font-bold mb-4">Crawler Info</h1>
       <Card>
         <CardHeader>
           <CardTitle>搜索</CardTitle>
@@ -43,7 +43,7 @@ const ClawerInfoPage = () => {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle>爬虫数据</CardTitle>
+          <CardTitle>Crawler Data</CardTitle>
         </CardHeader>
         <CardContent>
           <ClawerTable data={data?.data || []} />

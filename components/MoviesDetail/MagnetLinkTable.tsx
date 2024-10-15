@@ -104,6 +104,7 @@ const MagnetLinkTable: React.FC<MagnetLinkTableProps> = ({ links }) => {
                   <Button
                     variant="soft"
                     color="blue"
+                    size="1"
                     onClick={() => handleSaveLink(link.linkUrl!)}
                   >
                     Save to List

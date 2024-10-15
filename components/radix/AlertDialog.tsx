@@ -7,14 +7,14 @@ interface AlertDialogProps {
   description: string;
   actionText: string;
   setShowStopDialog: (show: boolean) => void;
-  confirmStopCrawling: () => void;
+  confirmAction: () => void;
 
 }
 
 const AlertDialogCommon: React.FC<AlertDialogProps> = ({
   showStopDialog,
   setShowStopDialog,
-  confirmStopCrawling,
+  confirmAction,
   title,
   description,
   actionText
@@ -38,7 +38,7 @@ const AlertDialogCommon: React.FC<AlertDialogProps> = ({
             <RadixButton
               variant="solid"
               color="red"
-              onClick={confirmStopCrawling}
+              onClick={confirmAction}
             >
               {actionText}
             </RadixButton>
