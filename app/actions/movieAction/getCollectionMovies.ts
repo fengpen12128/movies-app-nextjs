@@ -15,23 +15,18 @@ import { cookies } from 'next/headers';
 export async function getCollectionMovies({
     page = 1,
     download,
-    isStack = false
 }: {
     page?: number;
     download?: string;
-    isStack?: boolean;
 }): Promise<DataResponse<Movie[] | ActressGroupedMovies[]>> {
     try {
         const { ctCode, dmCode } = await getCollectionAndDownloadCode();
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
-
-
-        if (isStack) {
-            const res = await groupedMoviesByActress(page, 50);
-            return res;
-        }
-
+        // if (isStack) {
+        //     const res = await groupedMoviesByActress(page, 50);
+        //     return res;
+        // }
 
         const skip = (page - 1) * 50;
         let q = {
@@ -196,7 +191,6 @@ async function groupedMoviesByActress(page: number = 1, pageSize: number = 30): 
         });
     }
 
-    console.log('finalGroups[10]_xxx', finalGroups.slice(0, 10));
 
     // Step 4: 按组内最近收藏时间倒序排列
     finalGroups.sort((a, b) => b.latestCollectedDate.getTime() - a.latestCollectedDate.getTime());

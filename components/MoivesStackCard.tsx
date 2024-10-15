@@ -1,10 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import MoviesCard from "@/components/MoviesCard";
 import { StackCardContentModal } from "@/components/MoviesPreviewModal";
 import { Card, Spinner } from "@radix-ui/themes";
-import { getCollectedMoviesByActressId } from "@/app/actions";
+import {
+  getCollectedMoviesByActressId,
+  getDownloadMoviesByActressId,
+} from "@/app/actions";
 
 export default function MoviesStack({
   movies,
@@ -64,14 +68,23 @@ export default function MoviesStack({
 const ActressMoviesList = ({ actressId }: { actressId: number }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const pathname = usePathname();
+  const type = pathname.includes("collected") ? "collection" : "download";
 
   useEffect(() => {
     setLoading(true);
-    getCollectedMoviesByActressId(actressId).then((res) => {
-      setMovies(res.data || []);
-      setLoading(false);
-    });
-  }, [actressId]);
+    if (type === "collection") {
+      getCollectedMoviesByActressId(actressId).then((res) => {
+        setMovies(res.data || []);
+        setLoading(false);
+      });
+    } else if (type === "download") {
+      getDownloadMoviesByActressId(actressId).then((res) => {
+        setMovies(res.data || []);
+        setLoading(false);
+      });
+    }
+  }, [actressId, type]);
 
   if (loading) {
     return (

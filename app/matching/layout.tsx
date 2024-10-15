@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "资源匹配",
+  title: "Resource Matching",
 };
 
 import { ReactNode } from "react";

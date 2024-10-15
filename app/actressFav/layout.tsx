@@ -2,7 +2,7 @@ import SharedLayout from "../shared-layout/layout";
 import { ReactNode } from "react";
 
 export const metadata = {
-  title: "收藏演员",
+  title: "Actress Collection",
 };
 
 interface ActressCollectionMainProps {

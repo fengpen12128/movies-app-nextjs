@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { IconButton, Table } from "@radix-ui/themes";
+import { IconButton, Table, Button } from "@radix-ui/themes";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { message } from "react-message-popup";
 import { CopyIcon } from "@radix-ui/react-icons";
+import { useLocalStorage } from "usehooks-ts";
 
 import { showMagLinkName } from "@/lib/commonUtils";
 import dayjs from "dayjs";
@@ -14,6 +15,20 @@ interface MagnetLinkTableProps {
 }
 
 const MagnetLinkTable: React.FC<MagnetLinkTableProps> = ({ links }) => {
+  const [savedLinks, setSavedLinks] = useLocalStorage<string[]>(
+    "savedMagnetLinks",
+    []
+  );
+
+  const handleSaveLink = (linkUrl: string) => {
+    if (!savedLinks.includes(linkUrl)) {
+      setSavedLinks([...savedLinks, linkUrl]);
+      message.success("链接已保存到列表", 1000);
+    } else {
+      message.info("该链接已在列表中", 1000);
+    }
+  };
+
   return (
     <div className="w-full mt-10 bg-base-100 rounded p-2">
       <div className="pb-2 flex justify-between">
@@ -31,6 +46,9 @@ const MagnetLinkTable: React.FC<MagnetLinkTableProps> = ({ links }) => {
               </Table.ColumnHeaderCell>
               <Table.ColumnHeaderCell justify="center">
                 添加时间
+              </Table.ColumnHeaderCell>
+              <Table.ColumnHeaderCell justify="center">
+                操作
               </Table.ColumnHeaderCell>
             </Table.Row>
           </Table.Header>
@@ -76,7 +94,20 @@ const MagnetLinkTable: React.FC<MagnetLinkTableProps> = ({ links }) => {
                   justify="center"
                   className="whitespace-nowrap"
                 >
-                  {dayjs(link.uploadTime).format('YYYY-MM-DD')}
+                  {dayjs(link.uploadTime).format("YYYY-MM-DD")}
+                </Table.Cell>
+                <Table.Cell
+                  width={"25%"}
+                  justify="center"
+                  className="whitespace-nowrap"
+                >
+                  <Button
+                    variant="soft"
+                    color="blue"
+                    onClick={() => handleSaveLink(link.linkUrl!)}
+                  >
+                    Save to List
+                  </Button>
                 </Table.Cell>
               </Table.Row>
             ))}

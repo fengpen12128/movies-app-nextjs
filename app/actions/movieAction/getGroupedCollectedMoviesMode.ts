@@ -10,7 +10,7 @@ import { getCollectionAndDownloadCode, getPaginationData, handleMovie } from "..
  * @param page - The page number to fetch (default: 1)
  * @param pageSize - The number of items per page (default: 50)
  */
-export async function getGroupedMoviesMode(page: number = 1, pageSize: number = 50): Promise<DataResponse<ActressGroupedMovies[]>> {
+export async function getGroupedCollectedMoviesMode(page: number = 1, pageSize: number = 50): Promise<DataResponse<ActressGroupedMovies[]>> {
     const skip = (page - 1) * pageSize;
 
     try {

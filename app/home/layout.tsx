@@ -6,6 +6,10 @@ interface CollectionLayoutProps {
   children: ReactNode;
 }
 
+export const metadata = {
+  title: "Home",
+};
+
 export default function CollectionLayout({ children }: CollectionLayoutProps) {
   return (
     <SharedLayout>

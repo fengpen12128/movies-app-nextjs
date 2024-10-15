@@ -168,12 +168,12 @@ model ActressFav {
 }
 
 model CrawlSourceData {
-    id          Int     @id @default(autoincrement())
-    data        Json
-    code        String? @default(dbgenerated("(data ->> 'code'::text)"))
-    batchId     String? @default(dbgenerated("(data ->> 'batch_id'::text)")) @map("batch_id")
-    createdTime String? @default(dbgenerated("(data ->> 'created_time'::text)")) @map("created_time")
-    updatedTime String? @default(dbgenerated("(data ->> 'updated_time'::text)")) @map("updated_time")
+    id   Int  @id @default(autoincrement())
+    data Json
+    // code        String? @default(dbgenerated("(data ->> 'code'::text)"))
+    // batchId     String? @default(dbgenerated("(data ->> 'batch_id'::text)")) @map("batch_id")
+    // createdTime String? @default(dbgenerated("(data ->> 'created_time'::text)")) @map("created_time")
+    // updatedTime String? @default(dbgenerated("(data ->> 'updated_time'::text)")) @map("updated_time")
 
     @@map("crawl_source_data")
 }

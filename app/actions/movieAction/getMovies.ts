@@ -27,7 +27,7 @@ export async function getMovies({
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
         // Add a 3-second delay
-   //     await new Promise(resolve => setTimeout(resolve, 1000));
+       await new Promise(resolve => setTimeout(resolve, 3000));
 
         let relevantCodes: string[] = [];
         if (batchId) {

@@ -4,7 +4,7 @@ import { getCollectionAndDownloadCode, getPaginationData, handleMovie } from "@/
 import prisma from "@/app/lib/prisma";
 import { cookies } from 'next/headers';
 
-export async function getDownloadMovies(page = 1, collected: string): Promise<DataResponse<Movie[]>> {
+export async function getDownloadMovies(page: number = 1, collected?: string): Promise<DataResponse<Movie[] | ActressGroupedDownloadMovies[]>> {
     try {
         const skip = (page - 1) * 50;
 

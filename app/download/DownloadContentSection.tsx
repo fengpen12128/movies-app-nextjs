@@ -1,26 +1,26 @@
 import { CommonDisplay, StackDisplay } from "@/components/MovieCardDisplay";
-import { getCollectionMovies } from "@/app/actions";
-import { getGroupedCollectedMoviesMode } from "@/app/actions";
-import useCommonstore from "@/store/commonStore";
+import { getDownloadMovies } from "@/app/actions";
 import MovieEmpty from "@/components/MovieEmpty";
-interface CollectionProps {
+import { getGroupedDownloadMovies } from "@/app/actions/movieAction/getGroupedDownloadMoviesMode";
+
+interface DownloadContentSectionProps {
   page?: number;
-  download?: string;
+  collected?: string;
   arrange?: "flex" | "stack";
 }
 
-export default async function CollectionCardSection({
+const DownloadContentSection = async ({
   page = 1,
-  download,
+  collected,
   arrange = "flex",
-}: CollectionProps) {
+}: DownloadContentSectionProps) => {
   if (arrange === "flex") {
     const {
       data: movies,
+      pagination,
       code,
       msg,
-      pagination,
-    } = await getCollectionMovies({ page, download });
+    } = await getDownloadMovies(page, collected);
 
     if (code !== 200) {
       return <div>{msg}</div>;
@@ -29,8 +29,6 @@ export default async function CollectionCardSection({
     if (movies!.length === 0) {
       return <MovieEmpty />;
     }
-
-    useCommonstore.getState().setPagination(pagination!);
 
     return (
       <CommonDisplay movies={movies as Movie[]} pagination={pagination!} />
@@ -42,13 +40,18 @@ export default async function CollectionCardSection({
     code: groupedCode,
     msg: groupedMsg,
     pagination: groupedPagination,
-  } = await getGroupedCollectedMoviesMode(page);
+  } = await getGroupedDownloadMovies(page);
+
+  if (groupedCode !== 200) {
+    return <div>{groupedMsg}</div>;
+  }
 
   return (
     <StackDisplay
-    
-      movies={groupedMovies as ActressGroupedMovies[]}
+      movies={groupedMovies as ActressGroupedDownloadMovies[]}
       pagination={groupedPagination!}
     />
   );
-}
+};
+
+export default DownloadContentSection;

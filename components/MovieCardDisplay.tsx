@@ -6,7 +6,7 @@ import MyPagination from "./MyPagination";
 import { nanoid } from "nanoid";
 
 export const StackDisplay: React.FC<{
-  movies: ActressGroupedMovies[];
+  movies: ActressGroupedMovies[] | ActressGroupedDownloadMovies[];
   pagination?: PaginationData;
 }> = ({ movies, pagination }) => {
   const colClassDia = `grid mt-8 gap-5 grid-cols-1 sm:grid-cols-4`;

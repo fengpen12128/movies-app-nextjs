@@ -3,7 +3,7 @@ import CollectionSettings from "@/components/SubFilterBar/CollectionFilter";
 import { ReactNode } from 'react';
 
 export const metadata = {
-  title: "movies (我的收藏)",
+  title: "Movies Collection",
 };
 
 export default function CollectionLayout({ children }: { children: ReactNode }) {

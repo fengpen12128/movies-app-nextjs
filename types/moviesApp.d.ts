@@ -164,6 +164,17 @@ declare interface ActressGroupedMovies {
     latestCollectedDate: Date;
 }
 
+declare interface ActressGroupedDownloadMovies {
+    actress: {
+        id: number;
+        actressName: string;
+    };
+    movies: Movie[] | Movie;
+    grouped?: boolean;
+    size: number;
+    latestDownloadDate: Date;
+}
+
 declare interface MovieResource {
     matchCode: string;
     isMatched?: boolean;

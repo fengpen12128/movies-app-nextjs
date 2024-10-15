@@ -2,10 +2,14 @@ import SharedLayout from "../shared-layout/layout";
 import DownloadFilter from "@/components/SubFilterBar/DownloadFilter";
 
 export const metadata = {
-  title: "movies (我的下载)",
+  title: "Movies Download",
 };
 
-export default function DownloadLayout({ children }) {
+interface DownloadLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function DownloadLayout({ children }: DownloadLayoutProps) {
   return (
     <SharedLayout>
       <DownloadFilter />
