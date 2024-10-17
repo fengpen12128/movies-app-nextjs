@@ -1,20 +1,19 @@
-@import url("g1.css");
-@import url("g2.css");
-@import url("g3.css");
-@import url("g4.css");
 
 /* app/globals.css */
 @import 'nprogress/nprogress.css';
+
 /* 自定义 nprogress 样式 */
 #nprogress .bar {
-    background: red;  /* 进度条颜色 */
-    height: 4px;       /* 进度条高度 */
-  }
+    background: red;
+    /* 进度条颜色 */
+    height: 4px;
+    /* 进度条高度 */
+}
 
-  /* 隐藏 spinner（如果不需要的话） */
-  #nprogress .spinner {
+/* 隐藏 spinner（如果不需要的话） */
+#nprogress .spinner {
     display: none;
-  }
+}
 
 
 :root {
@@ -42,20 +41,20 @@
 
 .flex-between {
     @apply flex justify-between items-center;
-  }
+}
 
-  .flex-center {
+.flex-center {
     @apply flex justify-center items-center;
-  }
+}
 
-  .flex-start {
+.flex-start {
     @apply flex justify-start items-start;
-  }
+}
 
 
-  .flex-end {
+.flex-end {
     @apply flex justify-end items-center;
-  }
+}
 
 
 .transition-transform {
@@ -67,7 +66,7 @@
 }
 
 @layer base {
-  :root {
+    :root {
         --background: 0 0% 100%;
         --foreground: 240 10% 3.9%;
         --card: 0 0% 100%;
@@ -94,7 +93,8 @@
         --chart-5: 27 87% 67%;
         --radius: 0.5rem;
     }
-  .dark {
+
+    .dark {
         --background: 240 10% 3.9%;
         --foreground: 0 0% 98%;
         --card: 240 10% 3.9%;
@@ -123,32 +123,11 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
+    * {
+        @apply border-border;
     }
-  body {
-    @apply bg-background text-foreground;
+
+    body {
+        @apply bg-background text-foreground;
     }
-}
-
-/* 在文件末尾添加以下样式 */
-#nprogress .bar {
-  background: #29d;
-  position: fixed;
-  z-index: 1031;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-}
-
-#nprogress .peg {
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 100px;
-  height: 100%;
-  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
-  opacity: 1.0;
-  transform: rotate(3deg) translate(0px, -4px);
 }

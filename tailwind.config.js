@@ -10,11 +10,6 @@ module.exports = {
   ],
   theme: {
   	extend: {
-  		fontFamily: {
-  			suse: ["SUSE", "sans-serif"],
-  			nerko: ["Nerko One", "cursive"],
-  			ma: ["Ma Shan Zheng", "sans-serif"]
-  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
@@ -65,5 +60,5 @@ module.exports = {
   	}
   },
   plugins: [nextui(), require("tailwindcss-animate")],
-  darkMode: ["class", "class"],
+  darkMode: ["class"],
 };

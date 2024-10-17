@@ -1,6 +1,15 @@
+"use client";
+
 import { Card } from "@radix-ui/themes";
 import { ReactNode } from "react";
 import RenderPortal from "./RenderPortal";
+import { Play } from "lucide-react";
+import { useState } from "react";
+import dynamic from "next/dynamic";
+// 动态导入 VideoPlayer 组件
+const VideoPlayer = dynamic(() => import("@/components/VideoPlayer"), {
+  ssr: false, // 禁用服务器端渲染
+});
 
 interface ModalProps {
   open: boolean;
@@ -53,5 +62,48 @@ export const MoviesPreviewModal: React.FC<ModalProps> = ({
         </Card>
       </div>
     </RenderPortal>
+  );
+};
+
+export const MoviesTrailerModal: React.FC<{
+  coverUrl: string;
+  videoUrl: string;
+}> = ({ coverUrl, videoUrl }) => {
+  const [showPlay, setShowPlay] = useState(false);
+
+  return (
+    <>
+      {showPlay && (
+        <RenderPortal>
+          <div
+            onClick={() => setShowPlay(false)}
+            className="fixed inset-0 bg-black bg-opacity-50 bg h-screen w-screen flex items-center justify-center z-[9999]"
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className={`flex items-center justify-center rounded-lg shadow-xl w-[70%]`}
+            >
+              <VideoPlayer src={videoUrl || ""} />
+            </div>
+          </div>
+        </RenderPortal>
+      )}
+
+      <div className="relative">
+        <img
+          className="cursor-pointer h-[200px] object-cover"
+          src={coverUrl}
+          alt=""
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-50 hover:bg-opacity-30 transition-opacity duration-300 flex items-center justify-center">
+          <span
+            onClick={() => setShowPlay(true)}
+            className="text-white cursor-pointer text-5xl"
+          >
+            <Play color="#FFB6C1" fill="#FFB6C1" size={60} />
+          </span>
+        </div>
+      </div>
+    </>
   );
 };

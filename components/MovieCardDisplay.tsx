@@ -1,6 +1,6 @@
 "use client";
 
-import MoviesCard from "./MoviesCard";
+import MoviesCard from "./movie-card-styles/MoviesCard";
 import MoviesStack from "./MoivesStackCard";
 import MyPagination from "./MyPagination";
 import { nanoid } from "nanoid";
@@ -41,13 +41,13 @@ export const CommonDisplay: React.FC<{
   }
 
   return (
-    <>
+    <div className='mb-10'>
       <section className={colClassDia}>
         {movies.map((x) => (
           <MoviesCard key={x.id} {...x} />
         ))}
       </section>
       <MyPagination {...pagination!} />
-    </>
+    </div>
   );
 };

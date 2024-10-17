@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { message } from 'react-message-popup';
+import { getSpiderStatus, runCrawl } from '@/app/actions/admin/crawl';
 
 interface CrawlState {
     status: string;
@@ -9,7 +10,7 @@ interface CrawlState {
 
 export const useCrawlerOperations = (
     initialState: CrawlState,
-    targets: UrlParams[],
+    targets: CrawlUrl[],
 ) => {
 
 
@@ -19,12 +20,9 @@ export const useCrawlerOperations = (
 
     const checkSpiderStatus = useCallback(async (jobId: string, onFinished: (batchId: string) => void, batchId: string) => {
         try {
-            const response = await fetch(
-                `/api/crawl/action/statusGet?jobId=${jobId}`
-            );
-            const data = await response.json();
+            const { data: crawlStatus, code, msg } = await getSpiderStatus(jobId);
 
-            if (data.status === "finished") {
+            if (crawlStatus === "finished") {
                 setCrawlState(prevState => ({ ...prevState, status: "completed" }));
                 if (statusCheckInterval) {
                     clearInterval(statusCheckInterval);
@@ -54,25 +52,14 @@ export const useCrawlerOperations = (
     }
 
     const startCrawling = async (onFinished: (batchId: string) => void) => {
-        const handleCrawlParams = () => ({
-            urls: targets.map(({ url, maxPages }) => [url, maxPages]),
-        });
+
 
         try {
-            const response = await fetch("/api/crawl/action/run", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(handleCrawlParams()),
-            });
-
-            if (!response.ok) {
-                message.error("Failed to start spider");
+            const { data: res, code, msg } = await runCrawl({ urls: targets });
+            if (code !== 200 || !res) {
+                message.error(msg!);
                 return;
             }
-
-            const res = await response.json();
 
             setCrawlState(prevState => ({
                 ...prevState,

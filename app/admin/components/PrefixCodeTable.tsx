@@ -15,28 +15,44 @@ import Link from "next/link";
 import { getPrefixStatistics } from "@/app/actions/admin/dashboard";
 import { useRequest } from "ahooks";
 import { Spinner } from "@radix-ui/themes";
+import { runCrawl } from "@/app/actions/admin/crawl";
+import { message } from "react-message-popup";
 
 const PrefixCodeTable: React.FC = () => {
   const { data, loading } = useRequest(getPrefixStatistics);
   const [searchTerm, setSearchTerm] = useState("");
   const [crawlingCodes, setCrawlingCodes] = useState<Set<string>>(new Set());
+  const [jobId, setJobId] = useState<string | null>(null);
 
   const handleReCrawl = (code: string) => {
     setCrawlingCodes((prev) => new Set(prev).add(code));
-    // 模拟爬取过程
-    setTimeout(() => {
-      setCrawlingCodes((prev) => {
-        const newSet = new Set(prev);
-        newSet.delete(code);
-        return newSet;
-      });
-      console.log(`Re-crawling completed for code: ${code}`);
-    }, 10000); // 3秒后完成爬取
+    // // 模拟爬取过程
+    // setTimeout(() => {
+    //   setCrawlingCodes((prev) => {
+    //     const newSet = new Set(prev);
+    //     newSet.delete(code);
+    //     return newSet;
+    //   });
+    //   console.log(`Re-crawling completed for code: ${code}`);
+    // }, 10000); // 3秒后完成爬取
+
+    let p = {
+      url: `https://javdb.com/video_codes/${code}`,
+      maxPage: 1,
+      save: false,
+    };
+
+    runCrawl({ urls: [p] }).then((res) => {
+      if (res.code !== 200) {
+        message.error(res.msg || "爬取失败");
+      }
+      message.success(res?.data!.jobId);
+      setJobId(res?.data!.jobId);
+    });
   };
 
   const handleViewLog = (code: string) => {
-    console.log(`Viewing log for code: ${code}`);
-    // 这里可以实现查看日志的逻辑
+    window.open(`/clawerLogView?jobId=${jobId}`, "_blank");
   };
 
   const prefixData = data?.data || [];
@@ -84,7 +100,11 @@ const PrefixCodeTable: React.FC = () => {
                         )}
                         <Link
                           href={`/home?prefix=${item.code}` as any}
-                          className={`hover:underline ${crawlingCodes.has(item.code) ? 'text-red-500' : 'hover:text-blue-500'}`}
+                          className={`hover:underline ${
+                            crawlingCodes.has(item.code)
+                              ? "text-red-500"
+                              : "hover:text-blue-500"
+                          }`}
                           target="_blank"
                         >
                           {item.code}
@@ -96,10 +116,13 @@ const PrefixCodeTable: React.FC = () => {
                     <TableCell>
                       <Button
                         size="sm"
-                        variant={crawlingCodes.has(item.code) ? "secondary" : "outline"}
-                        className={crawlingCodes.has(item.code)
-                          ? "text-blue-600 hover:text-blue-700 "
-                          : "text-muted-foreground"
+                        variant={
+                          crawlingCodes.has(item.code) ? "secondary" : "outline"
+                        }
+                        className={
+                          crawlingCodes.has(item.code)
+                            ? "text-blue-600 hover:text-blue-700 "
+                            : "text-muted-foreground"
                         }
                         onClick={() =>
                           crawlingCodes.has(item.code)

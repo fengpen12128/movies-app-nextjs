@@ -20,7 +20,7 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
   const toggleCollect = async (): Promise<void> => {
     if (!movie) return;
     setIsCollecting(true);
-    const resp = await toggleCollection(movie.code, pathname);
+    const resp = await toggleCollection(movie.id, pathname);
     if (resp.code === 200) {
       setIsCollected(!isCollected);
       message.success(resp.msg || "操作成功", 1000);
@@ -59,12 +59,11 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
           alt="preview"
           src={coverUrl}
         />
-        {/* <Image isBlurred alt="preview" src={coverUrl} /> */}
       </div>
 
       <div className="w-full sm:w-[40%]">
         <ul className="space-y-4">
-          <li className="font-suse text-3xl text-[#0abab5] flex items-baseline">
+          <li className="text-3xl text-[#0abab5] flex items-baseline">
             <span
               className="hover:underline cursor-pointer  text-[1.15em] transition-colors duration-200 ease-in-out hover:text-[#08a19d]"
               onClick={() => handlePrefixClick(prefix)}
@@ -114,14 +113,6 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
           )}
         </ul>
         <div className="flex space-x-2 ml-0 sm:ml-10 mt-4 sm:mt-12">
-          {/* <Button
-            onClick={handlePlay}
-            className="cursor-pointer"
-            color="indigo"
-            variant="soft"
-          >
-            立即播放
-          </Button> */}
           <Button
             onClick={toggleCollect}
             className="cursor-pointer"

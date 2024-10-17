@@ -9,17 +9,17 @@ generator prismaClient {
     binaryTargets   = ["native"]
 }
 
-// datasource db {
-//     provider     = "postgresql"
-//     url          = env("DATABASE_URL")
-//     relationMode = "prisma"
-// }
-
 datasource db {
-    provider  = "postgresql"
-    url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-    directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+    provider     = "postgresql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
+
+// datasource db {
+//     provider  = "postgresql"
+//     url       = env("SUPABASE_MOVIES_POSTGRES_URL") // uses connection pooling
+//     directUrl = env("SUPABASE_MOVIES_POSTGRES_PRISMA_URL") // uses a direct connection
+// }
 
 model MoviesInfo {
     id              Int                   @id @default(autoincrement()) @map("id")
@@ -166,7 +166,8 @@ model CrawlSourceData {
 model CrawlStat {
     id                Int       @id @default(autoincrement())
     batchId           String?   @unique @map("batch_id")
-    status            Int?      @default(0)
+    jobId             String?   @unique @map("job_id")
+    crawlStatus       Int?      @default(0) @map("crawl_status")
     transStatus       Int?      @default(0) @map("trans_status")
     downloadStatus    Int?      @default(0) @map("download_status")
     startedTime       DateTime? @map("started_time") @db.Timestamp(6)

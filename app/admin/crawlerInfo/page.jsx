@@ -1,7 +1,5 @@
 "use client";
 
-import { useRequest } from "ahooks";
-
 import React, { useState } from "react";
 import SearchSection from "./SearchSection";
 import ClawerTable from "./ClawerTable";
@@ -12,18 +10,6 @@ const ClawerInfoPage = () => {
     batchId: "",
     status: "",
     page: 1,
-  });
-
-  const fetchBatchInfo = async (params) => {
-    const response = await fetch(`/api/crawl/crawlParams`);
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  };
-
-  const { data, error, loading } = useRequest(fetchBatchInfo, {
-    defaultParams: [searchParams],
   });
 
   const handleSearch = (params) => {
@@ -46,7 +32,7 @@ const ClawerInfoPage = () => {
           <CardTitle>Crawler Data</CardTitle>
         </CardHeader>
         <CardContent>
-          <ClawerTable data={data?.data || []} />
+          <ClawerTable />
         </CardContent>
       </Card>
     </div>

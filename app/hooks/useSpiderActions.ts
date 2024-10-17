@@ -1,40 +1,45 @@
 import { useState } from 'react';
 import { message } from 'react-message-popup';
+import { transformSourceData } from '@/app/actions/admin/script/sourceDataTran';
+import { saveCrawlBatchRecord, updateTransStatus } from '@/app/actions/admin/crawl/afterAction';
 
 export const useSpiderActions = () => {
-    const [isTransferring, setIsTransferring] = useState(false);
-    const [isDownloading, setIsDownloading] = useState(false);
+    const [transferringBatches, setTransferringBatches] = useState<string[]>([]);
+    const [downloadingBatches, setDownloadingBatches] = useState<string[]>([]);
 
-    const handleTransData = async (batchId: string | null) => {
+    const handleTransData = async (batchId: string) => {
         if (!batchId) {
             message.error("batchId is null");
             return;
         }
-        setIsTransferring(true);
+        setTransferringBatches((prev) => [...prev, batchId]);
         try {
-            await fetch(`/api/crawl/action/trans/${batchId}`);
-            message.success("数据迁移成功");
+            await transformSourceData({ batchId, isFullData: false });
+            message.success("Data transfer successful");
             await updateTransStatus(batchId);
         } catch (error) {
-            console.error("Error transferring data:", error);
-            message.error("数据迁移失败");
+            message.error("Data migration failed");
+            throw error;
         } finally {
-            setIsTransferring(false);
+            setTransferringBatches((prev) => prev.filter(id => id !== batchId));
         }
     };
 
-    const handleSaveCrawlBatchRecord = async (batchId: string | null) => {
-        if (!batchId) return;
+    const handleSaveCrawlBatchRecord = async (batchId: string) => {
         try {
-            await fetch(`/api/crawl/action/crawl-batch-record/${batchId}`);
+            const { code, msg } = await saveCrawlBatchRecord(batchId);
+            if (code === 200) {
+                message.success("Crawl batch record processed successfully");
+            } else {
+                message.error(`Failed to process crawl batch record: ${msg}`);
+            }
         } catch (error) {
-            console.error("Error transferring data:", error);
+            throw error;
         }
     };
 
-    const handleDownloadData = async (batchId: string | null) => {
-        if (!batchId) return;
-        setIsDownloading(true);
+    const handleDownloadData = async (batchId: string) => {
+        setDownloadingBatches((prev) => [...prev, batchId]);
         try {
             await fetch(`/api/crawl/action/download/${batchId}?mode=sync`);
             await updateMediaDownloadStatus(batchId);
@@ -43,11 +48,11 @@ export const useSpiderActions = () => {
             console.error("Error downloading data:", error);
             message.error("媒体下载失败");
         } finally {
-            setIsDownloading(false);
+            setDownloadingBatches((prev) => prev.filter(id => id !== batchId));
         }
     };
 
-    const updateMediaDownloadStatus = async (batchId: string | null) => {
+    const updateMediaDownloadStatus = async (batchId: string) => {
         try {
             const response = await fetch("/api/crawl/action/download/updateStatus", {
                 method: "PATCH",
@@ -62,49 +67,31 @@ export const useSpiderActions = () => {
         }
     };
 
-    const updateTransStatus = async (batchId: string | null) => {
-        if (!batchId) return;
-        try {
-            const response = await fetch("/api/crawl/action/trans/updateStatus", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ batchId: batchId, transStatus: 1 }),
-            });
-            if (!response.ok) throw new Error("Failed to update trans status");
-            console.log("Trans status updated");
-        } catch (error) {
-            console.error("Error updating trans status:", error);
-            message.error("更新迁移状态失败");
-        }
-    };
+    // const updateTransStatus = async (batchId: string) => {
+    //     try {
+    //         const response = await fetch("/api/crawl/action/trans/updateStatus", {
+    //             method: "PATCH",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify({ batchId: batchId, transStatus: 1 }),
+    //         });
+    //         if (!response.ok) throw new Error("Failed to update trans status");
+    //         console.log("Trans status updated");
+    //     } catch (error) {
+    //         console.error("Error updating trans status:", error);
+    //         message.error("更新迁移状态失败");
+    //     }
+    // };
 
     const executeSpiderEndActions = async (newBatchId: string | null) => {
+        if (!newBatchId) return;
         await handleTransData(newBatchId);
         await handleSaveCrawlBatchRecord(newBatchId);
         // await handleDownloadData(newBatchId);
     };
 
-    const processCrawlBatchRecord = async (batchId: string) => {
-        try {
-            const response = await fetch(`/api/crawl/action/crawl-batch-record/${batchId}`, {
-                method: 'GET',
-            });
-            const data = await response.json();
-            if (data.success) {
-                message.success(`Processed ${data.totalRecords} records, inserted ${data.recordsCreated} records for batch ${batchId}`);
-            } else {
-                message.error(`Failed to process crawl batch record: ${data.error}`);
-            }
-        } catch (error) {
-            console.error('Error processing crawl batch record:', error);
-            message.error('Failed to process crawl batch record');
-        }
-    };
-
     return {
-        isTransferring,
-        isDownloading,
+        transferringBatches,
+        downloadingBatches,
         executeSpiderEndActions,
-        processCrawlBatchRecord,
     };
 };

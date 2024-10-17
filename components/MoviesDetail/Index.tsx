@@ -8,6 +8,8 @@ import MoviesPreview from "../MediaPreview";
 import MagnetLinkTable from "./MagnetLinkTable";
 import RelationMovies from "@/components/MoviesDetail/RelationMovies";
 import { message } from "react-message-popup";
+import { inter } from "@/app/fonts";
+
 import {
   getVideoResource,
   getMovieOne,
@@ -83,13 +85,13 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
   }
 
   return (
-    <>
+    <div className={`${inter.className}`}>
       <MoviesInfo movie={movie} />
       <VideoPlayResource resources={resources} />
       <MoviesPreview media={media} />
       <MagnetLinkTable links={magnetLinks} />
       <RelationMovies relMovies={relMovies} setMovieId={setMovieId} />
-    </>
+    </div>
   );
 };
 

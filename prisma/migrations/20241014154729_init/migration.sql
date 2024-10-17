@@ -141,6 +141,18 @@ CREATE TABLE "crawl_source_data" (
     CONSTRAINT "crawl_source_data_pkey" PRIMARY KEY ("id")
 );
 
+ALTER TABLE crawl_source_data
+ADD COLUMN updated_time TEXT GENERATED ALWAYS AS ((data->> 'updated_time')::TEXT) STORED;
+
+ALTER TABLE crawl_source_data
+ADD COLUMN created_time TEXT GENERATED ALWAYS AS ((data->> 'created_time')::TEXT) STORED;
+
+ALTER TABLE crawl_source_data
+ADD COLUMN batch_id TEXT GENERATED ALWAYS AS ((data->> 'batch_id')::TEXT) STORED;
+
+ALTER TABLE crawl_source_data
+ADD COLUMN code TEXT GENERATED ALWAYS AS ((data->> 'code')::TEXT) STORED;
+
 -- CreateTable
 CREATE TABLE "crawl_stat" (
     "id" SERIAL NOT NULL,
@@ -155,6 +167,7 @@ CREATE TABLE "crawl_stat" (
     "newly_increased_num" INTEGER DEFAULT 0,
     "updated_num" INTEGER DEFAULT 0,
     "download_size" TEXT,
+    "log_text" TEXT,
 
     CONSTRAINT "crawl_stat_pkey" PRIMARY KEY ("id")
 );

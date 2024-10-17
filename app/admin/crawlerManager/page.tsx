@@ -6,7 +6,13 @@ import CrawlerManager from "./CrawlerManager";
 import ScrapedDataTab from "./ScrapedDataTab";
 import MediaLinksTab from "./MediaLinksTab";
 
-const Page = ({ searchParams }) => {
+interface PageProps {
+  searchParams: {
+    batchId: string;
+  };
+}
+
+const Page: React.FC<PageProps> = ({ searchParams }) => {
   return (
     <div className="flex flex-col gap-4 pb-10">
       <CrawlerManager batchId={searchParams.batchId} />

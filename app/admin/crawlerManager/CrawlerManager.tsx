@@ -15,105 +15,75 @@ import {
   FileText,
   Calendar,
 } from "lucide-react";
-import {DataList } from "@radix-ui/themes";
+import { DataList } from "@radix-ui/themes";
 import { message } from "react-message-popup";
 import ClawerLogView from "@/app/clawerLogView/ClawerLogView";
 import { Accordion, AccordionItem } from "@nextui-org/react";
-import { useRequest } from "ahooks";
 import AlertDialogCommon from "@/components/radix/AlertDialog";
-import { useCrawlTargets } from '@/app/hooks/useCrawlTargets';
-import { useSpiderActions } from '@/app/hooks/useSpiderActions';
-import { useCrawlerOperations } from '@/app/hooks/useCrawlerOperations';
-import { getCrawlParamsWithStatus } from "@/app/actions/crawlAction";
+import { useCrawlTargets } from "@/app/hooks/useCrawlTargets";
+import { useSpiderActions } from "@/app/hooks/useSpiderActions";
+import { useCrawlerOperations } from "@/app/hooks/useCrawlerOperations";
+import { getCrawlRecordByBatchId } from "@/app/actions/admin/crawl";
+import { getCrawlScheduledUrls } from "@/app/actions/admin/crawl";
 
 interface CrawlerManagerProps {
   batchId: string;
 }
 
 const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
-  const {
-    targets,
-    addTarget,
-    removeTarget,
-    updateTarget,
-    setAllTargets
-  } = useCrawlTargets();
+  const { targets, addTarget, removeTarget, updateTarget, setAllTargets } =
+    useCrawlTargets();
+
+  const { transferringBatches, downloadingBatches, executeSpiderEndActions } =
+    useSpiderActions();
 
   const {
-    isTransferring,
-    isDownloading,
-    executeSpiderEndActions,
-  } = useSpiderActions();
-
-  const {
+    startCrawling,
     crawlState,
     showStopDialog,
     setCrawlState,
     intervalCheckSpiderStatus,
     setShowStopDialog,
-    startCrawling,
     stopCrawling,
     confirmStopCrawling,
   } = useCrawlerOperations(
     { status: "idle", batchId: null, jobId: "" },
-    targets,
+    targets
   );
-
 
   const getCrawlParamsAndStatus = async () => {
-    const response = await getCrawlParamsWithStatus(batchId);
-    const result = response.data;
-    if (!result) return;
+    const {
+      data: crawlStat,
+      code,
+      msg,
+    } = await getCrawlRecordByBatchId(batchId);
+
+    if (code !== 200 || !crawlStat) {
+      message.error(msg!);
+      return;
+    }
 
     setCrawlState((prevState) => ({
-        ...prevState,
-        status: result.status ?? "idle",
-        batchId: result.batchId ?? null,
-        jobId: result.jobId ?? "",
-      }));
-      setAllTargets(result.urls || []);
-      if (result.status === "running") {
-        intervalCheckSpiderStatus(result.jobId, executeSpiderEndActions, result.batchId);
-      }
-  }
-
-
-
-  const { run: fetchScheduledUrls } = useRequest(
-    async () => {
-      const response = await fetch("/api/crawl/scheduled/config");
-      if (!response.ok) {
-        throw new Error("Failed to fetch scheduled URLs");
-      }
-      const data = await response.json();
-      return data.scheduledUrls;
-    },
-    {
-      manual: true,
-      onSuccess: (scheduledUrls: [string, number][]) => {
-        if (scheduledUrls && scheduledUrls.length > 0) {
-          const formattedUrls = scheduledUrls.map(([url, maxPages]) => ({
-            url,
-            maxPages,
-          }));
-          setAllTargets(formattedUrls);
-          message.success("Scheduled URLs fetched successfully");
-        } else {
-          message.info("No scheduled URLs found");
-        }
-      },
-      onError: (error: Error) => {
-        console.error("Error fetching scheduled URLs:", error);
-        message.error("Failed to fetch scheduled URLs");
-      },
+      ...prevState,
+      status: crawlStat.crawlStatus ?? "idle",
+      batchId: crawlStat.batchId ?? null,
+      jobId: crawlStat.jobId ?? "",
+    }));
+    setAllTargets(crawlStat.urls || []);
+    if (crawlStat.crawlStatus === "running") {
+      intervalCheckSpiderStatus(
+        crawlStat.jobId,
+        executeSpiderEndActions,
+        crawlStat.batchId
+      );
     }
-  );
+  };
 
   useEffect(() => {
     if (batchId) {
-        getCrawlParamsAndStatus()
+      getCrawlParamsAndStatus();
     }
-  }, [batchId])
+  }, [batchId]);
 
   const handleViewLogs = () => {
     if (!crawlState.jobId) {
@@ -123,9 +93,18 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
     window.open(`/clawerLogView?jobId=${crawlState.jobId}`, "_blank");
   };
 
+  const handleFetchScheduledUrls = async () => {
+    const { data: scheduledUrls, code, msg } = await getCrawlScheduledUrls();
+    if (code !== 200 || !scheduledUrls) {
+      message.error(msg!);
+      return;
+    }
+    setAllTargets(scheduledUrls);
+  };
+
   const handleStartCrawling = async () => {
-    await startCrawling(executeSpiderEndActions)
-  }
+    await startCrawling(executeSpiderEndActions);
+  };
 
   return (
     <Card>
@@ -150,11 +129,11 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
           />
           <TextField.Root
             size="3"
-            value={target.maxPages || ''}
+            value={target.maxPage || ""}
             onChange={(e) => {
               const value = e.target.value;
-              const parsedValue = value === '' ? '' : parseInt(value, 10);
-              updateTarget(index, "maxPages", parsedValue);
+              const parsedValue = value === "" ? "" : parseInt(value, 10);
+              updateTarget(index, "maxPage", parsedValue);
             }}
             radius="medium"
             placeholder="Max pages"
@@ -173,45 +152,63 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
       ))}
 
       <div className="flex justify-between mt-4">
-        <div className="flex gap-2" style={{ visibility: (crawlState.status === "running" || !!batchId) ? "hidden" : "visible" }}>
+        <div
+          className="flex gap-2"
+          style={{
+            visibility:
+              crawlState.status === "running" || !!batchId
+                ? "hidden"
+                : "visible",
+          }}
+        >
           <Button onClick={addTarget} variant="outline">
             <Plus className="mr-2 h-4 w-4" />
             Add URL
           </Button>
-          <Button onClick={() => fetchScheduledUrls()} variant="outline">
+          <Button onClick={() => handleFetchScheduledUrls()} variant="outline">
             <Calendar className="mr-2 h-4 w-4" />
             Fetch Scheduled
           </Button>
         </div>
         <div className="flex gap-2">
-            <Button
-              onClick={crawlState.status === "running" ? stopCrawling : handleStartCrawling}
-              color={crawlState.status === "running" ? "red" : "green"}
-              disabled={isTransferring || isDownloading}
-            >
-              {crawlState.status === "running" ? (
-                <>
-                  <StopCircle className="mr-1 h-4 w-4" />
-                  Stop Crawling
-                </>
-              ) : isTransferring ? (
-                <>
-                  <FileText className="mr-1 h-4 w-4" />
-                  Trans Data...
-                </>
-              ) : isDownloading ? (
-                <>
-                  <FileText className="mr-1 h-4 w-4" />
-                  Media Downloading...
-                </>
-              ) : (
-                <>
-                  <Play className="mr-1 h-4 w-4" />
-                  Start Crawling
-                </>
-              )}
-            </Button>
-          <Button disabled={!crawlState.jobId} color="cyan" onClick={handleViewLogs}>
+          <Button
+            onClick={
+              crawlState.status === "running"
+                ? stopCrawling
+                : handleStartCrawling
+            }
+            color={crawlState.status === "running" ? "red" : "green"}
+            disabled={
+              transferringBatches.length > 0 || downloadingBatches.length > 0
+            }
+          >
+            {crawlState.status === "running" ? (
+              <>
+                <StopCircle className="mr-1 h-4 w-4" />
+                Stop Crawling
+              </>
+            ) : transferringBatches.length > 0 ? (
+              <>
+                <FileText className="mr-1 h-4 w-4" />
+                Trans Data...
+              </>
+            ) : downloadingBatches.length > 0 ? (
+              <>
+                <FileText className="mr-1 h-4 w-4" />
+                Media Downloading...
+              </>
+            ) : (
+              <>
+                <Play className="mr-1 h-4 w-4" />
+                Start Crawling
+              </>
+            )}
+          </Button>
+          <Button
+            disabled={!crawlState.jobId}
+            color="cyan"
+            onClick={handleViewLogs}
+          >
             <FileText className="mr-1 h-4 w-4" />
             View Logs
           </Button>
@@ -230,10 +227,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
           </DataList.Item>
           <DataList.Item>
             <DataList.Label minWidth="88px">Timing</DataList.Label>
-            <DataList.Value>
-
-
-            </DataList.Value>
+            <DataList.Value></DataList.Value>
           </DataList.Item>
           <DataList.Item>
             <DataList.Label minWidth="88px">JobId</DataList.Label>
@@ -272,8 +266,8 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
       )}
 
       <AlertDialogCommon
-        showStopDialog={showStopDialog}
-        setShowStopDialog={setShowStopDialog}
+        isOpen={showStopDialog}
+        onOpenChange={setShowStopDialog}
         confirmAction={confirmStopCrawling}
         title="确认停止"
         description="您确定要停止爬虫吗？此操作无法撤销。"

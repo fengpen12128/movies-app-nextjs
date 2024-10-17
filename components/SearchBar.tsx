@@ -125,11 +125,11 @@ export default function SearchBar() {
         className="overflow-hidden transition-all duration-300 ease-in-out"
         style={{ maxHeight: showFilters ? "1000px" : "0px" }}
       >
-        <div className="space-y-6 pt-9">
+        <div className="space-y-3 pt-9">
           {filterOptions.map((x) => (
             <div key={x.title} className="flex flex-col space-y-2">
               <div className="flex justify-between items-center">
-                <label className="font-suse text-lg font-bold text-gray-300 mr-2">
+                <label className=" text-lg font-bold text-gray-300 mr-2">
                   {_.capitalize(x.title)}
                 </label>
                 {shouldShowExpandButton(x.title) && (

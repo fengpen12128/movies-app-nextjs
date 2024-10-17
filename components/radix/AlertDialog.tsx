@@ -1,52 +1,48 @@
-import React from 'react'
-import { AlertDialog as RadixAlertDialog, Button as RadixButton } from "@radix-ui/themes";
+import React from "react";
+import {
+  AlertDialog as RadixAlertDialog,
+  Button as RadixButton,
+} from "@radix-ui/themes";
 
 interface AlertDialogProps {
-  showStopDialog: boolean;
+  isOpen: boolean;
   title: string;
   description: string;
   actionText: string;
-  setShowStopDialog: (show: boolean) => void;
+  onOpenChange: (open: boolean) => void;
   confirmAction: () => void;
-
 }
 
 const AlertDialogCommon: React.FC<AlertDialogProps> = ({
-  showStopDialog,
-  setShowStopDialog,
+  isOpen,
+  onOpenChange,
   confirmAction,
   title,
   description,
-  actionText
+  actionText,
 }) => {
   return (
-    <RadixAlertDialog.Root open={showStopDialog} onOpenChange={setShowStopDialog}>
+    <RadixAlertDialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <RadixAlertDialog.Content>
         <RadixAlertDialog.Title>{title}</RadixAlertDialog.Title>
         <RadixAlertDialog.Description>
           {description}
         </RadixAlertDialog.Description>
         <div className="flex justify-end gap-3 mt-4">
-
           <RadixAlertDialog.Cancel>
             <RadixButton variant="soft" color="gray">
               Cancel
             </RadixButton>
           </RadixAlertDialog.Cancel>
-
           <RadixAlertDialog.Action>
-            <RadixButton
-              variant="solid"
-              color="red"
-              onClick={confirmAction}
-            >
+            <RadixButton variant="solid" color="red" onClick={confirmAction}>
               {actionText}
             </RadixButton>
           </RadixAlertDialog.Action>
         </div>
       </RadixAlertDialog.Content>
     </RadixAlertDialog.Root>
-  )
-}
+  );
+};
 
-export default AlertDialogCommon
+export default AlertDialogCommon;

@@ -1,15 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Package2,
-  Home,
-  ShoppingCart,
-  Database,
-  Bot,
-  BarChart,
-  Settings,
-} from "lucide-react";
+import { Package2, Home, Database, Bot, Settings, Folder } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -51,6 +43,12 @@ const AdminAside = () => {
               label: "Crawler Manager",
               href: "/admin/crawlerManager",
               route: "crawlerManager",
+            },
+            {
+              icon: Folder,
+              label: "Resource Matching",
+              href: "/admin/matching",
+              route: "resourceMatching",
             },
           ].map(({ icon: Icon, label, href, route }) => (
             <Tooltip key={label}>

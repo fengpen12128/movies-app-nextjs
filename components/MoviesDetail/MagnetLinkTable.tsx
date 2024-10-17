@@ -23,16 +23,16 @@ const MagnetLinkTable: React.FC<MagnetLinkTableProps> = ({ links }) => {
   const handleSaveLink = (linkUrl: string) => {
     if (!savedLinks.includes(linkUrl)) {
       setSavedLinks([...savedLinks, linkUrl]);
-      message.success("链接已保存到列表", 1000);
+      message.success("Saved successfully", 1000);
     } else {
-      message.info("该链接已在列表中", 1000);
+      message.info("Already in the list", 1000);
     }
   };
 
   return (
     <div className="w-full mt-10 bg-base-100 rounded p-2">
       <div className="pb-2 flex justify-between">
-        <div className="text-xl font-ma">磁力链接({links.length})</div>
+        <div className="text-xl ">Magnet Links ({links.length})</div>
       </div>
       <div className="overflow-x-auto mt-2">
         <Table.Root variant="surface">

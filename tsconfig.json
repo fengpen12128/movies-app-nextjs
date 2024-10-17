@@ -39,9 +39,7 @@
       "@/*": ["./*"]
     },
     // 指定类型根目录
-    "typeRoots": ["./node_modules/@types", "./types",
-      "./types"
-    ]
+    "typeRoots": ["./node_modules/@types", "./types"]
   },
   // 指定要包含的文件
   "include": [
@@ -50,9 +48,8 @@
     "**/*.tsx",
     "**/*.d.ts",
     ".next/types/**/*.ts",
-    "next.config.js",
-    "app/collection/page.tsx"
-, "app/actressMovies/page.tsx", "components/radix/ConfirmAlertDialog.tsx"  ],
+    "next.config.js"
+  ],
   // 指定要排除的文件
   "exclude": ["node_modules"]
 }

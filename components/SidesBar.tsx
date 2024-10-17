@@ -4,6 +4,7 @@ import React from "react";
 import { Home, Heart, Download, Folder, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { karla } from "@/app/fonts";
 
 interface NavItem {
   title: string;
@@ -21,34 +22,29 @@ const SidesBar: React.FC = () => {
 
   const list: NavItem[] = [
     {
-      title: "首页",
+      title: "Home",
       icon: "home",
       path: "/home",
     },
     {
-      title: "我的收藏",
+      title: "Collection",
       icon: "favorites",
       active: false,
       path: "/collection",
     },
     {
-      title: "收藏演员",
+      title: "Actresses",
       icon: "favorites",
       active: false,
       path: "/actressFav",
     },
     {
-      title: "已下载",
+      title: "Downloaded",
       icon: "download",
       path: "/download",
     },
     {
-      title: "资源匹配",
-      icon: "match",
-      path: "/matching",
-    },
-    {
-      title: "后台管理",
+      title: "Admin",
       icon: "admin",
       path: "/admin",
     },
@@ -76,7 +72,9 @@ const SidesBar: React.FC = () => {
                   {icon === "match" && <Folder size={16} />}
                   {icon === "admin" && <Settings size={16} />}
                 </div>
-                <p className="font-ma sidebar__title">{title}</p>
+                <p className={`${karla.className} sidebar__title`}>
+                  {title}
+                </p>
               </Link>
             );
           })}

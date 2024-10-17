@@ -1,6 +1,6 @@
 "use client";
 
-import MoviesCard from "@/components/MoviesCard";
+import MoviesCard from "@/components/movie-card-styles/MoviesCard";
 
 export default function RelationMovies({
   relMovies,
@@ -12,7 +12,7 @@ export default function RelationMovies({
   return (
     <div className="w-full mt-10 bg-base-100 rounded  p-2">
       <div className="pb-2 flex justify-between">
-        <div className="text-xl font-ma">她还出演过</div>
+        <div className="text-xl">She also starred in</div>
       </div>
       <div className="grid gap-3 mt-2 grid-cols-1 sm:grid-cols-3">
         {relMovies.map((x: Movie) => (

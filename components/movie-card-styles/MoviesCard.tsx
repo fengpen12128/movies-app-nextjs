@@ -4,9 +4,9 @@ import { Card, Inset, Badge } from "@radix-ui/themes";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
-import { MoviesPreviewModal } from "./MoviesPreviewModal";
-import MoviesDetail from "./MoviesDetail/Index";
-import { Star, Eye, Calendar, Bookmark, Download } from "lucide-react";
+import { MoviesPreviewModal } from "../MoviesPreviewModal";
+import MoviesDetail from "../MoviesDetail/Index";
+import { Star, Eye, Calendar, Bookmark, Download, Flame } from "lucide-react";
 
 const MoviesCard: React.FC<Movie> = ({
   id,
@@ -20,13 +20,9 @@ const MoviesCard: React.FC<Movie> = ({
   createdTime,
   tags,
   collectedTime,
+  downloadTime,
 }) => {
   const [open, setOpen] = useState(false);
-  const isNewThisWeek = useMemo(() => {
-    if (!createdTime || !dayjs(createdTime).isValid()) return false;
-    const createdDate = dayjs(createdTime);
-    return createdDate.add(3, "day").isAfter(dayjs());
-  }, [createdTime]);
 
   return (
     <>
@@ -64,10 +60,19 @@ const MoviesCard: React.FC<Movie> = ({
               <span>{dayjs(collectedTime).format("YYYY-MM-DD HH:mm")}</span>
             </div>
           )}
+          {downloaded && downloadTime && (
+            <div className="absolute top-0 right-0 flex items-center text-sm text-gray-400">
+              <Download color="orange" className="mr-1" size={14} />
+              <span>{dayjs(downloadTime).format("YYYY-MM-DD HH:mm")}</span>
+            </div>
+          )}
           <h4
             onClick={() => setOpen(true)}
-            className="font-suse text-xl cursor-pointer hover:underline"
+            className=" flex items-center gap-1 text-xl cursor-pointer hover:underline"
           >
+            {dayjs(createdTime).add(3, "day").isAfter(dayjs()) && (
+              <Flame className="text-red-400" size={16} />
+            )}{" "}
             {code}
           </h4>
           <div className="flex items-center w-full justify-between text-sm text-gray-400">
@@ -94,10 +99,6 @@ const MoviesCard: React.FC<Movie> = ({
           </div>
         </div>
         <div className="flex flex-wrap gap-2 mt-2">
-          {isNewThisWeek && <Badge color="blue">本周新片</Badge>}
-          {/* {collected && <Badge color="crimson">已收藏</Badge>}
-            {downloaded && <Badge color="green">已下载</Badge>} */}
-
           {tags?.map((tag) => (
             <Badge key={tag.id} color="blue">
               {tag.tagName}

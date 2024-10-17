@@ -96,38 +96,6 @@ declare interface ProcessStats {
     percent: number;
 }
 
-declare interface UrlParams {
-    url: string;
-    maxPages: number;
-}
-
-declare interface CrawlStat {
-    id: number;
-    jobId: string;
-    batchId: string;
-    executeType: string;
-    newlyIncreasedNum: number;
-    updatedNum: number;
-    status: string;
-    startedTime: Date;
-    endTime: Date | null;
-    urls: UrlParams[];
-}
-
-declare interface CrawlStatResponse {
-    data: CrawlStat[];
-    pagination: PaginationData;
-}
-
-declare type CrawlStatus = 'running' | 'pending' | 'finished' | 'not_found' | 'error';
-
-declare interface CrawlParams {
-    jobId: string;
-    mode: string;
-    urls: UrlParams[];
-    batchId: string;
-    status?: CrawlStatus;
-}
 
 declare interface OptionGroup {
     title: string;

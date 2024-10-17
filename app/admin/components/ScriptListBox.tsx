@@ -5,6 +5,7 @@ import { Button, useDisclosure } from "@nextui-org/react";
 import { TrainIcon } from "lucide-react";
 import AlertDialogCommon from "@/components/radix/AlertDialog";
 import { transformSourceData } from "@/app/actions/admin/script/sourceDataTran";
+import { message } from "react-message-popup";
 const TransformSourceDataButton: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,8 +35,8 @@ const TransformSourceDataButton: React.FC = () => {
       </Button>
 
       <AlertDialogCommon
-        showStopDialog={isOpen}
-        setShowStopDialog={onClose}
+        isOpen={isOpen}
+        onOpenChange={onClose}
         confirmAction={handleTransform}
         title="Confirm Action"
         description="Are you sure you want to transform the source data? This action cannot be undone."

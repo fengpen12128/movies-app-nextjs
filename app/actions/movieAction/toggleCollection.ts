@@ -1,21 +1,29 @@
 'use server'
 
 import prisma from "@/app/lib/prisma";
-import {revalidatePath} from "next/cache";
+import { revalidatePath } from "next/cache";
 
 
-export async function toggleCollection(code: string, refreshPath: string): Promise<DataResponse<boolean>> {
+export async function toggleCollection(movieId: number, refreshPath: string): Promise<DataResponse<boolean>> {
     try {
+        const movie = await prisma.moviesInfo.findUnique({
+            where: {
+                id: movieId,
+            },
+        });
+        if (!movie) {
+            return { code: 500, msg: "电影不存在" };
+        }
         const existingCollection = await prisma.moviesCollection.findUnique({
             where: {
-                movieCode: code,
+                movieCode: movie.code!,
             },
         });
 
         if (existingCollection) {
             await prisma.moviesCollection.delete({
                 where: {
-                    movieCode: code,
+                    movieCode: movie.code!,
                 },
             });
             revalidatePath(refreshPath);
@@ -24,7 +32,7 @@ export async function toggleCollection(code: string, refreshPath: string): Promi
 
         await prisma.moviesCollection.create({
             data: {
-                movieCode: code,
+                movieCode: movie.code!,
             },
         });
         revalidatePath(refreshPath);

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import MoviesCard from "@/components/MoviesCard";
+import MoviesCard from "@/components/movie-card-styles/MoviesCard";
 import { StackCardContentModal } from "@/components/MoviesPreviewModal";
 import { Card, Spinner } from "@radix-ui/themes";
 import {

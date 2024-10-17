@@ -22,33 +22,27 @@ export default function VideoPlayResource({
 
   return (
     <Card className="my-10">
-      <div>
-        <div className="text-xl font-ma">选择播放</div>
-        <div className="flex flex-wrap gap-3 mt-3">
-          {resources.map((item: VideoResource) => {
-            const href: string =
-              typeof window !== "undefined" && window.innerWidth <= 768
-                ? `${process.env.NEXT_PUBLIC_VIDEO_SERVER_PATH}${item.path}`
-                : `iina://weblink?url=${process.env.NEXT_PUBLIC_VIDEO_SERVER_PATH}${item.path}`;
-            return (
-              <a
-                key={item.id}
-                href={href}
-                onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
-                  handleClick(e, href)
-                }
-              >
-                <Button
-                  className="cursor-pointer"
-                  color="cyan"
-                  variant="outline"
-                >
-                  {item.path?.split("/")[0]} ({item.size})
-                </Button>
-              </a>
-            );
-          })}
-        </div>
+      <div className="text-xl">Select Play</div>
+      <div className="flex flex-wrap gap-3 mt-3">
+        {resources.map((item: VideoResource) => {
+          const href: string =
+            typeof window !== "undefined" && window.innerWidth <= 768
+              ? `${process.env.NEXT_PUBLIC_VIDEO_SERVER_PATH}${item.path}`
+              : `iina://weblink?url=${process.env.NEXT_PUBLIC_VIDEO_SERVER_PATH}${item.path}`;
+          return (
+            <a
+              key={item.id}
+              href={href}
+              onClick={(e: React.MouseEvent<HTMLAnchorElement>) =>
+                handleClick(e, href)
+              }
+            >
+              <Button className="cursor-pointer" color="cyan" variant="outline">
+                {item.path?.split("/")[0]} ({item.size})
+              </Button>
+            </a>
+          );
+        })}
       </div>
     </Card>
   );

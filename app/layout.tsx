@@ -5,6 +5,8 @@ import SidesBar from "@/components/SidesBar";
 import { Theme } from "@radix-ui/themes";
 import { ReactNode } from "react";
 
+import { sourceCodePro } from "@/app/fonts";
+
 export const metadata = {
   title: "Index",
 };
@@ -14,7 +16,7 @@ interface RootLayoutProps {
 }
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
-  <html lang="en">
+  <html lang="en" className={sourceCodePro.className}>
     <body className="app">
       <Theme
         panelBackground="translucent"

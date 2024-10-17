@@ -1,23 +1,23 @@
 import { useState } from 'react';
 
-export const useCrawlTargets = (initialTargets: UrlParams[] = [{ url: "", maxPages: 1 }]) => {
-    const [targets, setTargets] = useState<UrlParams[]>(initialTargets);
+export const useCrawlTargets = (initialTargets: CrawlUrl[] = [{ url: "", maxPage: 1 }]) => {
+    const [targets, setTargets] = useState<CrawlUrl[]>(initialTargets);
 
     const addTarget = () => {
-        setTargets([...targets, { url: "", maxPages: 1 }]);
+        setTargets([...targets, { url: "", maxPage: 1 }]);
     };
 
     const removeTarget = (index: number) => {
         setTargets(targets.filter((_, i) => i !== index));
     };
 
-    const updateTarget = (index: number, field: keyof UrlParams, value: string | number) => {
+    const updateTarget = (index: number, field: keyof CrawlUrl, value: string | number) => {
         const newTargets = [...targets];
         newTargets[index] = { ...newTargets[index], [field]: value };
         setTargets(newTargets);
     };
 
-    const setAllTargets = (newTargets: UrlParams[]) => {
+    const setAllTargets = (newTargets: CrawlUrl[]) => {
         setTargets(newTargets);
     };
 
