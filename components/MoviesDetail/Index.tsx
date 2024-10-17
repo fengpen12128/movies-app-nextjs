@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "@radix-ui/themes";
 import VideoPlayResource from "./VideoPlayResource";
 import MoviesInfo from "./MoviesInfo";
-import MoviesPreview from "../MediaPreview";
+import MoviesPreview from "./MediaPreview";
 import MagnetLinkTable from "./MagnetLinkTable";
 import RelationMovies from "@/components/MoviesDetail/RelationMovies";
 import { message } from "react-message-popup";
@@ -29,35 +29,42 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
   const [media, setMedia] = useState<MovieMedia[]>([]);
   const [magnetLinks, setMagnetLinks] = useState<MagnetLink[]>([]);
   const [relMovies, setRelMovies] = useState<Movie[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchResources = async () => {
       if (!movieId) {
         message.error("movieId is not passed");
+        setIsLoading(false);
         return;
       }
-      setMovie(null);
+      setIsLoading(true);
+      setError(null);
 
       try {
         const [
-          resourcesResult,
           movieResult,
+          resourcesResult,
           mediaResult,
           magnetLinksResult,
           relMoviesResult,
         ] = await Promise.allSettled([
-          getVideoResource(movieId),
           getMovieOne(movieId),
+          getVideoResource(movieId),
           getMedia(movieId),
           getMagnetLinks(movieId),
           getActressRelMovies(movieId),
         ]);
 
-        if (resourcesResult.status === "fulfilled") {
-          setResources(resourcesResult.value.data || []);
-        }
         if (movieResult.status === "fulfilled") {
           setMovie(movieResult.value.data || null);
+        } else {
+          throw new Error("Failed to fetch movie data");
+        }
+
+        if (resourcesResult.status === "fulfilled") {
+          setResources(resourcesResult.value.data || []);
         }
         if (mediaResult.status === "fulfilled") {
           setMedia(mediaResult.value.data || []);
@@ -70,16 +77,35 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
         }
       } catch (error) {
         console.error("Error fetching movie data:", error);
+        setError("Failed to load movie data. Please try again later.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchResources();
   }, [movieId]);
 
-  if (!movie) {
+  if (isLoading) {
     return (
       <div className="h-full w-full flex items-center justify-center">
         <Spinner size="3" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
+
+  if (!movie) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <p>No movie data available.</p>
       </div>
     );
   }
