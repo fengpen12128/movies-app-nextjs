@@ -1,7 +1,7 @@
 import React from "react";
 import VideoPlayResource from "./VideoPlayResource";
 import MoviesInfo from "./MoviesInfo";
-import MoviesPreview from "../MediaPreview";
+import MoviesPreview from "./MediaPreview";
 import MagnetLinkTable from "./MagnetLinkTable";
 import RelationMovies from "@/components/MoviesDetail/RelationMovies";
 import { Spinner } from "@radix-ui/themes";

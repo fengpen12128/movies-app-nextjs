@@ -6,8 +6,6 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { message } from "react-message-popup";
 import { CopyIcon } from "@radix-ui/react-icons";
 import { useLocalStorage } from "usehooks-ts";
-
-import { showMagLinkName } from "@/lib/commonUtils";
 import dayjs from "dayjs";
 
 interface MagnetLinkTableProps {
@@ -19,6 +17,11 @@ const MagnetLinkTable: React.FC<MagnetLinkTableProps> = ({ links }) => {
     "savedMagnetLinks",
     []
   );
+
+  const showMagLinkName = (link: string) => {
+    const dnMatch = link.match(/dn=([^&]*)/);
+    return dnMatch ? dnMatch[1] : link.split("&")[0];
+  };
 
   const handleSaveLink = (linkUrl: string) => {
     if (!savedLinks.includes(linkUrl)) {

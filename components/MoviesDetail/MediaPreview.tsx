@@ -8,7 +8,7 @@ import { useMediaUrls } from "@/app/hooks/useMedia";
 import { Image } from "@nextui-org/image";
 import NextImage from "next/image";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
-import BlurFade from "@/components/ui/blur-fade";
+import { MoviesTrailerModal } from "@/components/MoviesPreviewModal";
 
 interface MoviesPreviewProps {
   media: MovieMedia[];
@@ -28,15 +28,13 @@ const MoviesPreview: React.FC<MoviesPreviewProps> = ({ media }) => {
   };
 
   return (
-    <div className="w-full rounded grid grid-cols-2 sm:grid-cols-4 gap-2  p-2 relative">
+    <div className="w-full rounded grid grid-cols-2 sm:grid-cols-4 gap-2  p-2 ">
       <HeroVideoDialog
-        className="dark:hidden block"
         animationStyle="from-center"
         videoSrc={videoUrl || ""}
         thumbnailSrc={coverUrl || ""}
         thumbnailAlt="Hero Video"
       />
-      {/* <MoviesTrailerModal coverUrl={coverUrl!} videoUrl={videoUrl!} /> */}
 
       <PhotoProvider loop maskOpacity={0.5}>
         {introUrls.map((x) => (

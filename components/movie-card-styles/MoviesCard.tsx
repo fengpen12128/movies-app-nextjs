@@ -71,7 +71,7 @@ const MoviesCard: React.FC<Movie> = ({
             className=" flex items-center gap-1 text-xl cursor-pointer hover:underline"
           >
             {dayjs(createdTime).add(3, "day").isAfter(dayjs()) && (
-              <Flame className="text-red-400" size={16} />
+              <Flame className="text-red-400"  size={18} />
             )}{" "}
             {code}
           </h4>

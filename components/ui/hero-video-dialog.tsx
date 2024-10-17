@@ -127,7 +127,7 @@ export default function HeroVideoDialog({
                 {...selectedAnimation}
                 onClick={(e) => e.stopPropagation()}
                 transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                className="relative  sm:w-2/3  "
+                className="relative  sm:w-[80%]  "
               >
                 <motion.button className="absolute -top-16 right-0 text-white text-xl bg-neutral-900/50 ring-1 backdrop-blur-md rounded-full p-2 dark:bg-neutral-100/50 dark:text-black">
                   <XIcon className="size-5" />

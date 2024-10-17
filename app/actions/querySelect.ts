@@ -8,6 +8,8 @@ export const movieSelect = {
     rateNum: true,
     releaseDate: true,
     releaseYear: true,
+    createdTime: true,
+    updatedTime: true,
     actresses: {
         select: {
             id: true,
