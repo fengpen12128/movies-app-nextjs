@@ -2,6 +2,7 @@
 
 import { Button, Card } from "@radix-ui/themes";
 import React from "react";
+import { ibmPlexMono } from "@/app/fonts";
 
 interface VideoPlayResourceProps {
   resources: VideoResource[];
@@ -21,8 +22,8 @@ export default function VideoPlayResource({
   };
 
   return (
-    <Card className="my-10">
-      <div className="text-xl">Select Play</div>
+    <Card className={`my-10 ${ibmPlexMono.className}`}>
+      <div className="text-xl ">Select Play</div>
       <div className="flex flex-wrap gap-3 mt-3">
         {resources.map((item: VideoResource) => {
           const href: string =

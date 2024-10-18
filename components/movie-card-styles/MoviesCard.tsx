@@ -4,7 +4,10 @@ import { Card, Inset, Badge } from "@radix-ui/themes";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
-import { MoviesPreviewModal } from "../MoviesPreviewModal";
+import {
+  MoviesPreviewModal,
+  MoviesPreviewModalAnimate,
+} from "../MoviesPreviewModal";
 import MoviesDetail from "../MoviesDetail/Index";
 import { Star, Eye, Calendar, Bookmark, Download, Flame } from "lucide-react";
 
@@ -71,7 +74,7 @@ const MoviesCard: React.FC<Movie> = ({
             className=" flex items-center gap-1 text-xl cursor-pointer hover:underline"
           >
             {dayjs(createdTime).add(3, "day").isAfter(dayjs()) && (
-              <Flame className="text-red-400"  size={18} />
+              <Flame className="text-red-400" size={18} />
             )}{" "}
             {code}
           </h4>

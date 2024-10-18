@@ -1,4 +1,4 @@
-import { Inter, Quicksand, Playfair_Display, Karla, Lora, Source_Code_Pro } from "next/font/google";
+import { Inter, Quicksand, Playfair_Display, Karla, Lora, Source_Code_Pro, IBM_Plex_Mono } from "next/font/google";
 export const inter = Inter({ subsets: ["latin"] });
 export const quicksand = Quicksand({
     subsets: ["latin"],
@@ -20,4 +20,9 @@ export const sourceCodePro = Source_Code_Pro({
     subsets: ["latin"],
     weight: "400",
     style: "italic",
+});
+
+export const ibmPlexMono = IBM_Plex_Mono({
+    subsets: ["latin"],
+    weight: "400",
 });

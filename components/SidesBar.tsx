@@ -4,7 +4,7 @@ import React from "react";
 import { Home, Heart, Download, Folder, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { karla } from "@/app/fonts";
+import { ibmPlexMono } from "@/app/fonts";
 
 interface NavItem {
   title: string;
@@ -72,7 +72,7 @@ const SidesBar: React.FC = () => {
                   {icon === "match" && <Folder size={16} />}
                   {icon === "admin" && <Settings size={16} />}
                 </div>
-                <p className={`${karla.className} sidebar__title`}>
+                <p className={`${ibmPlexMono.className} sidebar__title`}>
                   {title}
                 </p>
               </Link>

@@ -8,7 +8,7 @@ import MoviesPreview from "./MediaPreview";
 import MagnetLinkTable from "./MagnetLinkTable";
 import RelationMovies from "@/components/MoviesDetail/RelationMovies";
 import { message } from "react-message-popup";
-import { inter } from "@/app/fonts";
+import { ibmPlexMono } from "@/app/fonts";
 
 import {
   getVideoResource,
@@ -111,7 +111,7 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
   }
 
   return (
-    <div className={`${inter.className}`}>
+    <div className={`${ibmPlexMono.className}`}>
       <MoviesInfo movie={movie} />
       <VideoPlayResource resources={resources} />
       <MoviesPreview media={media} />

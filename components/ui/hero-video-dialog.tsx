@@ -4,8 +4,10 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Play, XIcon } from "lucide-react";
 import RenderPortal from "@/components/RenderPortal";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
+import useMobile from "@/app/hooks/useMobile";
 
 import dynamic from "next/dynamic";
 // 动态导入 VideoPlayer 组件
@@ -83,6 +85,7 @@ export default function HeroVideoDialog({
 }: HeroVideoProps) {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const selectedAnimation = animationVariants[animationStyle];
+  const isMobile = useMobile();
 
   return (
     <div className={cn("relative", className)}>
@@ -90,11 +93,13 @@ export default function HeroVideoDialog({
         className="relative cursor-pointer group"
         onClick={() => setIsVideoOpen(true)}
       >
-        <img
-          src={thumbnailSrc}
-          alt={thumbnailAlt}
+        <Image
+          alt={`preview`}
           width={1920}
           height={1080}
+          loading="eager"
+          priority
+          src={thumbnailSrc}
           className="w-full transition-all duration-200 group-hover:brightness-[0.8] ease-out rounded-md shadow-lg border"
         />
         <div className="absolute inset-0 flex items-center justify-center group-hover:scale-100 scale-[0.9] transition-all duration-200 ease-out rounded-2xl">
@@ -119,7 +124,11 @@ export default function HeroVideoDialog({
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              onClick={() => setIsVideoOpen(false)}
+              onClick={() => {
+                if (!isMobile) {
+                  setIsVideoOpen(false);
+                }
+              }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md"
             >
@@ -129,16 +138,13 @@ export default function HeroVideoDialog({
                 transition={{ type: "spring", damping: 30, stiffness: 300 }}
                 className="relative  sm:w-[80%]  "
               >
-                <motion.button className="absolute -top-16 right-0 text-white text-xl bg-neutral-900/50 ring-1 backdrop-blur-md rounded-full p-2 dark:bg-neutral-100/50 dark:text-black">
+                <motion.button
+                  onClick={() => setIsVideoOpen(false)}
+                  className="absolute -top-16 right-0 text-white text-xl bg-neutral-900/50 ring-1 backdrop-blur-md rounded-full p-2 dark:bg-neutral-100/50 dark:text-black"
+                >
                   <XIcon className="size-5" />
                 </motion.button>
-                <div className=" border-2  border-white rounded-2xl overflow-hidden isolate z-[1] relative">
-                  {/* <iframe
-                    src={videoSrc}
-                    className="size-full rounded-2xl"
-                    allowFullScreen
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  ></iframe> */}
+                <div className=" border-2   border-white rounded-2xl overflow-hidden isolate z-[1] relative">
                   <VideoPlayer src={videoSrc} />
                 </div>
               </motion.div>

@@ -5,7 +5,7 @@ import SidesBar from "@/components/SidesBar";
 import { Theme } from "@radix-ui/themes";
 import { ReactNode } from "react";
 
-import { sourceCodePro } from "@/app/fonts";
+import { ibmPlexMono } from "@/app/fonts";
 
 export const metadata = {
   title: "Index",
@@ -16,7 +16,7 @@ interface RootLayoutProps {
 }
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
-  <html lang="en" className={sourceCodePro.className}>
+  <html lang="en" className={ibmPlexMono.className}>
     <body className="app">
       <Theme
         panelBackground="translucent"

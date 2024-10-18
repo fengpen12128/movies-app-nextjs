@@ -61,6 +61,8 @@ export const useCrawlerOperations = (
                 return;
             }
 
+            console.log("res_XXXXXXXXXXXXX", res);
+
             setCrawlState(prevState => ({
                 ...prevState,
                 jobId: res.jobId,

@@ -61,8 +61,8 @@
     @apply transition-all duration-200 ease-in-out transform
 }
 
-.modal-content {
-    @apply no-scrollbar fixed inset-0 bg-black bg-opacity-90 h-screen w-screen flex items-center justify-center z-40
+.modal-mask {
+    @apply  fixed inset-0 bg-black/50 backdrop-blur-md flex-center z-40
 }
 
 @layer base {

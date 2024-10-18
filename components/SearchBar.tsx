@@ -107,7 +107,6 @@ export default function SearchBar() {
           onClick={() => setShowFilters(!showFilters)}
         >
           <FilterIcon size={18} className="mr-1" />
-          Filters
           {showFilters ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </Button>
 

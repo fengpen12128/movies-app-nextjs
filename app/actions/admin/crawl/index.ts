@@ -20,7 +20,9 @@ export async function runCrawl(config: CrawlConfig): Promise<DataResponse<CrawlR
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const data: CrawlResponse = await response.json();
+        const data: any = await response.json();
+        console.log("response_XXXXXXXXXXXXX", data);
+
 
         // Ensure the returned data contains jobId and batchId
         if (!data.jobId || !data.batchId) {
@@ -28,7 +30,10 @@ export async function runCrawl(config: CrawlConfig): Promise<DataResponse<CrawlR
         }
 
         return {
-            data: data,
+            data: {
+                batchId: data.batchId,
+                jobId: data.jobId.jobid
+            },
             code: 200,
         };
     } catch (error) {
