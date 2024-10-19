@@ -8,12 +8,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, ListFilter } from "lucide-react";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 
 interface FilterOption {
   value: string;
   label: string;
+  icon?: React.ReactNode;
 }
 
 interface FilterDropdownProps {
@@ -54,12 +55,12 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ filterOptions }) => {
           }`}
         >
           <div className="flex items-center">
-            <SlidersHorizontal className="mr-2 h-4 w-4" />
+            <ListFilter size={18} className="mr-2 " />
             Filter
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[150px] dark">
+      <DropdownMenuContent className="w-[180px] dark">
         {filterOptions?.map((option) => (
           <label
             key={option.value}
@@ -72,8 +73,11 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ filterOptions }) => {
                 handleChange(checked as boolean, option.value)
               }
             />
-            <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900 dark:text-gray-100">
-              {option.label}
+            <span className="flex items-center text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-gray-900 dark:text-gray-100">
+              <div className="ml-2 flex gap-2 items-center">
+                {option.icon}
+                {option.label}
+              </div>
             </span>
           </label>
         ))}

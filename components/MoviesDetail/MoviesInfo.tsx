@@ -7,6 +7,7 @@ import { message } from "react-message-popup";
 import { toggleCollection } from "@/app/actions";
 import { usePathname } from "next/navigation";
 import dayjs from "dayjs";
+import { zenMaruGothic } from "@/app/fonts";
 import { useState } from "react";
 interface MoviesInfoProps {
   movie: Movie;
@@ -85,7 +86,11 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
                     onClick={() => handleActressClick(item.actressName)}
                     className="hover:underline cursor-pointer ml-1"
                   >
-                    <Badge variant="surface" color="blue">
+                    <Badge
+                      className={`${zenMaruGothic.className} text-md`}
+                      variant="surface"
+                      color="blue"
+                    >
                       {item.actressName}
                     </Badge>
                   </span>
@@ -135,7 +140,9 @@ interface InfoItemProps {
 
 const InfoItem: React.FC<InfoItemProps> = ({ label, value }) => (
   <li>
-    <span className="text-gray-500 text-sm">{label}：</span>
+    <span className={`${zenMaruGothic.className} text-gray-500 text-md`}>
+      {label}：
+    </span>
     {value}
   </li>
 );

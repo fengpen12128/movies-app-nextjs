@@ -60,7 +60,7 @@ export const handleMovie = (
 
         if (config?.displayMode === 'demo') {
             result.coverUrl = process.env.NEXT_PUBLIC_DEMO_IMAGE;
-            result.code = result.code.split("-")[1];
+           // result.code = result.code.split("-")[1];
         }
         return result;
     };

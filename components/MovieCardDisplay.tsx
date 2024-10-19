@@ -41,7 +41,7 @@ export const CommonDisplay: React.FC<{
   }
 
   return (
-    <div className='mb-10'>
+    <div className="mb-10">
       <section className={colClassDia}>
         {movies.map((x) => (
           <MoviesCard key={x.id} {...x} />

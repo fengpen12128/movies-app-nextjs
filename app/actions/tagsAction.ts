@@ -19,15 +19,15 @@ export async function getTags(): Promise<DataResponse<OptionGroup[]>> {
         const tagNameList = moviesTag.map((x: any) => x.tagName);
         const optionsList: OptionGroup[] = [
             {
-                title: "prefix",
+                title: "Prefix",
                 options: tags.reverse(),
             },
             {
-                title: "years",
+                title: "Years",
                 options: yearTags.sort().reverse(),
             },
             {
-                title: "tags",
+                title: "Tags",
                 options: tagNameList,
             }
         ];

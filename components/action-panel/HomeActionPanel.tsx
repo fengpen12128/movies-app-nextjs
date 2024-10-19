@@ -4,31 +4,33 @@ import MagentPopover from "@/components/MagentPopover";
 import FilterDropdown from "@/components/FilterDropdown";
 import OrderSelect from "@/components/MoviesOrderSelect";
 import { Calendar, Clock } from "lucide-react";
+import { Film, Tv, Star } from "lucide-react";
+
 const movieFilterOptions = [
-  { value: "latest", label: "最新" },
-  { value: "popular", label: "热门" },
-  { value: "highRated", label: "高分" },
-  { value: "recommended", label: "推荐" },
+  { value: "movie", label: "Movies", icon: <Film size={16} /> },
+  { value: "tv", label: "TV Shows", icon: <Tv size={16} /> },
+  { value: "popular", label: "Popular", icon: <Star size={16} /> },
+  { value: "latest", label: "Latest", icon: <Clock size={16} /> },
 ];
 
 const homeOrderOptions = [
   {
     value: "releaseDate",
-    label: "上映日期",
+    label: "releaseDate",
     icon: <Calendar className="mr-2 h-4 w-4" />,
   },
   {
     value: "crawlDate",
-    label: "爬取日期",
+    label: "crawlDate",
     icon: <Clock className="mr-2 h-4 w-4" />,
   },
 ];
 
-const HomeFilter: React.FC = () => {
+const HomeActionPanel: React.FC = () => {
   return (
     <Card>
       <div className="flex justify-between">
-        <div>
+        <div className="flex gap-6">
           <MagentPopover />
           <FilterDropdown filterOptions={movieFilterOptions} />
           <OrderSelect options={homeOrderOptions} />
@@ -39,4 +41,4 @@ const HomeFilter: React.FC = () => {
   );
 };
 
-export default HomeFilter;
+export default HomeActionPanel;

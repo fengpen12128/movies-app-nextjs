@@ -6,10 +6,10 @@ import {
   StarFilledIcon,
   StarIcon,
 } from "@radix-ui/react-icons";
-import SelectItem from "./SelectItem";
+import SelectItem from "./components/SelectItem";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 import PageationInfo from "../PaginationInfo";
-
+import { zenMaruGothic } from "@/app/fonts";
 interface Item {
   value: string;
   label: string;
@@ -22,10 +22,10 @@ interface Items {
   single: Item[];
 }
 
-export default function ActressMoviesFilter() {
-  const [collected, setCollected] = useSyncUrlParams("collected", "");
-  const [download, setDownload] = useSyncUrlParams("download", "");
-  const [single, setSingle] = useSyncUrlParams("single", "");
+export default function ActressMoviesActionPanel() {
+  const [collected, setCollected] = useSyncUrlParams("collected", "all");
+  const [download, setDownload] = useSyncUrlParams("download", "all");
+  const [single, setSingle] = useSyncUrlParams("single", "all");
 
   const items: Items = {
     collected: [
@@ -47,7 +47,7 @@ export default function ActressMoviesFilter() {
 
   return (
     <Flex direction="row" justify="between" align="center">
-      <div className="flex gap-6">
+      <div className={`flex gap-6 ${zenMaruGothic.className}`}>
         <SelectItem
           label="收藏状态"
           items={items.collected}

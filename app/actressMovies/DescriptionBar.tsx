@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { getActressFavStatus, toggleActressFav } from "@/app/actions";
 
 import { message } from "react-message-popup";
-import ActressMoviesFilter from "@/components/SubFilterBar/ActressMoviesFilter";
-import { ibmPlexMono } from "@/app/fonts";
+import ActressMoviesActionPanel from "@/components/action-panel/ActressMoviesActionPanel";
+import { zenMaruGothic } from "@/app/fonts";
 
 interface DescriptionBarProps {
   children: React.ReactNode;
@@ -48,10 +48,8 @@ export default function DescriptionBar({ children }: DescriptionBarProps) {
     >
       <Card>
         <div>
-          <div className="flex justify-between">
-            <span className={`${ibmPlexMono.className} text-3xl font-bold`}>
-              {name}
-            </span>
+          <div className={`flex justify-between ${zenMaruGothic.className}`}>
+            <span className="text-3xl font-bold">{name}</span>
             <Button
               color={isFav ? "red" : "cyan"}
               variant="outline"
@@ -61,7 +59,7 @@ export default function DescriptionBar({ children }: DescriptionBarProps) {
             </Button>
           </div>
           <div className="mt-4">
-            <ActressMoviesFilter />
+            <ActressMoviesActionPanel />
           </div>
         </div>
       </Card>

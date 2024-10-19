@@ -1,4 +1,3 @@
-export * from "./movieAction";
+export * from "./movie-action";
 export * from "./actressActions";
 export * from "./tagsAction";
-

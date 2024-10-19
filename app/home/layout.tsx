@@ -1,5 +1,5 @@
 import SharedLayout from "../shared-layout/layout";
-import HomeFilter from "@/components/SubFilterBar/HomeFilter2";
+import HomeActionPanel from "@/components/action-panel/theme2/HomeActionPanel";
 import { ReactNode } from "react";
 
 interface CollectionLayoutProps {
@@ -13,7 +13,7 @@ export const metadata = {
 export default function CollectionLayout({ children }: CollectionLayoutProps) {
   return (
     <SharedLayout>
-      <HomeFilter />
+      <HomeActionPanel />
       {children}
     </SharedLayout>
   );

@@ -1,19 +1,19 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
+
 import {
+  SlidersHorizontal,
+  Star,
+  StarOff,
   LayoutGrid,
   LayoutList,
-  Download,
-  XCircle,
-  SlidersHorizontal,
 } from "lucide-react";
-import SelectItem from "./SelectItem2";
+import SelectItem from "../components/SelectItem2";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
-import PageationInfo from "../PaginationInfo";
+import PageationInfo from "../../PaginationInfo";
 import MoviesOrderSelect from "@/components/MoviesOrderSelect";
-import { Calendar, Clock, Star } from "lucide-react";
-
+import { Calendar, Clock, Download } from "lucide-react";
 interface Item {
   value: string;
   label: string;
@@ -22,34 +22,35 @@ interface Item {
 
 interface Items {
   arrange: Item[];
-  download: Item[];
+  collected: Item[];
 }
 
-export default function CollectionFilter() {
+export default function DownloadActionPanel() {
+  const [collected, setCollected] = useSyncUrlParams("collected", "all");
   const [arrange, setArrange] = useSyncUrlParams("arrange", "flex");
-  const [download, setDownload] = useSyncUrlParams("download", "all");
 
   const items: Items = {
     arrange: [
       { value: "flex", label: "Flex", icon: <LayoutGrid size={16} /> },
       { value: "stack", label: "Stack", icon: <LayoutList size={16} /> },
     ],
-    download: [
-      { value: "all", label: "全部", icon: <SlidersHorizontal size={16} /> },
-      { value: "true", label: "已下载", icon: <Download size={16} /> },
-      { value: "false", label: "未下载", icon: <XCircle size={16} /> },
+    collected: [
+      { value: "all", label: "All", icon: <SlidersHorizontal size={16} /> },
+      { value: "true", label: "Collected", icon: <Star size={16} /> },
+      { value: "false", label: "Not Collected", icon: <StarOff size={16} /> },
     ],
   };
+
   const orderOptions: OrderOption[] = [
     {
-      value: "favoriteDesc",
-      label: "收藏日期 Desc",
-      icon: <Star className="mr-2 h-4 w-4" />,
+      value: "downloadDesc",
+      label: "下载日期 Desc",
+      icon: <Download className="mr-2 h-4 w-4" />,
     },
     {
-      value: "favoriteAsc",
-      label: "收藏日期 Asc",
-      icon: <Star className="mr-2 h-4 w-4" />,
+      value: "downloadAsc",
+      label: "下载日期 Asc",
+      icon: <Download className="mr-2 h-4 w-4" />,
     },
     {
       value: "releaseDate",
@@ -65,9 +66,9 @@ export default function CollectionFilter() {
 
   return (
     <Card>
-      <CardContent className="my-3 p-0 ">
-        <div className="flex-between mx-3">
-          <div className="flex gap-6 ">
+      <CardContent className="my-3 p-0">
+        <div className="flex justify-between mx-3">
+          <div className="flex gap-6">
             <SelectItem
               label="排列方式"
               items={items.arrange}
@@ -75,14 +76,14 @@ export default function CollectionFilter() {
               onChange={setArrange}
             />
             <SelectItem
-              label="下载状态"
-              items={items.download}
-              value={download}
-              onChange={setDownload}
+              label="收藏状态"
+              items={items.collected}
+              value={collected}
+              onChange={setCollected}
             />
             <MoviesOrderSelect
               options={orderOptions}
-              defaultValue="favoriteDesc"
+              defaultValue="downloadDesc"
             />
           </div>
           <PageationInfo />

@@ -8,7 +8,7 @@ import {
   XCircle,
   SlidersHorizontal,
 } from "lucide-react";
-import SelectItem from "./SelectItem";
+import SelectItem from "./components/SelectItem";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 import PageationInfo from "../PaginationInfo";
 
@@ -23,7 +23,7 @@ interface Items {
   download: Item[];
 }
 
-export default function CollectionFilter() {
+export default function CollectionActionPanel() {
   const [arrange, setArrange] = useSyncUrlParams("arrange", "flex");
   const [download, setDownload] = useSyncUrlParams("download", "");
 

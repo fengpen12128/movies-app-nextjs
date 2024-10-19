@@ -8,7 +8,7 @@ import {
   LayoutGrid,
   LayoutList,
 } from "lucide-react";
-import SelectItem from "./SelectItem";
+import SelectItem from "./components/SelectItem";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 import PageationInfo from "../PaginationInfo";
 
@@ -23,7 +23,7 @@ interface Items {
   collected: Item[];
 }
 
-export default function DownloadFilter() {
+export default function DownloadActionPanel() {
   const [collected, setCollected] = useSyncUrlParams("collected", "all");
   const [arrange, setArrange] = useSyncUrlParams("arrange", "flex");
 

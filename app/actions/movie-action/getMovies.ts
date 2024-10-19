@@ -38,7 +38,36 @@ export async function getMovies({
             });
             relevantCodes = batchRecords.map((record: { code: string }) => record.code);
         }
-        const filterArr = filter?.split(",");
+        const { ctCode, dmCode } = await getCollectionAndDownloadCode();
+
+        const filterArr = filter?.split(",") || [];
+
+        const createPartWhereByFilter = async (filterArr: string[]) => {
+            if (filterArr.includes("latest")) {
+                return {
+                    createdTime: {
+                        gte: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000)
+                    }
+                }
+            }
+            if (filterArr.includes("download")) {
+                return {
+                    code: {
+                        in: dmCode
+                    }
+                }
+            }
+
+            if (filterArr.includes("collection")) {
+                return {
+                    code: {
+                        in: ctCode
+                    }
+                }
+            }
+        }
+
+        const filterWhere = await createPartWhereByFilter(filterArr)
 
         let moviesQuery: any = {
             skip,
@@ -77,19 +106,17 @@ export async function getMovies({
                 ...(batchId && {
                     code: { in: relevantCodes },
                 }),
-                ...(filterArr?.includes("latest") && {
-                    createdTime: {
-                        gte: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000)
-                    }
-                })
+                ...(filterWhere)
             },
         };
+
+        console.log('moviesQuery_XXXXXXXX', moviesQuery)
+        console.log('filterWhere_XXXXXXXX', moviesQuery.where?.code?.in?.length)
 
         const [movies, totalCount] = await Promise.all([
             prisma.moviesInfo.findMany(moviesQuery),
             prisma.moviesInfo.count({ where: moviesQuery.where }),
         ]);
-        const { ctCode, dmCode } = await getCollectionAndDownloadCode();
 
 
         const handled = handleMovie(movies, {

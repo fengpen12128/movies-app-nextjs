@@ -2,6 +2,7 @@ import { Card, Text, Box, Button, Avatar } from "@radix-ui/themes";
 import { Trash2 } from "lucide-react";
 import DeleteAlertDialog from "./DeleteAlertDialog";
 import Link from "next/link";
+import { zenMaruGothic } from "@/app/fonts";
 
 interface ActressCardProps {
   actressName: string;
@@ -14,7 +15,7 @@ const ActressCard: React.FC<ActressCardProps> = ({
 }) => {
   return (
     <Box>
-      <Card className="cursor-pointer">
+      <Card className={`cursor-pointer `}>
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <Avatar
@@ -29,7 +30,7 @@ const ActressCard: React.FC<ActressCardProps> = ({
               href={`/actressMovies?name=${actressName}`}
             >
               <Text
-                className="font-ma cursor-pointer"
+                className={`cursor-pointer ${zenMaruGothic.className}`}
                 as="div"
                 size="5"
                 weight="bold"
@@ -41,7 +42,6 @@ const ActressCard: React.FC<ActressCardProps> = ({
           <div className="flex items-center">
             <Text as="div" color="gray" size="2">
               {/* Start building your next project in minutes */}
-              
             </Text>
             <DeleteAlertDialog actressName={actressName}>
               <Button variant="ghost">
