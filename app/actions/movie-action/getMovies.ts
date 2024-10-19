@@ -110,9 +110,6 @@ export async function getMovies({
             },
         };
 
-        console.log('moviesQuery_XXXXXXXX', moviesQuery)
-        console.log('filterWhere_XXXXXXXX', moviesQuery.where?.code?.in?.length)
-
         const [movies, totalCount] = await Promise.all([
             prisma.moviesInfo.findMany(moviesQuery),
             prisma.moviesInfo.count({ where: moviesQuery.where }),
