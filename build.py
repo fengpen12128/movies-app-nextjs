@@ -22,17 +22,15 @@ def remove_image(image_name):
 
 
 def main():
-    # Step 1: Remove the existing container (if any)
-    remove_container("movies_app_nextjs")
-
-    # Step 2: Remove the existing Docker image (if any)
-    remove_image("movies_app_nextjs")
 
     # Step 3: Git pull to fetch the latest code
     run_command("git pull")
 
     # Step 4: Build the Docker image without using cache
     run_command("docker build  -t movies_app_nextjs .")
+
+    # Step 1: Remove the existing container (if any)
+    remove_container("movies_app_nextjs")
 
     # Step 5: Run the Docker container
     run_command(
