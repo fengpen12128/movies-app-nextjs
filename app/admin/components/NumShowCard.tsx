@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, ReactNode } from "react";
 import {
   Card,
   CardContent,
@@ -12,6 +12,7 @@ import { Progress } from "@/components/ui/progress";
 interface NumShowCardProps {
   num?: string;
   title?: string;
+  icon?: ReactNode;
   progressValue?: number;
   progressLabel?: string;
   additionalInfo?: string;
@@ -20,14 +21,18 @@ interface NumShowCardProps {
 const NumShowCard: FC<NumShowCardProps> = ({
   num,
   title,
+  icon,
   progressValue,
   progressLabel,
   additionalInfo,
 }) => {
   return (
-    <Card >
+    <Card>
       <CardHeader className="pb-2">
-        <CardDescription>{title}</CardDescription>
+        <CardDescription className="flex items-center">
+          {icon && <span className="mr-2">{icon}</span>}
+          {title}
+        </CardDescription>
         <CardTitle className="text-4xl">{num}</CardTitle>
       </CardHeader>
       <CardContent>

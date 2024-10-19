@@ -7,6 +7,7 @@ import { getActressFavStatus, toggleActressFav } from "@/app/actions";
 
 import { message } from "react-message-popup";
 import ActressMoviesFilter from "@/components/SubFilterBar/ActressMoviesFilter";
+import { ibmPlexMono } from "@/app/fonts";
 
 interface DescriptionBarProps {
   children: React.ReactNode;
@@ -48,7 +49,9 @@ export default function DescriptionBar({ children }: DescriptionBarProps) {
       <Card>
         <div>
           <div className="flex justify-between">
-            <span className="text-3xl font-ma font-bold">{""}</span>
+            <span className={`${ibmPlexMono.className} text-3xl font-bold`}>
+              {name}
+            </span>
             <Button
               color={isFav ? "red" : "cyan"}
               variant="outline"

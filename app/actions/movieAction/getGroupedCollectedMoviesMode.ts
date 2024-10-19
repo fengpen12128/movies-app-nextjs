@@ -3,14 +3,22 @@
 import prisma from "@/app/lib/prisma";
 import { cookies } from 'next/headers';
 import { getCollectionAndDownloadCode, getPaginationData, handleMovie } from "../utils/commonUtils";
-
+import { getCollectionOrder } from "./getOrder";
 /**
  * Fetches and groups movies by actress, with pagination support.
  *
  * @param page - The page number to fetch (default: 1)
  * @param pageSize - The number of items per page (default: 50)
  */
-export async function getGroupedCollectedMoviesMode(page: number = 1, pageSize: number = 50): Promise<DataResponse<ActressGroupedMovies[]>> {
+export async function getGroupedCollectedMoviesMode({
+    page = 1,
+    pageSize = 50,
+    order = "favoriteDesc"
+}: {
+    page?: number;
+    pageSize?: number;
+    order?: MovieOrder;
+}): Promise<DataResponse<ActressGroupedMovies[]>> {
     const skip = (page - 1) * pageSize;
 
     try {
@@ -43,9 +51,7 @@ export async function getGroupedCollectedMoviesMode(page: number = 1, pageSize: 
                     },
                 },
             },
-            orderBy: {
-                createdTime: 'desc',
-            },
+            orderBy: getCollectionOrder(order),
         });
 
         const cookieStore = cookies();

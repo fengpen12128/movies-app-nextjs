@@ -41,6 +41,7 @@ const ActressCard: React.FC<ActressCardProps> = ({
           <div className="flex items-center">
             <Text as="div" color="gray" size="2">
               {/* Start building your next project in minutes */}
+              
             </Text>
             <DeleteAlertDialog actressName={actressName}>
               <Button variant="ghost">

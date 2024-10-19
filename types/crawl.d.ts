@@ -30,3 +30,9 @@ declare interface CrawlStat {
 }
 
 declare type CrawlStatus = 'running' | 'pending' | 'finished' | 'not_found' | 'error';
+
+
+declare interface UnDownloadNum {
+    imageNum: number,
+    videoNum: number,
+}

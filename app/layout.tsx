@@ -16,8 +16,8 @@ interface RootLayoutProps {
 }
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
-  <html lang="en" className={ibmPlexMono.className}>
-    <body className="app">
+  <html lang="en" className={`${ibmPlexMono.className} dark`}>
+    <body className="app ">
       <Theme
         panelBackground="translucent"
         appearance="dark"

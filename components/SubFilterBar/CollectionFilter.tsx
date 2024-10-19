@@ -9,7 +9,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import SelectItem from "./SelectItem";
-import { useFilterState } from "@/app/hooks/useFilterState";
+import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 import PageationInfo from "../PaginationInfo";
 
 interface Item {
@@ -24,8 +24,8 @@ interface Items {
 }
 
 export default function CollectionFilter() {
-  const [arrange, setArrange] = useFilterState("arrange", "flex");
-  const [download, setDownload] = useFilterState("download", "all");
+  const [arrange, setArrange] = useSyncUrlParams("arrange", "flex");
+  const [download, setDownload] = useSyncUrlParams("download", "");
 
   const items: Items = {
     arrange: [
@@ -33,7 +33,7 @@ export default function CollectionFilter() {
       { value: "stack", label: "Stack", icon: <LayoutList size={16} /> },
     ],
     download: [
-      { value: "all", label: "全部", icon: <SlidersHorizontal size={16} /> },
+      { value: "", label: "全部", icon: <SlidersHorizontal size={16} /> },
       { value: "true", label: "已下载", icon: <Download size={16} /> },
       { value: "false", label: "未下载", icon: <XCircle size={16} /> },
     ],

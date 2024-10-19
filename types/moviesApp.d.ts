@@ -79,7 +79,18 @@ declare interface MovieQueryParams {
     years?: string | number;
     tags?: string;
     batchId?: string;
+    latest?: 'true' | 'false' | undefined
+    order?: MovieOrder
+    filter?: MovieFilter
 }
+declare interface OrderOption {
+    value: string;
+    label: string;
+    icon: React.ReactNode;
+};
+
+declare type MovieOrder = "releaseDate" | "crawlDate" | "favoriteDesc" | "favoriteAsc" | "downloadDesc" | "downloadAsc";
+declare type MovieFilter = "latest" | "popular" | "highRated" | "recommended";
 
 // 爬虫相关接口
 declare interface ProcessStats {

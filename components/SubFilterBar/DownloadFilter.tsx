@@ -9,7 +9,7 @@ import {
   LayoutList,
 } from "lucide-react";
 import SelectItem from "./SelectItem";
-import { useFilterState } from "@/app/hooks/useFilterState";
+import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 import PageationInfo from "../PaginationInfo";
 
 interface Item {
@@ -24,8 +24,8 @@ interface Items {
 }
 
 export default function DownloadFilter() {
-  const [collected, setCollected] = useFilterState("collected", "all");
-  const [arrange, setArrange] = useFilterState("arrange", "flex");
+  const [collected, setCollected] = useSyncUrlParams("collected", "all");
+  const [arrange, setArrange] = useSyncUrlParams("arrange", "flex");
 
   const items: Items = {
     arrange: [

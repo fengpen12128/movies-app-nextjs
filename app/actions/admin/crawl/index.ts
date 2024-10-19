@@ -194,3 +194,41 @@ export async function getCrawlScheduledUrls(): Promise<DataResponse<CrawlUrl[]>>
         };
     }
 }
+
+export async function getUnDownloadNum(): Promise<DataResponse<UnDownloadNum>> {
+    try {
+        const [imageNum, videoNum] = await Promise.all([
+            prisma.downloadUrls.count({
+                where: {
+                    status: {
+                        not: 1
+                    },
+                    type: {
+                        in: [1, 2]
+                    }
+                }
+            }),
+            prisma.downloadUrls.count({
+                where: {
+                    status: {
+                        not: 1
+                    },
+                    type: 3
+                }
+            })
+        ]);
+
+        return {
+            data: {
+                imageNum,
+                videoNum
+            },
+            code: 200
+        }
+    } catch (error) {
+        return {
+            msg: `error: ${error}`,
+            code: 500
+        }
+    }
+}

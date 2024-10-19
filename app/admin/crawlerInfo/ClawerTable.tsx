@@ -15,11 +15,13 @@ import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { useRequest } from "ahooks";
 import { Badge, Spinner } from "@radix-ui/themes";
+import { Badge as NextuiBadge } from "@nextui-org/react";
 import { Chip } from "@nextui-org/react";
 import _ from "lodash";
 import { Eye } from "lucide-react";
 import { getCrawlRecord } from "@/app/actions/admin/crawl";
 import { useSpiderActions } from "@/app/hooks/useSpiderActions";
+import { getUnDownloadNum } from "@/app/actions/admin/crawl";
 
 interface DownloadProcess {
   percent?: number;
@@ -33,8 +35,18 @@ const ClawerTable: React.FC = () => {
   const { data: crawlResponse, loading, error } = useRequest(getCrawlRecord);
   const { data: crawlData, pagination } = crawlResponse || {};
 
+  const [unDownloadNum, setUnDownloadNum] = useState<number>(0);
   const { transferringBatches, downloadingBatches, executeSpiderEndActions } =
     useSpiderActions();
+
+  useRequest(getUnDownloadNum, {
+    onSuccess: (data) => {
+      if (data?.code === 200 && data.data) {
+        const { imageNum = 0, videoNum = 0 } = data.data;
+        setUnDownloadNum(imageNum);
+      }
+    },
+  });
 
   const { runAsync: handleDownloadData } = useRequest(
     async () => {
@@ -66,11 +78,7 @@ const ClawerTable: React.FC = () => {
     scheduled: "定时执行",
   };
 
-  const handleDataTrans = (batchId: string) => {
-    try {
-      executeSpiderEndActions(batchId);
-    } catch (error) {}
-  };
+  const handleDataTrans = (batchId: string) => executeSpiderEndActions(batchId);
 
   const renderTransButton = (
     transStatus: number,
@@ -120,16 +128,18 @@ const ClawerTable: React.FC = () => {
   };
 
   return (
-    <div className="overflow-x-auto  dark:text-white">
-      <div className="flex items-center space-x-4 mb-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => handleDownloadData()}
-          disabled={downloadLoading}
-        >
-          {downloadLoading ? "下载中..." : "开始下载"}
-        </Button>
+    <div className="overflow-x-auto  ">
+      <div className="flex items-center space-x-4 py-2 mb-4">
+        <NextuiBadge content={unDownloadNum} size="sm" color="danger">
+          <Button
+            onClick={() => handleDownloadData()}
+            disabled={downloadLoading}
+            variant="outline"
+          >
+            {downloadLoading ? "下载中..." : "开始下载"}
+          </Button>
+        </NextuiBadge>
+
         <div className="flex-grow">
           <Progress value={downloadProcess?.percent} />
           <div className="flex justify-between mt-1 text-sm">

@@ -1,5 +1,5 @@
 import SharedLayout from "../shared-layout/layout";
-import CollectionSettings from "@/components/SubFilterBar/CollectionFilter";
+import CollectionSettings from "@/components/SubFilterBar/CollectionFilter2";
 import { ReactNode } from 'react';
 
 export const metadata = {

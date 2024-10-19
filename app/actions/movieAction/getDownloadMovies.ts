@@ -3,14 +3,16 @@
 import { getCollectionAndDownloadCode, getPaginationData, handleMovie } from "@/app/actions/utils/commonUtils";
 import prisma from "@/app/lib/prisma";
 import { cookies } from 'next/headers';
+import { getDownloadOrder } from "./getOrder";
 
-export async function getDownloadMovies(page: number = 1, collected?: string): Promise<DataResponse<Movie[] | ActressGroupedDownloadMovies[]>> {
+export async function getDownloadMovies({ page = 1, collected, order = "downloadDesc" }: { page: number, collected?: string, order?: MovieOrder }): Promise<DataResponse<Movie[] | ActressGroupedDownloadMovies[]>> {
     try {
         const skip = (page - 1) * 50;
 
         const { ctCode, dmCode } = await getCollectionAndDownloadCode();
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
 
 
 
@@ -38,7 +40,7 @@ export async function getDownloadMovies(page: number = 1, collected?: string): P
                     },
                 },
             },
-            orderBy: { createdTime: 'desc' },
+            orderBy: getDownloadOrder(order),
             skip,
             distinct: ['movieCode'],
             take: 50,

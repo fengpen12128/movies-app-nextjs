@@ -25,20 +25,22 @@ export const StackCardContentModal: React.FC<ModalProps> = ({
   children,
 }) => {
   return (
-    <div
-      onClick={() => setOpen(false)}
-      className="modal-content"
-      style={{ display: open ? "flex" : "none" }}
-    >
-      <Card
-        className="w-full sm:w-2/3 h-[80vh] sm:h-[95vh] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
+    <RenderPortal>
+      <div
+        onClick={() => setOpen(false)}
+        className="modal-mask"
+        style={{ display: open ? "flex" : "none" }}
       >
-        <div className="w-[98%] sm:w-full h-full overflow-y-auto no-scrollbar">
-          {children}
-        </div>
-      </Card>
-    </div>
+        <Card
+          className="w-full sm:w-2/3 h-[80vh] sm:h-[95vh] overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="w-[98%] sm:w-full h-full overflow-y-auto no-scrollbar">
+            {children}
+          </div>
+        </Card>
+      </div>
+    </RenderPortal>
   );
 };
 

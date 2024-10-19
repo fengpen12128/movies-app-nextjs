@@ -7,7 +7,7 @@ import {
   StarIcon,
 } from "@radix-ui/react-icons";
 import SelectItem from "./SelectItem";
-import { useFilterState } from "@/app/hooks/useFilterState";
+import { useFilterState } from "@/app/hooks/useSyncUrlParams";
 import PageationInfo from "../PaginationInfo";
 
 interface Item {

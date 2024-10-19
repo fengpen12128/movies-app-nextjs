@@ -9,6 +9,7 @@ import {
 } from "@/app/actions/utils/commonUtils";
 import { cookies } from 'next/headers';
 import { movieSelect } from "../querySelect";
+import { getDefaultOrder } from "./getOrder";
 
 
 
@@ -20,6 +21,8 @@ export async function getMovies({
     years,
     tags,
     batchId,
+    filter,
+    order = "releaseDate"
 }: MovieQueryParams): Promise<DataResponse<Movie[]>> {
     try {
         const skip = (page - 1) * DEFAULT_PAGE_SIZE;
@@ -35,11 +38,12 @@ export async function getMovies({
             });
             relevantCodes = batchRecords.map((record: { code: string }) => record.code);
         }
+        const filterArr = filter?.split(",");
 
         let moviesQuery: any = {
             skip,
             take: DEFAULT_PAGE_SIZE,
-            orderBy: { releaseDate: "desc" as const },
+            orderBy: getDefaultOrder(order),
             select: movieSelect,
             where: {
                 ...(search && {
@@ -73,8 +77,12 @@ export async function getMovies({
                 ...(batchId && {
                     code: { in: relevantCodes },
                 }),
+                ...(filterArr?.includes("latest") && {
+                    createdTime: {
+                        gte: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000)
+                    }
+                })
             },
-
         };
 
         const [movies, totalCount] = await Promise.all([

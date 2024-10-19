@@ -7,15 +7,12 @@ const HomeContent: React.FC<MovieQueryParams> = async (params) => {
     ...params,
     actressName: undefined,
   });
-
   if (code !== 200) {
     return <div>{msg}</div>;
   }
-
   if (data!.length === 0) {
     return <MovieEmpty />;
   }
-
   return <CommonDisplay movies={data!} pagination={pagination} />;
 };
 

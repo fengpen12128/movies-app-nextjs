@@ -7,26 +7,26 @@ import {
     getPaginationData,
 } from "@/app/actions/utils/commonUtils";
 import { cookies } from 'next/headers';
-
-
+import { getCollectionOrder } from "./getOrder";
 
 
 
 export async function getCollectionMovies({
     page = 1,
     download,
+    order = "favoriteDesc"
 }: {
     page?: number;
     download?: string;
+    order?: MovieOrder
 }): Promise<DataResponse<Movie[] | ActressGroupedMovies[]>> {
     try {
         const { ctCode, dmCode } = await getCollectionAndDownloadCode();
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
-        // if (isStack) {
-        //     const res = await groupedMoviesByActress(page, 50);
-        //     return res;
-        // }
+
+        // 在文件顶部添加这个新的辅助函数
+
 
         const skip = (page - 1) * 50;
         let q = {
@@ -43,7 +43,7 @@ export async function getCollectionMovies({
                     },
                 },
             },
-            orderBy: { createdTime: 'desc' as const },
+            orderBy: getCollectionOrder(order),
             where: {
                 movieCode: {
                     ...(download === "true" && { in: dmCode }),

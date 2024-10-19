@@ -1,5 +1,5 @@
 import SharedLayout from "../shared-layout/layout";
-import HomeFilter from "@/components/SubFilterBar/HomeFilter";
+import HomeFilter from "@/components/SubFilterBar/HomeFilter2";
 import { ReactNode } from "react";
 
 interface CollectionLayoutProps {
