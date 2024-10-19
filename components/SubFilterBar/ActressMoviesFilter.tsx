@@ -7,7 +7,7 @@ import {
   StarIcon,
 } from "@radix-ui/react-icons";
 import SelectItem from "./SelectItem";
-import { useFilterState } from "@/app/hooks/useSyncUrlParams";
+import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 import PageationInfo from "../PaginationInfo";
 
 interface Item {
@@ -23,9 +23,9 @@ interface Items {
 }
 
 export default function ActressMoviesFilter() {
-  const [collected, setCollected] = useFilterState("collected", "all");
-  const [download, setDownload] = useFilterState("download", "all");
-  const [single, setSingle] = useFilterState("single", "all");
+  const [collected, setCollected] = useSyncUrlParams("collected", "");
+  const [download, setDownload] = useSyncUrlParams("download", "");
+  const [single, setSingle] = useSyncUrlParams("single", "");
 
   const items: Items = {
     collected: [
