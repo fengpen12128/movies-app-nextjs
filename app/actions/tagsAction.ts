@@ -37,8 +37,8 @@ export async function getTags(): Promise<DataResponse<OptionGroup[]>> {
         console.error("Error fetching tags:", error);
         return { code: 500, msg: "Failed to fetch tags" };
     } finally {
-        if (client) {
-            await disconnectRedis();
-        }
+        // if (client) {
+        //     await disconnectRedis();
+        // }
     }
 }
