@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Button as NextUIButton } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { getPrefixStatistics } from "@/app/actions/admin/dashboard";
@@ -17,7 +18,7 @@ import { useRequest } from "ahooks";
 import { Spinner } from "@radix-ui/themes";
 import { runCrawl } from "@/app/actions/admin/crawl";
 import { message } from "react-message-popup";
-
+import { CameraIcon, UserIcon } from "lucide-react";
 const PrefixCodeTable: React.FC = () => {
   const { data, loading } = useRequest(getPrefixStatistics);
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,16 +27,6 @@ const PrefixCodeTable: React.FC = () => {
 
   const handleReCrawl = (code: string) => {
     setCrawlingCodes((prev) => new Set(prev).add(code));
-    // // 模拟爬取过程
-    // setTimeout(() => {
-    //   setCrawlingCodes((prev) => {
-    //     const newSet = new Set(prev);
-    //     newSet.delete(code);
-    //     return newSet;
-    //   });
-    //   console.log(`Re-crawling completed for code: ${code}`);
-    // }, 10000); // 3秒后完成爬取
-
     let p = {
       url: `https://javdb.com/video_codes/${code}`,
       maxPage: 1,
@@ -85,6 +76,7 @@ const PrefixCodeTable: React.FC = () => {
                 <TableHead>Code</TableHead>
                 <TableHead>Num</TableHead>
                 <TableHead>Brand</TableHead>
+                <TableHead>Website</TableHead>
                 <TableHead>操作</TableHead>
               </TableRow>
             </TableHeader>
@@ -113,6 +105,20 @@ const PrefixCodeTable: React.FC = () => {
                     </TableCell>
                     <TableCell>{item.num}</TableCell>
                     <TableCell>{item.brand}</TableCell>
+                    <TableCell>
+                      <NextUIButton
+                        size="sm"
+                        as={Link}
+                        href={`https://javdb.com/video_codes/${item.code}`}
+                        color="default"
+                        variant="ghost"
+                        endContent={<img className="w-3" src="s1.png" alt="" />}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Javdb
+                      </NextUIButton>
+                    </TableCell>
                     <TableCell>
                       <Button
                         size="sm"

@@ -36,3 +36,12 @@ declare interface UnDownloadNum {
     imageNum: number,
     videoNum: number,
 }
+
+declare interface ScheduleCrawlUrl {
+    id: number;
+    web: string;
+    url: string;
+    uri: string;
+    maxPage: number;
+    createdTime: Date;
+}

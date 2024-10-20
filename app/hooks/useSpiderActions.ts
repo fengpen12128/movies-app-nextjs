@@ -67,21 +67,6 @@ export const useSpiderActions = () => {
         }
     };
 
-    // const updateTransStatus = async (batchId: string) => {
-    //     try {
-    //         const response = await fetch("/api/crawl/action/trans/updateStatus", {
-    //             method: "PATCH",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({ batchId: batchId, transStatus: 1 }),
-    //         });
-    //         if (!response.ok) throw new Error("Failed to update trans status");
-    //         console.log("Trans status updated");
-    //     } catch (error) {
-    //         console.error("Error updating trans status:", error);
-    //         message.error("更新迁移状态失败");
-    //     }
-    // };
-
     const executeSpiderEndActions = async (newBatchId: string | null) => {
         if (!newBatchId) return;
         await handleTransData(newBatchId);

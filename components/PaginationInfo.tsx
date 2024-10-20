@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Text } from "@radix-ui/themes";
+import { Text } from "@radix-ui/themes";
 import usePageStore from "@/store/commonStore";
 
 const PaginationInfo: React.FC = () => {
@@ -13,14 +13,14 @@ const PaginationInfo: React.FC = () => {
   const { totalCount, totalPage } = pagination;
 
   return (
-    <Flex gap="4" align="center">
+    <div className="flex items-center gap-2">
       <Text size="2" weight="medium">
         共 {totalCount} 条
       </Text>
       <Text size="2" weight="medium">
         共 {totalPage} 页
       </Text>
-    </Flex>
+    </div>
   );
 };
 

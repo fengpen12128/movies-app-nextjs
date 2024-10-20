@@ -100,7 +100,7 @@ export default function SearchBar() {
       </div>
 
       <div className="flex gap-2 items-center justify-center">
-        <Button
+        {/* <Button
           variant="surface"
           size="3"
           color="indigo"
@@ -108,7 +108,7 @@ export default function SearchBar() {
         >
           <FilterIcon size={18} className="mr-1" />
           {showFilters ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-        </Button>
+        </Button> */}
 
         <TextField.Root
           size="3"

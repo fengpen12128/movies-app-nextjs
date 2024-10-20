@@ -61,7 +61,7 @@
 }
 
 .modal-mask {
-    @apply  fixed inset-0 bg-black/50 backdrop-blur-md flex-center z-40
+    @apply  fixed inset-0  bg-black/50 backdrop-blur-md flex-center z-40
 }
 
 @layer base {

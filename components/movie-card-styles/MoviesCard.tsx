@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import {
   MoviesPreviewModal,
+  MoviesPreviewModal22,
   MoviesPreviewModalAnimate,
 } from "../MoviesPreviewModal";
 import MoviesDetail from "../MoviesDetail/Index";

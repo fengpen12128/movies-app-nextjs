@@ -22,6 +22,7 @@ import { Eye } from "lucide-react";
 import { getCrawlRecord } from "@/app/actions/admin/crawl";
 import { useSpiderActions } from "@/app/hooks/useSpiderActions";
 import { getUnDownloadNum } from "@/app/actions/admin/crawl";
+import { CrawlParamsHoverCard } from "./CrawlParamsHoverCard";
 
 interface DownloadProcess {
   percent?: number;
@@ -83,11 +84,12 @@ const ClawerTable: React.FC = () => {
   const renderTransButton = (
     transStatus: number,
     batchId: string,
-    isFinished: boolean
+    isFinished: boolean,
+    jobId?: string
   ) => {
     if (transferringBatches.includes(batchId)) {
       return (
-        <Button variant="secondary" size="sm" disabled>
+        <Button variant="outline" size="sm" disabled>
           转换中...
         </Button>
       );
@@ -96,8 +98,18 @@ const ClawerTable: React.FC = () => {
     if (transStatus == 1) {
       return (
         <>
-          <Button variant="secondary" size="sm">
+          <Button variant="outline" size="sm">
             reTrans
+          </Button>
+
+          <Button
+            onClick={() => {
+              window.open(`/clawerLogView?jobId=${jobId}`, "_blank");
+            }}
+            variant="outline"
+            size="sm"
+          >
+            View Log
           </Button>
           <Link
             href={`/home?batchId=${batchId}`}
@@ -116,7 +128,7 @@ const ClawerTable: React.FC = () => {
       return (
         <>
           <Button
-            variant="secondary"
+            variant="outline"
             size="sm"
             onClick={() => handleDataTrans(batchId)}
           >
@@ -159,7 +171,7 @@ const ClawerTable: React.FC = () => {
       ) : crawlData && crawlData.length > 0 ? (
         <Table>
           <TableHeader>
-            <TableRow className="dark:border-gray-700">
+            <TableRow>
               <TableHead className="dark:text-gray-300">批次号</TableHead>
               <TableHead className="dark:text-gray-300">新增</TableHead>
               <TableHead className="dark:text-gray-300">更新</TableHead>
@@ -172,14 +184,18 @@ const ClawerTable: React.FC = () => {
           </TableHeader>
           <TableBody>
             {crawlData.map((row: CrawlStat) => (
-              <TableRow key={row.id} className="dark:border-gray-700">
+              <TableRow key={row.id}>
                 <TableCell className="dark:text-gray-300">
-                  <Link
+                  {/* <Link
                     href={`/admin/crawlerManager?batchId=${row.batchId}`}
                     className="text-blue-500 hover:underline dark:text-blue-400"
                   >
                     {row.batchId}
-                  </Link>
+                  </Link> */}
+                  <CrawlParamsHoverCard
+                    batchId={row.batchId}
+                    crawlParams={row.urls || []}
+                  />
                 </TableCell>
                 <TableCell className="dark:text-gray-300">
                   {row.newlyIncreasedNum}
@@ -215,7 +231,8 @@ const ClawerTable: React.FC = () => {
                     {renderTransButton(
                       Number(row.transStatus ?? 0),
                       row.batchId,
-                      row.crawlStatus === "finished"
+                      row.crawlStatus === "finished",
+                      row.jobId
                     )}
                   </div>
                 </TableCell>

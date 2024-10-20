@@ -35,21 +35,28 @@ const HomeActionPanel: React.FC = async () => {
 
   return (
     <Card>
-      <CardContent className="flex justify-between m-3 p-0 ">
-        <div className="flex items-center gap-6">
+      <CardContent className="flex flex-row items-center justify-between m-3 p-0 overflow-x-auto">
+        <div className="flex items-center gap-6 min-w-max">
           <MagentPopover />
           <FilterDropdown filterOptions={movieFilterOptions} />
           <MoviesOrderSelect options={options} />
-          {code === 200 &&
-            data?.map((x) => (
-              <ButtonListPopover
-                key={x.title}
-                title={x.title}
-                options={x.options}
-              />
-            ))}
+
+          <Card>
+            <CardContent className="p-0 flex gap-2">
+              {code === 200 &&
+                data?.map((x) => (
+                  <ButtonListPopover
+                    key={x.title}
+                    title={x.title}
+                    options={x.options}
+                  />
+                ))}
+            </CardContent>
+          </Card>
         </div>
-        <PaginationInfo />
+        <div className="flex-shrink-0">
+          <PaginationInfo />
+        </div>
       </CardContent>
     </Card>
   );

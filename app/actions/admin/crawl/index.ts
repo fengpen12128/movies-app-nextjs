@@ -106,6 +106,9 @@ export async function processCrawlParams(parsedParams: any): Promise<CrawlStat> 
         crawlStatus = statusResponse.data;
     }
 
+
+    parsedParams.urls = JSON.parse(parsedParams.crawlParams.urls)
+
     return {
         ...parsedParams,
         crawlStatus
@@ -167,17 +170,14 @@ export async function getSpiderLog(jobId: string): Promise<DataResponse<string>>
 
 export async function getCrawlScheduledUrls(): Promise<DataResponse<CrawlUrl[]>> {
     try {
-        const response = await fetch(`${process.env.CRAWLER_SERVER}/scheduled-urls`);
-        if (!response.ok) {
-            throw new Error("Failed to fetch scheduled URLs");
-        }
-        const data = await response.json();
-        const scheduledUrls = data.scheduledUrls;
+
+
+        const data = await prisma.scheduleCrawlUrl.findMany()
 
         let formattedUrls: CrawlUrl[] = [];
-        if (scheduledUrls && scheduledUrls.length > 0) {
-            formattedUrls = scheduledUrls.map(([url, maxPage]: [string, number]) => ({
-                url,
+        if (data && data.length > 0) {
+            formattedUrls = data.map(({ url, uri, maxPage }) => ({
+                url: `${url}/${uri}`,
                 maxPage,
             }));
         }

@@ -64,15 +64,15 @@ const ButtonListPopover: React.FC<OptionGroup> = ({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[99%] sm:w-[700px] bg-black/70 backdrop-blur-sm max-h-[500px] overflow-auto">
-        <div className="grid grid-cols-6 gap-2">
-          <Button onClick={() => handleSelect("All")} variant="secondary">
+      <PopoverContent className="w-full sm:w-[700px] bg-black/70 backdrop-blur-sm max-h-[500px] overflow-y-auto">
+        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+          <Button onClick={() => handleSelect("All")} variant="outline">
             All
           </Button>
           {options.map((option) => (
             <Button
               key={option}
-              variant="secondary"
+              variant="outline"
               className={` ${selectedOption === option ? "text-blue-700" : ""}`}
               onClick={() => handleSelect(option)}
             >

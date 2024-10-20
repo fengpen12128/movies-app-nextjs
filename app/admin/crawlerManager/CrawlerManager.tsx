@@ -23,8 +23,10 @@ import AlertDialogCommon from "@/components/radix/AlertDialog";
 import { useCrawlTargets } from "@/app/hooks/useCrawlTargets";
 import { useSpiderActions } from "@/app/hooks/useSpiderActions";
 import { useCrawlerOperations } from "@/app/hooks/useCrawlerOperations";
-import { getCrawlRecordByBatchId } from "@/app/actions/admin/crawl";
-import { getCrawlScheduledUrls } from "@/app/actions/admin/crawl";
+import {
+  getCrawlRecordByBatchId,
+  getCrawlScheduledUrls,
+} from "@/app/actions/admin/crawl";
 
 interface CrawlerManagerProps {
   batchId: string;

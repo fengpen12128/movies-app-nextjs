@@ -97,3 +97,68 @@ export async function getPrefixStatistics(): Promise<DataResponse<PrefixCode[]>>
         };
     }
 }
+
+export async function getScheduleCrawlUrl({ page, pageSize = 20, web, uri }: { page: number, pageSize?: number, web?: string, uri?: string }): Promise<DataResponse<ScheduleCrawlUrl[]>> {
+    try {
+        const schedules = await prisma.scheduleCrawlUrl.findMany({
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            where: {
+                ...(web && {
+                    web: {
+                        contains: web || ''
+                    }
+                }),
+                ...(uri && {
+                    uri: {
+                        contains: uri || ''
+                    }
+                })
+            }
+        });
+        return {
+            code: 200,
+            data: schedules as ScheduleCrawlUrl[]
+        }
+    } catch (error) {
+        return {
+            code: 500,
+            msg: "获取数据失败",
+            data: []
+        }
+    }
+}
+
+export async function addScheduleCrawlUrl(data: ScheduleCrawlUrl): Promise<DataResponse<void>> {
+    try {
+        await prisma.scheduleCrawlUrl.create({
+            data
+        });
+        return {
+            code: 200,
+            msg: "添加成功"
+        }
+    } catch (error) {
+        return {
+            code: 500,
+            msg: "添加失败"
+        }
+    }
+}
+
+export async function deleteScheduleCrawlUrl(ids: number[]): Promise<DataResponse<void>> {
+    try {
+        await prisma.scheduleCrawlUrl.deleteMany({
+            where: { id: { in: ids } }
+        });
+        return {
+            code: 200,
+            msg: "删除成功"
+        }
+    } catch (error) {
+        return {
+            code: 500,
+            msg: "删除失败"
+        }
+    }
+}

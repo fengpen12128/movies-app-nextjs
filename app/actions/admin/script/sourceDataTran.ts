@@ -2,6 +2,7 @@
 
 import prisma from "@/app/lib/prisma";
 import { insertMovieData } from "@/app/actions/utils/dataTranScript";
+import { revalidatePath } from 'next/cache'
 
 export async function transformSourceData({ batchId, isFullData = false }: { batchId?: string, isFullData: boolean }) {
     if (!isFullData && !batchId) {
@@ -27,6 +28,8 @@ export async function transformSourceData({ batchId, isFullData = false }: { bat
         for (const movieData of movieDataArray) {
             await insertMovieData(movieData.data);
         }
+
+        revalidatePath("/admin");
 
         return { msg: "transformation completed", count: movieDataArray.length };
     } catch (error) {

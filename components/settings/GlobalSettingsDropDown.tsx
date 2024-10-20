@@ -67,7 +67,7 @@ const GlobalSettings: React.FC = () => {
           </Button>
         </DropdownMenu.Trigger>
 
-        <DropdownMenu.Content>
+        <DropdownMenu.Content >
           <ThemeSettings
             theme={globalSettings.theme ?? "system"}
             onThemeChange={handleThemeChange}

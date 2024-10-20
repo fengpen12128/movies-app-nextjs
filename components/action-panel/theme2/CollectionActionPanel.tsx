@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import SelectItem from "../components/SelectItem2";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
-import PageationInfo from "../../PaginationInfo";
+import PaginationInfo from "@/components/PaginationInfo";
 import MoviesOrderSelect from "@/components/MoviesOrderSelect";
 import { Calendar, Clock, Star } from "lucide-react";
 
@@ -65,27 +65,27 @@ export default function CollectionActionPanel() {
 
   return (
     <Card>
-      <CardContent className="my-3 p-0 ">
-        <div className="flex-between mx-3">
-          <div className="flex gap-6 ">
-            <SelectItem
-              label="排列方式"
-              items={items.arrange}
-              value={arrange}
-              onChange={setArrange}
-            />
-            <SelectItem
-              label="下载状态"
-              items={items.download}
-              value={download}
-              onChange={setDownload}
-            />
-            <MoviesOrderSelect
-              options={orderOptions}
-              defaultValue="favoriteDesc"
-            />
-          </div>
-          <PageationInfo />
+      <CardContent className="flex items-center justify-between m-3 p-0 overflow-x-auto">
+        <div className="flex items-center gap-6 min-w-max">
+          <SelectItem
+            label="排列方式"
+            items={items.arrange}
+            value={arrange}
+            onChange={setArrange}
+          />
+          <SelectItem
+            label="下载状态"
+            items={items.download}
+            value={download}
+            onChange={setDownload}
+          />
+          <MoviesOrderSelect
+            options={orderOptions}
+            defaultValue="favoriteDesc"
+          />
+        </div>
+        <div className="flex-shrink-0">
+          <PaginationInfo />
         </div>
       </CardContent>
     </Card>

@@ -30,7 +30,7 @@ const OrderSelect: React.FC<OrderSelectProps> = ({
   return (
     <Select value={order} onValueChange={setOrder}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="选择排序方式" />
+        <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
