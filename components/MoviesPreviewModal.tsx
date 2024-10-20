@@ -44,6 +44,32 @@ export const StackCardContentModal: React.FC<ModalProps> = ({
   );
 };
 
+export const MoviesPreviewModalCustom: React.FC<ModalProps> = ({
+  open,
+  setOpen,
+  children,
+}) => {
+  return (
+    <RenderPortal>
+      <div
+        onClick={() => setOpen(false)}
+        className="modal-mask"
+        style={{ display: open ? "flex" : "none" }}
+      >
+        {/* bg-[var(--color-panel)]  从radix-ui 获取的，暂不使用 */}
+        <div
+          className="rounded-[var(--radius-4)] border p-[var(--space-3)]   backdrop-blur-md w-full sm:w-2/3 2xl:w-[60%] h-[80vh] sm:h-[95vh] overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="w-[98%] sm:w-full h-full overflow-y-auto no-scrollbar">
+            {children}
+          </div>
+        </div>
+      </div>
+    </RenderPortal>
+  );
+};
+
 export const MoviesPreviewModal: React.FC<ModalProps> = ({
   open,
   setOpen,
@@ -118,7 +144,6 @@ export const MoviesTrailerModal: React.FC<{
   videoUrl: string;
 }> = ({ coverUrl, videoUrl }) => {
   const [showPlay, setShowPlay] = useState(false);
-
   return (
     <>
       {showPlay && (
