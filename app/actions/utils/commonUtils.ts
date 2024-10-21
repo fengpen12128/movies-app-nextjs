@@ -1,6 +1,8 @@
 import prisma from "@/app/lib/prisma";
 
 export const DEFAULT_PAGE_SIZE = 50;
+import { movieNames, actorNames } from "./data";
+
 
 export const getCollectionAndDownloadCode = async (): Promise<{ ctCode: string[], dmCode: string[] }> => {
     const [downloadMovies, collectedMovies] = await Promise.all([
@@ -59,8 +61,9 @@ export const handleMovie = (
 
 
         if (config?.displayMode === 'demo') {
-            result.coverUrl = process.env.NEXT_PUBLIC_DEMO_IMAGE;
-           // result.code = result.code.split("-")[1];
+            result.coverUrl = `/demo/demo${Math.floor(Math.random() * 30) + 1}.jpg`
+            result.code = movieNames[Math.floor(Math.random() * movieNames.length)]
+            result.actresses = [actorNames[Math.floor(Math.random() * actorNames.length)]]
         }
         return result;
     };

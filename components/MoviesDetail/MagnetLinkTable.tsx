@@ -35,9 +35,11 @@ const MagnetLinkTable: React.FC<MagnetLinkTableProps> = ({ links }) => {
   return (
     <div className="w-full mt-10 bg-base-100 rounded p-2">
       <div className="pb-2 flex justify-between">
-        <div className="text-xl ">Magnet Links ({links.length})</div>
+        <div className="text-xl font-ibmPlexMono ">
+          Magnet Links ({links.length})
+        </div>
       </div>
-      <div className="overflow-x-auto mt-2">
+      <div className="overflow-x-auto mt-2 font-ibmPlexMono">
         <Table.Root variant="surface">
           <Table.Header>
             <Table.Row align="center">

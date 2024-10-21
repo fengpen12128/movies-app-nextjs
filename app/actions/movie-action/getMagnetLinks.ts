@@ -1,6 +1,9 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
+import { testMagnetLinks } from "../utils/data";
+import { cookies } from "next/headers";
+import _ from "lodash";
 
 // 辅助函数：将大小字符串转换为字节数
 
@@ -16,6 +19,10 @@ export async function getMagnetLinks(movieId: number): Promise<DataResponse<Magn
         const unit = match[3].toUpperCase();
         return num * units[unit as keyof typeof units];
     }
+
+    const cookieStore = cookies();
+    const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
 
 
     try {
@@ -36,9 +43,11 @@ export async function getMagnetLinks(movieId: number): Promise<DataResponse<Magn
             return sizeB - sizeA; // 降序排序
         });
 
+
+
         return {
             code: 200,
-            data: sortedMagnetLinks
+            data: config?.displayMode === 'demo' ? _.sampleSize(testMagnetLinks, Math.random() * 6 + 5) : sortedMagnetLinks
         }
     } catch (error) {
         console.error("Error fetching magnet links:", error);

@@ -5,7 +5,7 @@ import SidesBar from "@/components/SidesBar";
 import { Theme } from "@radix-ui/themes";
 import { ReactNode } from "react";
 
-import { ibmPlexMono } from "@/app/fonts";
+import { ibmPlexMono, zenMaruGothic } from "@/app/fonts";
 
 export const metadata = {
   title: "Index",
@@ -16,7 +16,10 @@ interface RootLayoutProps {
 }
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
-  <html lang="en" className={`${ibmPlexMono.className} dark`}>
+  <html
+    lang="en"
+    className={`${ibmPlexMono.variable} ${zenMaruGothic.variable} dark`}
+  >
     <body className="app ">
       <Theme
         panelBackground="translucent"

@@ -7,6 +7,7 @@ import { Play } from "lucide-react";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence, motion } from "framer-motion";
+import { useModalTheme } from "@/app/hooks/useModalTheme";
 
 // 动态导入 VideoPlayer 组件
 const VideoPlayer = dynamic(() => import("@/components/VideoPlayer"), {
@@ -49,6 +50,7 @@ export const MoviesPreviewModalCustom: React.FC<ModalProps> = ({
   setOpen,
   children,
 }) => {
+  const modalTheme = useModalTheme();
   return (
     <RenderPortal>
       <div
@@ -57,10 +59,8 @@ export const MoviesPreviewModalCustom: React.FC<ModalProps> = ({
         style={{ display: open ? "flex" : "none" }}
       >
         {/* bg-[var(--color-panel)]  从radix-ui 获取的，暂不使用 */}
-        <div
-          className="rounded-[var(--radius-4)] border p-[var(--space-3)] backdrop-blur-md w-full sm:w-2/3 2xl:w-[60%] h-[80vh] sm:h-[95vh] overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
-        >
+        {/* backdrop-blur-md */}
+        <div className={modalTheme} onClick={(e) => e.stopPropagation()}>
           <div className="w-[98%] sm:w-full h-full overflow-y-auto no-scrollbar">
             {children}
           </div>

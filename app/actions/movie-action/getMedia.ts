@@ -1,8 +1,12 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
+import { cookies } from 'next/headers';
+export async function getMedia(movieId: number): Promise<DataResponse<MoviesMediaUrl>> {
 
-export async function getMedia(movieId: number): Promise<DataResponse<MovieMedia[]>> {
+    const cookieStore = cookies();
+    const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
 
     try {
         const media = await prisma.filesInfo.findMany({
@@ -52,12 +56,31 @@ export async function getMedia(movieId: number): Promise<DataResponse<MovieMedia
             return updatedMedia;
         }));
 
+        const videoUrl = config.displayMode === "normal" ? handledMedia.find((x) => x.type === 3)?.path : process.env.NEXT_PUBLIC_DEMO_VIDEO;
+        const coverUrl =
+            config.displayMode === "normal"
+                ? handledMedia.find((x) => x.type === 2)?.path
+                : `/demo/demo${Math.floor(Math.random() * 30) + 1}.jpg`
+        const introUrls = handledMedia
+            .filter((x) => x.type === 1)
+            .map((x) => ({
+                id: x.id,
+                path: config.displayMode === "normal"
+                    ? x.path
+                    : `/demo/demo${Math.floor(Math.random() * 30) + 1}.jpg`,
+            }));
+
+
         return {
             code: 200,
-            data: handledMedia
+            data: {
+                videoUrl,
+                coverUrl,
+                introUrls
+            }
         }
     } catch (error) {
         console.error("Error fetching media:", error);
-        return { code: 500, msg: "Error fetching media", data: [] };
+        return { code: 500, msg: "Error fetching media" };
     }
 }

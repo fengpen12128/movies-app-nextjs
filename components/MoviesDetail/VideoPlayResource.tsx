@@ -2,7 +2,6 @@
 
 import { Button, Card, Select } from "@radix-ui/themes";
 import React, { useState, useCallback } from "react";
-import { ibmPlexMono } from "@/app/fonts";
 import HeroVideoDialog from "../ui/hero-video-dialog";
 
 interface VideoPlayResourceProps {
@@ -37,9 +36,9 @@ export default function VideoPlayResource({
   );
 
   return (
-    <Card className={`my-10 ${ibmPlexMono.className}`}>
+    <Card className="my-10">
       <div className="flex justify-between items-center mb-3">
-        <div className="text-xl">Select Play</div>
+        <div className="text-xl font-ibmPlexMono ">Select Play</div>
         <Select.Root
           value={playMode}
           onValueChange={(value: "IINA" | "Modal") => setPlayMode(value)}

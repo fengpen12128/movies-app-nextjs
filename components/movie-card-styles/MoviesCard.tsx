@@ -11,7 +11,6 @@ import {
 } from "../MoviesPreviewModal";
 import MoviesDetail from "../MoviesDetail/Index";
 import { Star, Eye, Calendar, Bookmark, Download, Flame } from "lucide-react";
-import { ibmPlexMono } from "@/app/fonts";
 
 const MoviesCard: React.FC<Movie> = ({
   id,
@@ -78,12 +77,10 @@ const MoviesCard: React.FC<Movie> = ({
             {dayjs(createdTime).add(3, "day").isAfter(dayjs()) && (
               <Flame className="text-red-400" size={18} />
             )}{" "}
-            <span className={`${ibmPlexMono.className}`}>{code}</span>
+            <span>{code}</span>
           </h4>
           <div className="flex items-center w-full justify-between text-sm text-gray-400">
-            <div
-              className={`${ibmPlexMono.className} flex items-center justify-start flex-grow`}
-            >
+            <div className="flex items-center justify-start flex-grow">
               <Star className="mr-1 text-yellow-400" size={14} />
               <span>{rate}</span>
               <span className="mx-2">•</span>

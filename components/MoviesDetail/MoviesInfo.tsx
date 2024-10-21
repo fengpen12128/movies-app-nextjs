@@ -64,7 +64,7 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
 
       <div className="w-full sm:w-[40%]">
         <ul className="space-y-4">
-          <li className="text-3xl text-[#0abab5] flex items-baseline">
+          <li className=" font-ibmPlexMono text-3xl text-[#0abab5] flex items-baseline">
             <span
               className="hover:underline cursor-pointer  text-[1.15em] transition-colors duration-200 ease-in-out hover:text-[#08a19d]"
               onClick={() => handlePrefixClick(prefix)}

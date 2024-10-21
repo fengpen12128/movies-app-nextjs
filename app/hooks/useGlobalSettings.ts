@@ -8,7 +8,12 @@ export function useGlobalSettings() {
     });
 }
 
-export function useDisplayMode(): GlobalSettingsConfig['displayMode'] {
+export function useDisplayMode(): GlobalDisplayModeConfig {
     const [globalSettings] = useGlobalSettings();
     return globalSettings?.displayMode ?? DEFAULT_GLOBAL_SETTINGS.displayMode;
+}
+
+export function useMoviesPreviewModalTheme(): GlobalMoviesPreviewModalThemeConfig {
+    const [globalSettings] = useGlobalSettings();
+    return globalSettings?.moviesPreviewModalTheme ?? DEFAULT_GLOBAL_SETTINGS.moviesPreviewModalTheme;
 }

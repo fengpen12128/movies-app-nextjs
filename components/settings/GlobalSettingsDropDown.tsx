@@ -4,8 +4,9 @@ import { Button, DropdownMenu } from "@radix-ui/themes";
 import { GearIcon } from "@radix-ui/react-icons";
 import ThemeSettings from "./ThemeSettings";
 import DisplayModeSettings from "./DisplayModeSettings";
+import ModalThemeSettings from "./ModalThemeSettings";
 import { useLocalStorage } from "usehooks-ts";
-import { getGlobalSettings } from "@/app/globalSetting";
+import { DEFAULT_GLOBAL_SETTINGS } from "@/app/globalSetting";
 import Cookies from "js-cookie";
 import { useEffect, useRef } from "react";
 
@@ -13,7 +14,7 @@ const GlobalSettings: React.FC = () => {
   const [globalSettings, setGlobalSettings, removeGlobalSettings] =
     useLocalStorage<GlobalSettingsConfig>(
       "GlobalSettings",
-      getGlobalSettings()
+      DEFAULT_GLOBAL_SETTINGS
     );
 
   const isFirstRender = useRef(true);
@@ -58,6 +59,13 @@ const GlobalSettings: React.FC = () => {
     }));
   };
 
+  const handleModalThemeChange = (newTheme: string): void => {
+    setGlobalSettings((prevSettings) => ({
+      ...prevSettings,
+      moviesPreviewModalTheme: newTheme as GlobalMoviesPreviewModalThemeConfig,
+    }));
+  };
+
   return (
     <>
       <DropdownMenu.Root>
@@ -67,7 +75,7 @@ const GlobalSettings: React.FC = () => {
           </Button>
         </DropdownMenu.Trigger>
 
-        <DropdownMenu.Content >
+        <DropdownMenu.Content>
           <ThemeSettings
             theme={globalSettings.theme ?? "system"}
             onThemeChange={handleThemeChange}
@@ -76,6 +84,11 @@ const GlobalSettings: React.FC = () => {
           <DisplayModeSettings
             displayMode={globalSettings.displayMode ?? "normal"}
             onDisplayModeChange={handleDisplayModeChange}
+          />
+          <DropdownMenu.Separator />
+          <ModalThemeSettings
+            theme={globalSettings.moviesPreviewModalTheme ?? "sample1"}
+            onThemeChange={handleModalThemeChange}
           />
         </DropdownMenu.Content>
       </DropdownMenu.Root>

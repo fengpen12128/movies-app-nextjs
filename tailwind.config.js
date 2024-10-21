@@ -59,6 +59,10 @@ module.exports = {
           5: "hsl(var(--chart-5))",
         },
       },
+      fontFamily: {
+        ibmPlexMono: ["var(--font-ibm-plex-mono)"],
+        zenMaruGothic: ["var(--font-zen-maru-gothic)"],
+      },
     },
   },
   plugins: [nextui(), require("tailwindcss-animate")],

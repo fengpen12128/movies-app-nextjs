@@ -131,14 +131,36 @@ export async function getScheduleCrawlUrl({ page, pageSize = 20, web, uri }: { p
 
 export async function addScheduleCrawlUrl(data: ScheduleCrawlUrl): Promise<DataResponse<void>> {
     try {
+        // console.log('data_XXXXXXXX', data)
+        // const exist = await prisma.scheduleCrawlUrl.findUnique({
+        //     where: {
+        //         url_uri: {
+        //             url: data.url,
+        //             uri: data.uri
+        //         }
+        //     }
+        // })
+        // if (exist) {
+        //     return {
+        //         code: 500,
+        //         msg: "existed..."
+        //     }
+        // }
+
         await prisma.scheduleCrawlUrl.create({
-            data
+            data: {
+                url: data.url,
+                uri: data.uri,
+                web: 'Javdb',
+
+            }
         });
         return {
             code: 200,
             msg: "添加成功"
         }
     } catch (error) {
+        console.log(error)
         return {
             code: 500,
             msg: "添加失败"

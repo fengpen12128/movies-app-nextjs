@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import MoviesCard from "@/components/movie-card-styles/MoviesCard";
 import { StackCardContentModal } from "@/components/MoviesPreviewModal";
 import { Card, Spinner } from "@radix-ui/themes";
-import { ibmPlexMono } from "@/app/fonts";
 import {
   getCollectedMoviesByActressId,
   getDownloadMoviesByActressId,
@@ -58,9 +57,7 @@ export default function MoviesStack({
       <StackCardContentModal open={open} setOpen={setOpen}>
         {open && (
           <>
-            <h1 className={`${ibmPlexMono.className} pb-3 text-xl`}>
-              {actress.actressName}
-            </h1>
+            <h1 className="pb-3 text-xl">{actress.actressName}</h1>
             <ActressMoviesList actressId={actress.id} />
           </>
         )}

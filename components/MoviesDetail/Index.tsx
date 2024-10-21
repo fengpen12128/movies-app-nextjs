@@ -8,7 +8,6 @@ import MoviesPreview from "./MediaPreview";
 import MagnetLinkTable from "./MagnetLinkTable";
 import RelationMovies from "@/components/MoviesDetail/RelationMovies";
 import { message } from "react-message-popup";
-import { ibmPlexMono } from "@/app/fonts";
 
 import {
   getVideoResource,
@@ -26,7 +25,7 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
   const [movieId, setMovieId] = useState<number | null>(initialMovieId);
   const [movie, setMovie] = useState<Movie | null>(null);
   const [resources, setResources] = useState<VideoResource[]>([]);
-  const [media, setMedia] = useState<MovieMedia[]>([]);
+  const [media, setMedia] = useState<MoviesMediaUrl | null>(null);
   const [magnetLinks, setMagnetLinks] = useState<MagnetLink[]>([]);
   const [relMovies, setRelMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,6 +55,7 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
           getMagnetLinks(movieId),
           getActressRelMovies(movieId),
         ]);
+        console.log("mediaResult", mediaResult);
 
         if (movieResult.status === "fulfilled") {
           setMovie(movieResult.value.data || null);
@@ -67,7 +67,7 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
           setResources(resourcesResult.value.data || []);
         }
         if (mediaResult.status === "fulfilled") {
-          setMedia(mediaResult.value.data || []);
+          setMedia(mediaResult.value.data || null);
         }
         if (magnetLinksResult.status === "fulfilled") {
           setMagnetLinks(magnetLinksResult.value.data || []);
@@ -111,13 +111,13 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
   }
 
   return (
-    <div className={`${ibmPlexMono.className}`}>
+    <>
       <MoviesInfo movie={movie} />
       <VideoPlayResource resources={resources} />
-      <MoviesPreview media={media} />
+      {media && <MoviesPreview media={media} />}
       <MagnetLinkTable links={magnetLinks} />
       <RelationMovies relMovies={relMovies} setMovieId={setMovieId} />
-    </div>
+    </>
   );
 };
 

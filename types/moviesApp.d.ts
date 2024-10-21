@@ -49,11 +49,17 @@ declare interface Movie {
 }
 
 declare interface MovieMedia {
-    id: number;
+    id: number | string;
     path: string;
     type: number;
     useOnline?: boolean;
     onlineUrl?: string;
+}
+
+declare interface MoviesMediaUrl {
+    videoUrl: string | undefined;
+    coverUrl: string | undefined;
+    introUrls: { id: number | string, path: string }[];
 }
 
 declare interface VideoResource {
@@ -125,11 +131,12 @@ declare interface ActressFav {
 declare interface GlobalSettingsConfig {
     theme: 'system' | 'light' | 'dark';
     displayMode: 'normal' | 'demo';
+    moviesPreviewModalTheme: 'sample1' | 'sample2';
 }
 
 type GlobalThemeConfig = GlobalSettingsConfig['theme'];
 type GlobalDisplayModeConfig = GlobalSettingsConfig['displayMode'];
-
+type GlobalMoviesPreviewModalThemeConfig = GlobalSettingsConfig['moviesPreviewModalTheme'];
 
 
 declare interface ActressGroupedMovies {

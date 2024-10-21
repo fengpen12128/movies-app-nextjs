@@ -1,10 +1,10 @@
-import { useDisplayMode } from './useDisplayMode';
+import { useDisplayMode } from './useGlobalSettings';
 import { useEffect, useState } from 'react';
 
 
 
 
-export function useMediaUrls(movieMedia: MovieMedia[]): { videoUrl: string | undefined, coverUrl: string | undefined, introUrls: { id: number, path: string }[] } {
+export function useMediaUrls(movieMedia: MovieMedia[]): { videoUrl: string | undefined, coverUrl: string | undefined, introUrls: { id: number | string, path: string }[] } {
     const displayMode = useDisplayMode();
     const videoUrl = displayMode === "normal" ? movieMedia.find((x) => x.type === 3)?.path : process.env.NEXT_PUBLIC_DEMO_VIDEO;
     const coverUrl =

@@ -8,11 +8,12 @@ import NextImage from "next/image";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 
 interface MoviesPreviewProps {
-  media: MovieMedia[];
+  media: MoviesMediaUrl;
 }
 
 const MoviesPreview: React.FC<MoviesPreviewProps> = ({ media }) => {
-  const { videoUrl, coverUrl, introUrls } = useMediaUrls(media);
+  //const { videoUrl, coverUrl, introUrls } = useMediaUrls(media);
+  const { videoUrl, coverUrl, introUrls } = media;
 
   return (
     <div className="w-full rounded grid grid-cols-2 sm:grid-cols-4 gap-2 p-2">
