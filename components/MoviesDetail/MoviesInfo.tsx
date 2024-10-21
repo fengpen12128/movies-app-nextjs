@@ -54,7 +54,7 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
           height={403}
           loading="eager"
           priority
-          style={{ maxHeight: "500px", width: "auto" }}
+        //   style={{ maxHeight: "500px", width: "auto" }}
           className=" object-contain"
           isBlurred
           alt="preview"

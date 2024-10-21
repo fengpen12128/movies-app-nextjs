@@ -55,7 +55,6 @@ const Index: React.FC<IndexProps> = ({ movieId: initialMovieId }) => {
           getMagnetLinks(movieId),
           getActressRelMovies(movieId),
         ]);
-        console.log("mediaResult", mediaResult);
 
         if (movieResult.status === "fulfilled") {
           setMovie(movieResult.value.data || null);

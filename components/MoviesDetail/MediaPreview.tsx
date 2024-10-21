@@ -2,7 +2,6 @@
 
 import "react-photo-view/dist/react-photo-view.css";
 import { PhotoProvider, PhotoView } from "react-photo-view";
-import { useMediaUrls } from "@/app/hooks/useMedia";
 import { Image } from "@nextui-org/image";
 import NextImage from "next/image";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
@@ -12,7 +11,6 @@ interface MoviesPreviewProps {
 }
 
 const MoviesPreview: React.FC<MoviesPreviewProps> = ({ media }) => {
-  //const { videoUrl, coverUrl, introUrls } = useMediaUrls(media);
   const { videoUrl, coverUrl, introUrls } = media;
 
   return (
@@ -32,7 +30,7 @@ const MoviesPreview: React.FC<MoviesPreviewProps> = ({ media }) => {
               height={200}
               loading="eager"
               priority
-              style={{ maxHeight: "200px", width: "auto" }}
+              //   style={{ maxHeight: "200px", width: "auto" }}
               className="cursor-pointer object-cover"
               isBlurred
               alt="preview"

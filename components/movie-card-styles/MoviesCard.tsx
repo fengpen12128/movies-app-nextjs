@@ -36,9 +36,9 @@ const MoviesCard: React.FC<Movie> = ({
 
       <Card>
         <Inset clip="padding-box" side="top" pb="current">
-          {coverUrl ? (
+          {/* {coverUrl ? (
             <Image
-              style={{ maxHeight: "270px", width: "auto" }}
+              //   style={{ maxHeight: "270px", width: "auto" }}
               alt={`preview`}
               onClick={() => setOpen(true)}
               width={400}
@@ -50,7 +50,19 @@ const MoviesCard: React.FC<Movie> = ({
             />
           ) : (
             <div className="min-h-[270px]"></div>
-          )}
+          )} */}
+
+          <div style={{ position: "relative", width: "100%", height: "270px" }}>
+            <Image
+              alt={`preview`}
+              onClick={() => setOpen(true)}
+              loading="eager"
+              priority
+              src={coverUrl!}
+              className="cursor-pointer object-contain"
+              fill
+            />
+          </div>
         </Inset>
         <div className="flex flex-col items-start gap-2  relative">
           {collected && collectedTime && (
