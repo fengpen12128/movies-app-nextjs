@@ -49,7 +49,7 @@
     "**/*.d.ts",
     ".next/types/**/*.ts",
     "next.config.js"
-  ],
+, "lib/supabseStorageUtils.js"  ],
   // 指定要排除的文件
   "exclude": ["node_modules"]
 }

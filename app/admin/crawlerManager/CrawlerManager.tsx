@@ -6,6 +6,7 @@ import {
   Text,
   ScrollArea,
   Badge,
+  Checkbox,
 } from "@radix-ui/themes";
 import {
   Plus,
@@ -141,6 +142,13 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
             placeholder="Max pages"
             className="w-32"
             disabled={crawlState.status === "running" || !!batchId}
+          />
+          <Checkbox
+            size="3"
+            color="cyan"
+            variant="surface"
+            checked={target.save}
+            onCheckedChange={(checked) => updateTarget(index, "save", checked)}
           />
           {crawlState.status === "idle" && (
             <Button

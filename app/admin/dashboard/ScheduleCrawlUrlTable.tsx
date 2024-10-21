@@ -36,16 +36,6 @@ import {
   deleteScheduleCrawlUrl,
 } from "@/app/actions/admin/dashboard";
 
-// 定义 ScheduleCrawlUrl 类型
-interface ScheduleCrawlUrl {
-  id: number;
-  web: string;
-  url: string;
-  uri: string;
-  maxPage: number;
-  createdTime: Date;
-}
-
 export function ScheduleCrawlUrlTable() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [schedules, setSchedules] = useState<ScheduleCrawlUrl[]>([]);
@@ -125,7 +115,7 @@ export function ScheduleCrawlUrlTable() {
     if (selectedIds.length === schedules.length) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(schedules.map((s) => s.id.toString()));
+      setSelectedIds(schedules.map((s) => s.id!.toString()));
     }
   };
 
@@ -169,8 +159,8 @@ export function ScheduleCrawlUrlTable() {
             <TableRow key={schedule.id}>
               <TableCell>
                 <Checkbox
-                  checked={selectedIds.includes(schedule.id.toString())}
-                  onCheckedChange={() => toggleItem(schedule.id.toString())}
+                  checked={selectedIds.includes(schedule.id!.toString())}
+                  onCheckedChange={() => toggleItem(schedule.id!.toString())}
                 />
               </TableCell>
               <TableCell>{index + 1}</TableCell>
@@ -181,7 +171,7 @@ export function ScheduleCrawlUrlTable() {
               <TableCell>
                 <Button
                   variant="destructive"
-                  onClick={() => handleDelete([schedule.id.toString()])}
+                  onClick={() => handleDelete([schedule.id!.toString()])}
                 >
                   删除
                 </Button>

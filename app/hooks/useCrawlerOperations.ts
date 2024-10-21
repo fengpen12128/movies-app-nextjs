@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { message } from 'react-message-popup';
 import { getSpiderStatus, runCrawl } from '@/app/actions/admin/crawl';
+import { addScheduleCrawlUrl } from '@/app/actions/admin/dashboard';
 
 interface CrawlState {
     status: string;
@@ -51,18 +52,28 @@ export const useCrawlerOperations = (
         setStatusCheckInterval(statusInterval);
     }
 
+    const saveCrawlUrls = async (crawlUrls: CrawlUrl[]) => {
+        crawlUrls = crawlUrls.filter(url => url.save);
+        crawlUrls.forEach(async crawlUrl => {
+            const urlParts = new URL(crawlUrl.url);
+            const baseUrl = `${urlParts.protocol}//${urlParts.hostname}${urlParts.pathname}`;
+            const uri = urlParts.pathname.split('/').pop() || '';
+            const { code, msg } = await addScheduleCrawlUrl({ ...crawlUrl, web: "Javdb", url: baseUrl, uri: uri });
+            if (code !== 200) {
+                message.error(msg!);
+                return;
+            }
+        })
+    }
+
     const startCrawling = async (onFinished: (batchId: string) => void) => {
-
-
         try {
             const { data: res, code, msg } = await runCrawl({ urls: targets });
             if (code !== 200 || !res) {
                 message.error(msg!);
                 return;
             }
-
-            console.log("res_XXXXXXXXXXXXX", res);
-
+            await saveCrawlUrls(targets);
             setCrawlState(prevState => ({
                 ...prevState,
                 jobId: res.jobId,

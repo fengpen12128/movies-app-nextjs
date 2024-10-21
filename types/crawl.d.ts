@@ -38,10 +38,10 @@ declare interface UnDownloadNum {
 }
 
 declare interface ScheduleCrawlUrl {
-    id: number;
+    id?: number;
     web: string;
     url: string;
     uri: string;
     maxPage: number;
-    createdTime: Date;
+    createdTime?: Date;
 }
