@@ -8,11 +8,26 @@ import {
 import { cookies } from 'next/headers';
 import { movieSelect } from "../querySelect";
 import { saveBrowerHistory } from "./saveBrowerHistory";
+import { testMovieData, actorNames } from "../data";
 
 export async function getMovieOne(movieId: number): Promise<DataResponse<Movie>> {
     try {
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+        if (process.env.DEMO_ENV == 'true' || config.displayMode === 'demo') {
+
+            const testData = testMovieData[Math.floor(Math.random() * testMovieData.length)]
+            testData.actresses = [{
+                id: Math.floor(Math.random() * 1000) + 1,
+                actressName: actorNames[Math.floor(Math.random() * actorNames.length)]
+            }]
+            return {
+                code: 200,
+                data: testData,
+            }
+        }
+
 
         const movie = await prisma.moviesInfo.findUnique({
             where: {
@@ -32,7 +47,7 @@ export async function getMovieOne(movieId: number): Promise<DataResponse<Movie>>
         const handled = handleMovie(movie, {
             ctCode,
             dmCode,
-        }, config);
+        });
 
         // 异步保存浏览历史，不等待结果
         if (movie.code) {

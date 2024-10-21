@@ -7,7 +7,7 @@ import {
 } from "@/app/actions/utils/commonUtils";
 import { movieSelect } from "../querySelect";
 import { cookies } from 'next/headers';
-
+import { testMovieData } from "../data";
 
 
 
@@ -18,6 +18,12 @@ export async function getActressRelMovies(movieId: number): Promise<DataResponse
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
+        if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+            return {
+                data: testMovieData.sort(() => Math.random() - 0.5).slice(0, 6),
+                code: 200,
+            };
+        }
 
 
         const movie = await prisma.moviesInfo.findUnique({
@@ -65,7 +71,7 @@ export async function getActressRelMovies(movieId: number): Promise<DataResponse
         const handled = handleMovie(filteredRelMovies, {
             ctCode,
             dmCode,
-        }, config);
+        });
 
 
 

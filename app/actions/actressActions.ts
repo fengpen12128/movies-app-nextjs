@@ -6,6 +6,7 @@ import {
     DEFAULT_PAGE_SIZE,
     getPaginationData,
 } from "./utils/commonUtils";
+import { cookies } from 'next/headers';
 
 
 
@@ -51,6 +52,17 @@ export async function saveActressFav(name: string): Promise<DataResponse<boolean
 
 export async function getActressFavList({ page = 1 }: { page?: number }): Promise<DataResponse<ActressFav[]>> {
     const skip = (page - 1) * DEFAULT_PAGE_SIZE;
+
+    const cookieStore = cookies();
+    const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+    if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+        return {
+            code: 500,
+            msg: "not support now",
+        };
+    }
+
 
     try {
         const [actressFav, totalCount] = await prisma.$transaction([

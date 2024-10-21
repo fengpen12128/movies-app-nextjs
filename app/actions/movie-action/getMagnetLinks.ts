@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
-import { testMagnetLinks } from "../utils/data";
+import { testMagnetLinks } from "../data";
 import { cookies } from "next/headers";
 import _ from "lodash";
 
@@ -23,7 +23,12 @@ export async function getMagnetLinks(movieId: number): Promise<DataResponse<Magn
     const cookieStore = cookies();
     const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
-
+    if (process.env.DEMO_ENV == 'true' || config.displayMode === 'demo') {
+        return {
+            code: 200,
+            data: _.sampleSize(testMagnetLinks, Math.random() * 6 + 5)
+        }
+    }
 
     try {
         const magnetLinks = await prisma.magnetLinks.findMany({
@@ -43,11 +48,9 @@ export async function getMagnetLinks(movieId: number): Promise<DataResponse<Magn
             return sizeB - sizeA; // 降序排序
         });
 
-
-
         return {
             code: 200,
-            data: config?.displayMode === 'demo' ? _.sampleSize(testMagnetLinks, Math.random() * 6 + 5) : sortedMagnetLinks
+            data: sortedMagnetLinks
         }
     } catch (error) {
         console.error("Error fetching magnet links:", error);

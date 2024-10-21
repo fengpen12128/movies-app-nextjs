@@ -9,6 +9,8 @@ import {
 } from "@/app/actions/utils/commonUtils";
 import { cookies } from 'next/headers';
 import { movieSelect } from "../querySelect";
+import { testMovieData } from "../data";
+import _ from "lodash";
 
 
 
@@ -21,6 +23,15 @@ export async function getMoviesByActressId(
         const skip = (page - 1) * pageSize;
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+
+        if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+            return {
+                data: testMovieData.sort(() => Math.random() - 0.5).slice(0, 10),
+                code: 200,
+            };
+        }
+
 
         let moviesQuery = {
             skip,
@@ -46,9 +57,7 @@ export async function getMoviesByActressId(
         const handled = handleMovie(movies, {
             ctCode,
             dmCode,
-        },
-            config
-        );
+        });
 
         const pagination = getPaginationData(totalCount, page, pageSize);
 
@@ -73,6 +82,14 @@ export async function getCollectedMoviesByActressId(
         const skip = (page - 1) * pageSize;
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+        if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+            return {
+                data: _.shuffle(testMovieData).slice(0, _.random(5, 10)),
+                code: 200,
+            };
+        }
+
 
         let moviesQuery = {
             skip,
@@ -124,11 +141,9 @@ export async function getCollectedMoviesByActressId(
             }));
 
         const handled = handleMovie(movies, {
-                ctCode,
-                dmCode,
-            },
-            config
-        );
+            ctCode,
+            dmCode,
+        });
 
         const pagination = getPaginationData(totalCount, page, pageSize);
 
@@ -153,6 +168,14 @@ export async function getDownloadMoviesByActressId(
         const skip = (page - 1) * pageSize;
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+
+        if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+            return {
+                data: _.shuffle(testMovieData).slice(0, _.random(5, 10)),
+                code: 200,
+            };
+        }
 
         let moviesQuery = {
             skip,
@@ -204,11 +227,9 @@ export async function getDownloadMoviesByActressId(
             }));
 
         const handled = handleMovie(movies, {
-                ctCode,
-                dmCode,
-            },
-            config
-        );
+            ctCode,
+            dmCode,
+        });
 
         const pagination = getPaginationData(totalCount, page, pageSize);
 

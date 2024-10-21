@@ -8,8 +8,9 @@ import {
 } from "@/app/actions/utils/commonUtils";
 import { cookies } from 'next/headers';
 import { getCollectionOrder } from "./getOrder";
+import { testMovieData } from "../data";
 
-
+const DEFAULT_PAGE_SIZE = 50;
 
 export async function getCollectionMovies({
     page = 1,
@@ -21,14 +22,24 @@ export async function getCollectionMovies({
     order?: MovieOrder
 }): Promise<DataResponse<Movie[] | ActressGroupedMovies[]>> {
     try {
-        const { ctCode, dmCode } = await getCollectionAndDownloadCode();
+
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+        const skip = (page - 1) * DEFAULT_PAGE_SIZE;
 
-        // 在文件顶部添加这个新的辅助函数
+
+        if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+            return {
+                data: testMovieData.slice(skip, skip + DEFAULT_PAGE_SIZE),
+                pagination: getPaginationData(testMovieData.length, page, DEFAULT_PAGE_SIZE),
+                code: 200,
+            };
+        }
 
 
-        const skip = (page - 1) * 50;
+        const { ctCode, dmCode } = await getCollectionAndDownloadCode();
+
+
         let q = {
             include: {
                 MovieInfo: {
@@ -70,16 +81,16 @@ export async function getCollectionMovies({
         let handledMovies: Movie[] | ActressGroupedMovies[] = [];
 
 
-        handledMovies = handleMovie(flatMovies, {
+        const handled = handleMovie(flatMovies, {
             ctCode,
             dmCode,
-        }, config) as Movie[];
+        });
 
 
 
         return {
-            data: handledMovies,
-            pagination: getPaginationData(totalCount, page, 50),
+            data: handled as Movie[] || [],
+            pagination: getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE),
             code: 200,
         }
 
@@ -135,7 +146,7 @@ async function groupedMoviesByActress(page: number = 1, pageSize: number = 30): 
     const handledMovies = handleMovie(flatMovies, {
         ctCode,
         dmCode,
-    }, config) as Movie[];
+    }) as Movie[];
 
     // Step 2: 分组电影，过滤掉演员电影数量超过2部的
     const groupedByActress = new Map<number, {

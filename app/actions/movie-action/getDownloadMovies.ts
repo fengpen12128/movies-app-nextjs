@@ -4,16 +4,26 @@ import { getCollectionAndDownloadCode, getPaginationData, handleMovie } from "@/
 import prisma from "@/app/lib/prisma";
 import { cookies } from 'next/headers';
 import { getDownloadOrder } from "./getOrder";
+import { testMovieData } from "../data";
+
+const DEFAULT_PAGE_SIZE = 50;
 
 export async function getDownloadMovies({ page = 1, collected, order = "downloadDesc" }: { page: number, collected?: string, order?: MovieOrder }): Promise<DataResponse<Movie[] | ActressGroupedDownloadMovies[]>> {
     try {
-        const skip = (page - 1) * 50;
+        const skip = (page - 1) * DEFAULT_PAGE_SIZE;
 
-        const { ctCode, dmCode } = await getCollectionAndDownloadCode();
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
+        if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+            return {
+                data: testMovieData.slice(skip, skip + DEFAULT_PAGE_SIZE),
+                pagination: getPaginationData(testMovieData.length, page, DEFAULT_PAGE_SIZE),
+                code: 200,
+            };
+        }
 
+        const { ctCode, dmCode } = await getCollectionAndDownloadCode();
 
 
         let q = {
@@ -43,7 +53,7 @@ export async function getDownloadMovies({ page = 1, collected, order = "download
             orderBy: getDownloadOrder(order),
             skip,
             distinct: ['movieCode'],
-            take: 50,
+            take: DEFAULT_PAGE_SIZE,
         };
 
         let [result, totalCount] = await Promise.all([
@@ -67,11 +77,11 @@ export async function getDownloadMovies({ page = 1, collected, order = "download
 
 
 
-        const pagination = getPaginationData(totalCount, page, 50);
+        const pagination = getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE);
         const handled = handleMovie(downloadMovies, {
             ctCode,
             dmCode,
-        }, config);
+        });
 
 
 

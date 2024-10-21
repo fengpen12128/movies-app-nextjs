@@ -115,20 +115,7 @@ model MoviesVideoResource {
     @@map("movies_video_resource")
 }
 
-model DownloadStatistics {
-    id            Int       @id @default(autoincrement())
-    total_size    BigInt
-    start_time    DateTime  @db.Timestamptz(6)
-    end_time      DateTime? @db.Timestamptz(6)
-    duration      Float?
-    success_count Int
-    failure_count Int
-    total_count   Int
-    batch_id      String?   @db.VarChar(100)
-    created_at    DateTime? @db.Date
 
-    @@map("download_statistics")
-}
 
 model DownloadUrls {
     id      Int     @id(map: "downloads_urls_pkey") @default(autoincrement())

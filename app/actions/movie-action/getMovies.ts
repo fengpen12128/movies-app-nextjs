@@ -10,8 +10,7 @@ import {
 import { cookies } from 'next/headers';
 import { movieSelect } from "../querySelect";
 import { getDefaultOrder } from "./getOrder";
-
-
+import { testMovieData } from "../data";
 
 export async function getMovies({
     page = 1,
@@ -29,6 +28,13 @@ export async function getMovies({
         const cookieStore = cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
+        if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+            return {
+                data: testMovieData.slice(skip, skip + DEFAULT_PAGE_SIZE),
+                pagination: getPaginationData(testMovieData.length, page, DEFAULT_PAGE_SIZE),
+                code: 200,
+            };
+        }
 
         let relevantCodes: string[] = [];
         if (batchId) {
@@ -119,9 +125,7 @@ export async function getMovies({
         const handled = handleMovie(movies, {
             ctCode,
             dmCode,
-        },
-            config
-        );
+        });
         const pagination = getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE);
 
         return {

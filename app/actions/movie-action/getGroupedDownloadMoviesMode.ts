@@ -8,6 +8,18 @@ import { getDownloadOrder } from "./getOrder";
 export async function getGroupedDownloadMovies({ page = 1, order = "downloadDesc", pageSize = 50 }: { page?: number, order?: MovieOrder, pageSize?: number }): Promise<DataResponse<ActressGroupedDownloadMovies[]>> {
     const skip = (page - 1) * pageSize;
 
+    const cookieStore = cookies();
+    const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+
+    if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+        return {
+            code: 500,
+            msg: "not support now",
+        };
+    }
+
+
     try {
         // 获取所有下载的电影及其演员信息
         const allMoviesWithActress = await prisma.moviesVideoResource.findMany({
@@ -55,7 +67,7 @@ export async function getGroupedDownloadMovies({ page = 1, order = "downloadDesc
         const handledMovies = handleMovie(flatMovies, {
             ctCode,
             dmCode,
-        }, config) as Movie[];
+        }) as Movie[];
 
         // 分组电影
         const groupedByActress = new Map<number, ActressGroupedDownloadMovies>();

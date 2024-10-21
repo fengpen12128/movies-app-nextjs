@@ -21,6 +21,17 @@ export async function getGroupedCollectedMoviesMode({
 }): Promise<DataResponse<ActressGroupedMovies[]>> {
     const skip = (page - 1) * pageSize;
 
+    const cookieStore = cookies();
+    const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+
+    if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+        return {
+            code: 500,
+            msg: "not support now",
+        };
+    }
+
     try {
         // 获取所有收藏的电影及其演员信息
         const allMoviesWithActress = await prisma.moviesCollection.findMany({
@@ -68,7 +79,7 @@ export async function getGroupedCollectedMoviesMode({
         const handledMovies = handleMovie(flatMovies, {
             ctCode,
             dmCode,
-        }, config) as Movie[];
+        }) as Movie[];
 
         // 分组电影
         const groupedByActress = new Map<number, ActressGroupedMovies>();

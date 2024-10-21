@@ -9,7 +9,8 @@ import {
 } from "@/app/actions/utils/commonUtils";
 import { movieSelect } from "../querySelect";
 import { cookies } from 'next/headers';
-
+import { testMovieData } from "../data";
+import _ from "lodash";
 
 export async function getMoviesByActressName({
     page = 1,
@@ -30,6 +31,13 @@ export async function getMoviesByActressName({
 
     const cookieStore = cookies();
     const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
+    if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
+        return {
+            data: _.shuffle(testMovieData).slice(0, _.random(5, 10)),
+            code: 200,
+        };
+    }
 
 
     let q = {
@@ -120,7 +128,7 @@ export async function getMoviesByActressName({
         const movies = handleMovie(actressMovies, {
             ctCode,
             dmCode,
-        }, config);
+        });
 
         const pagination = getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE);
 
