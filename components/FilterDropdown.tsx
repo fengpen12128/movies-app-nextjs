@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState, useEffect } from "react";
-import { SlidersHorizontal, ListFilter } from "lucide-react";
+import { ListFilter } from "lucide-react";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 
 interface FilterOption {
@@ -48,7 +48,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ filterOptions }) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
-          className={`w-[100px] justify-between ${
+          className={`w-[50px] justify-between ${
             selectedFilters.length > 0
               ? "text-blue-700 hover:text-blue-700"
               : ""
@@ -56,15 +56,14 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({ filterOptions }) => {
         >
           <div className="flex items-center">
             <ListFilter size={18} className="mr-2 " />
-            Filter
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[180px] dark">
+      <DropdownMenuContent className="w-[180px] dark bg-black/60 backdrop-blur-sm">
         {filterOptions?.map((option) => (
           <label
             key={option.value}
-            className="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer"
+            className="flex items-center space-x-2 p-2 hover:bg-gray-900  cursor-pointer"
           >
             <Checkbox
               id={option.value}

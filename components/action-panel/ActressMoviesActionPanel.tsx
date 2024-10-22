@@ -6,7 +6,7 @@ import {
   StarFilledIcon,
   StarIcon,
 } from "@radix-ui/react-icons";
-import SelectItem from "./components/SelectItem";
+import SelectItem from "./components/SelectItemShadcn";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 import PageationInfo from "../PaginationInfo";
 import { zenMaruGothic } from "@/app/fonts";

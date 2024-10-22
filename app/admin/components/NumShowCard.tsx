@@ -22,8 +22,7 @@ const NumShowCard: FC<NumShowCardProps> = ({
   num,
   title,
   icon,
-  progressValue,
-  progressLabel,
+
   additionalInfo,
 }) => {
   return (
@@ -38,9 +37,6 @@ const NumShowCard: FC<NumShowCardProps> = ({
       <CardContent>
         <div className="text-xs text-muted-foreground">{additionalInfo}</div>
       </CardContent>
-      <CardFooter>
-        <Progress value={progressValue} aria-label={progressLabel} />
-      </CardFooter>
     </Card>
   );
 };

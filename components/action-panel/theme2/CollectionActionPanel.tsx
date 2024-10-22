@@ -7,12 +7,13 @@ import {
   Download,
   XCircle,
   SlidersHorizontal,
+  Calendar,
+  Clock,
+  Star,
 } from "lucide-react";
-import SelectItem from "../components/SelectItem2";
+import SelectItem from "../components/SelectItemShadcn";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 import PaginationInfo from "@/components/PaginationInfo";
-import MoviesOrderSelect from "@/components/MoviesOrderSelect";
-import { Calendar, Clock, Star } from "lucide-react";
 
 interface Item {
   value: string;
@@ -20,16 +21,12 @@ interface Item {
   icon: JSX.Element;
 }
 
-interface Items {
-  arrange: Item[];
-  download: Item[];
-}
-
 export default function CollectionActionPanel() {
   const [arrange, setArrange] = useSyncUrlParams("arrange", "flex");
   const [download, setDownload] = useSyncUrlParams("download", "all");
+  const [order, setOrder] = useSyncUrlParams("order", "favoriteDesc");
 
-  const items: Items = {
+  const items = {
     arrange: [
       { value: "flex", label: "Flex", icon: <LayoutGrid size={16} /> },
       { value: "stack", label: "Stack", icon: <LayoutList size={16} /> },
@@ -38,6 +35,16 @@ export default function CollectionActionPanel() {
       { value: "all", label: "All", icon: <SlidersHorizontal size={16} /> },
       { value: "true", label: "Downloaded", icon: <Download size={16} /> },
       { value: "false", label: "Not Downloaded", icon: <XCircle size={16} /> },
+    ],
+    orders: [
+      {
+        value: "favoriteDesc",
+        label: "收藏日期 Desc",
+        icon: <Star size={16} />,
+      },
+      { value: "favoriteAsc", label: "收藏日期 Asc", icon: <Star size={16} /> },
+      { value: "releaseDate", label: "上映日期", icon: <Calendar size={16} /> },
+      { value: "crawlDate", label: "爬取日期", icon: <Clock size={16} /> },
     ],
   };
   const orderOptions: OrderOption[] = [
@@ -79,9 +86,11 @@ export default function CollectionActionPanel() {
             value={download}
             onChange={setDownload}
           />
-          <MoviesOrderSelect
-            options={orderOptions}
-            defaultValue="favoriteDesc"
+          <SelectItem
+            label=""
+            items={items.orders}
+            value={order}
+            onChange={setOrder}
           />
         </div>
         <div className="flex-shrink-0">

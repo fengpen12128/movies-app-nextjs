@@ -1,3 +1,3 @@
 export * from "./movie-action";
 export * from "./actressActions";
-export * from "./tagsAction";
+export * from "./movie-action/getTags";

@@ -110,12 +110,11 @@ model MoviesVideoResource {
     size        String?     @map("size") @db.VarChar(100)
     createdTime DateTime?   @default(now()) @map("created_time")
     MovieInfo   MoviesInfo? @relation(fields: [movieCode], references: [code])
+    deletedTime DateTime?   @map("deleted_time")
 
     @@unique([movieCode, path])
     @@map("movies_video_resource")
 }
-
-
 
 model DownloadUrls {
     id      Int     @id(map: "downloads_urls_pkey") @default(autoincrement())
@@ -178,7 +177,6 @@ model CrawlBatchRecord {
     @@map("crawl_batch_record")
 }
 
-// 添加新的 BrowsingHistory 模型
 model BrowsingHistory {
     id        Int         @id @default(autoincrement())
     movieCode String      @map("movie_code") @db.VarChar(100)

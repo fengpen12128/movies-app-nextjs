@@ -3,6 +3,8 @@
 import prisma from "@/app/lib/prisma";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
+import { saveCollectionIfNotExists } from "@/app/actions";
+import { message } from "react-message-popup";
 
 export async function getResourceList(st?: string): Promise<DataResponse<MovieResource[]>> {
     try {
@@ -80,8 +82,14 @@ export async function saveResourceList(resourceList: MovieResource[] | MovieReso
             skipDuplicates: true,
         });
 
-        revalidatePath("/matching");
+        resources.forEach(async (item) => {
+            const { code, msg } = await saveCollectionIfNotExists(item.matchCode);
+            if (code !== 200) {
+                message.error(msg!);
+            }
+        });
 
+        revalidatePath("/matching");
 
         return { data: true, code: 200, msg: "保存成功" };
     } catch (error) {

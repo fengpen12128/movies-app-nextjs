@@ -12,3 +12,9 @@ declare interface PrefixCode {
     num: number;
     brand?: string;
 }
+
+type BrowsingHistoryChartData = {
+    viewedAt: string;
+    browserNum: number;
+    collectedNum: number;
+};

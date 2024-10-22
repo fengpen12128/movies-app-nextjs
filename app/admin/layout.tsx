@@ -1,6 +1,11 @@
+import React from "react";
 import AdminAside from "./AdminAside";
 
-export default function AdminLayout({ children }) {
+interface AdminLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <AdminAside />

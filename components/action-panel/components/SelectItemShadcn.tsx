@@ -28,7 +28,7 @@ const SelectComponent: React.FC<SelectItemProps> = ({
         <SelectTrigger id={label}>
           <SelectValue placeholder="Select an option" />
         </SelectTrigger>
-        <SelectContent >
+        <SelectContent className="bg-black/60 backdrop-blur-sm">
           {items.map((item) => (
             <SelectItem key={item.value} value={item.value}>
               <div className="flex items-center space-x-2">

@@ -5,6 +5,7 @@ import { GearIcon } from "@radix-ui/react-icons";
 import ThemeSettings from "./ThemeSettings";
 import DisplayModeSettings from "./DisplayModeSettings";
 import ModalThemeSettings from "./ModalThemeSettings";
+import ImageDisplaySettings from "./ImageDisplaySettings";
 import { useLocalStorage } from "usehooks-ts";
 import { DEFAULT_GLOBAL_SETTINGS } from "@/app/globalSetting";
 import Cookies from "js-cookie";
@@ -66,6 +67,13 @@ const GlobalSettings: React.FC = () => {
     }));
   };
 
+  const handleImageDisplayChange = (newImageDisplay: string): void => {
+    setGlobalSettings((prevSettings) => ({
+      ...prevSettings,
+      imageDisplay: newImageDisplay as GlobalImageDisplayConfig,
+    }));
+  };
+
   return (
     <>
       <DropdownMenu.Root>
@@ -89,6 +97,11 @@ const GlobalSettings: React.FC = () => {
           <ModalThemeSettings
             theme={globalSettings.moviesPreviewModalTheme ?? "sample1"}
             onThemeChange={handleModalThemeChange}
+          />
+          <DropdownMenu.Separator />
+          <ImageDisplaySettings
+            imageDisplay={globalSettings.imageDisplay ?? "MasonryGrid"}
+            onImageDisplayChange={handleImageDisplayChange}
           />
         </DropdownMenu.Content>
       </DropdownMenu.Root>

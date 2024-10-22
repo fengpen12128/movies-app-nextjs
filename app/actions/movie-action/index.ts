@@ -9,5 +9,5 @@ export * from "./getMovieOne";
 export * from "./getMovies";
 export * from "./getMoviesByActressId";
 export * from "./getVideoResource";
-export * from "./toggleCollection";
+export * from "./movies-collection";
 export * from "./getMoviesByActressName";

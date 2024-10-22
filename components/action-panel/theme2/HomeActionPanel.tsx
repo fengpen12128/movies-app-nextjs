@@ -3,16 +3,19 @@ import PaginationInfo from "@/components/PaginationInfo";
 import MagentPopover from "@/components/MagentPopover";
 import FilterDropdown from "@/components/FilterDropdown";
 import MoviesOrderSelect from "@/components/MoviesOrderSelect";
-import { Calendar, Clock, Download } from "lucide-react";
-import { Star } from "lucide-react";
+import { Calendar, Clock, Download, Star, Heart, Flame } from "lucide-react";
 import ButtonListPopover from "../components/ButtonListPopover";
 import { getTags } from "@/app/actions";
 
 const HomeActionPanel: React.FC = async () => {
   const movieFilterOptions = [
     { value: "latest", label: "Latest", icon: <Clock size={16} /> },
-    { value: "download", label: "Download", icon: <Download size={16} /> },
-    { value: "collection", label: "Collection", icon: <Star size={16} /> },
+    {
+      value: "nd",
+      label: "Not Download",
+      icon: <Download size={16} />,
+    },
+    { value: "nc", label: "Not Collection", icon: <Heart size={16} /> },
     { value: "popular", label: "Popular", icon: <Star size={16} /> },
   ];
 
@@ -29,6 +32,16 @@ const HomeActionPanel: React.FC = async () => {
       icon: <Clock className="mr-2 h-4 w-4" />,
       showOn: ["home", "collection", "download"],
     },
+  ];
+  const optionsOrders = [
+    {
+      value: "favoriteDesc",
+      label: "收藏日期 Desc",
+      icon: <Star size={16} />,
+    },
+    { value: "favoriteAsc", label: "收藏日期 Asc", icon: <Star size={16} /> },
+    { value: "releaseDate", label: "上映日期", icon: <Calendar size={16} /> },
+    { value: "crawlDate", label: "爬取日期", icon: <Clock size={16} /> },
   ];
 
   const { data, code } = await getTags();

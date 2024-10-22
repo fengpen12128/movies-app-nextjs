@@ -56,18 +56,18 @@ export async function getMovies({
                     }
                 }
             }
-            if (filterArr.includes("download")) {
+            if (filterArr.includes("nd")) {
                 return {
                     code: {
-                        in: dmCode
+                        notIn: dmCode
                     }
                 }
             }
 
-            if (filterArr.includes("collection")) {
+            if (filterArr.includes("nc")) {
                 return {
                     code: {
-                        in: ctCode
+                        notIn: ctCode
                     }
                 }
             }

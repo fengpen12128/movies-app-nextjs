@@ -1,6 +1,7 @@
 'use server'
 
 import prisma from "@/app/lib/prisma"
+import dayjs from 'dayjs'
 
 export async function getMoiveeAppStatistic(): Promise<DataResponse<MovieeAppStatistic[]>> {
     try {
@@ -182,5 +183,62 @@ export async function deleteScheduleCrawlUrl(ids: number[]): Promise<DataRespons
             code: 500,
             msg: "删除失败"
         }
+    }
+}
+
+export async function getBrowsingHistoryStats(): Promise<DataResponse<BrowsingHistoryChartData[]>> {
+    try {
+        const [browsingStats, collectionStats]: any = await Promise.all([
+            prisma.$queryRaw`
+                SELECT DATE(viewed_at) as date, COUNT(*) as count
+                FROM browsing_history
+                GROUP BY DATE(viewed_at)
+                ORDER BY DATE(viewed_at) ASC
+            `,
+            prisma.$queryRaw`
+                SELECT DATE(created_time) as date, COUNT(*) as count
+                FROM movies_collection
+                GROUP BY DATE(created_time)
+                ORDER BY DATE(created_time) ASC
+            `
+        ]);
+
+        // 创建一个映射来存储所有日期的数据
+        const dateMap = new Map<string, { browserNum: number; collectedNum: number }>();
+
+        // 处理浏览历史数据
+        browsingStats.forEach((stat: any) => {
+            const date = dayjs(stat.date).format('YYYY-MM-DD');
+            dateMap.set(date, { browserNum: Number(stat.count), collectedNum: 0 });
+        });
+
+        // 处理收藏数据
+        collectionStats.forEach((stat: any) => {
+            const date = dayjs(stat.date).format('YYYY-MM-DD');
+            if (dateMap.has(date)) {
+                dateMap.get(date)!.collectedNum = Number(stat.count);
+            } else {
+                dateMap.set(date, { browserNum: 0, collectedNum: Number(stat.count) });
+            }
+        });
+
+        // 将 Map 转换为数组并排序
+        const chartData: BrowsingHistoryChartData[] = Array.from(dateMap, ([viewedAt, stats]) => ({
+            viewedAt,
+            browserNum: stats.browserNum,
+            collectedNum: stats.collectedNum
+        })).sort((a, b) => a.viewedAt.localeCompare(b.viewedAt));
+
+        return {
+            code: 200,
+            data: chartData
+        };
+    } catch (error) {
+        console.error("Error fetching browsing history and collection statistics:", error);
+        return {
+            code: 500,
+            msg: "获取浏览历史和收藏统计数据失败",
+            data: []
+        };
     }
 }

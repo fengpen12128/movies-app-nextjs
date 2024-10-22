@@ -54,6 +54,7 @@ export default function DescriptionBar({ children }: DescriptionBarProps) {
               color={isFav ? "red" : "cyan"}
               variant="outline"
               onClick={handleSaveFav}
+              radius="large"
             >
               {isFav ? "已收藏" : "收藏"}
             </Button>

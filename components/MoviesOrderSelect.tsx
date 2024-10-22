@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import SelectItem from "@/components/action-panel/components/SelectItemShadcn";
 
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 
@@ -28,21 +22,7 @@ const OrderSelect: React.FC<OrderSelectProps> = ({
   const [order, setOrder] = useSyncUrlParams("order", defaultValue);
 
   return (
-    <Select value={order} onValueChange={setOrder}>
-      <SelectTrigger className="w-[180px]">
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            <div className="flex items-center">
-              {option.icon}
-              {option.label}
-            </div>
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <SelectItem label="" items={options} value={order} onChange={setOrder} />
   );
 };
 

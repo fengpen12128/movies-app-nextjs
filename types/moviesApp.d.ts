@@ -132,12 +132,13 @@ declare interface GlobalSettingsConfig {
     theme: 'system' | 'light' | 'dark';
     displayMode: 'normal' | 'demo';
     moviesPreviewModalTheme: 'sample1' | 'sample2';
+    imageDisplay: 'MasonryGrid' | 'grid';
 }
 
 type GlobalThemeConfig = GlobalSettingsConfig['theme'];
 type GlobalDisplayModeConfig = GlobalSettingsConfig['displayMode'];
 type GlobalMoviesPreviewModalThemeConfig = GlobalSettingsConfig['moviesPreviewModalTheme'];
-
+type GlobalImageDisplayConfig = GlobalSettingsConfig['imageDisplay'];
 
 declare interface ActressGroupedMovies {
     actress: {

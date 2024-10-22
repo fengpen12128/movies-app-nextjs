@@ -66,14 +66,20 @@ const ButtonListPopover: React.FC<OptionGroup> = ({
       </PopoverTrigger>
       <PopoverContent className="w-full sm:w-[700px] bg-black/70 backdrop-blur-sm max-h-[500px] overflow-y-auto">
         <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-          <Button onClick={() => handleSelect("All")} variant="outline">
+          <Button
+            className="bg-black/20"
+            onClick={() => handleSelect("All")}
+            variant="outline"
+          >
             All
           </Button>
           {options.map((option) => (
             <Button
               key={option}
               variant="outline"
-              className={` ${selectedOption === option ? "text-blue-700" : ""}`}
+              className={` bg-black/20 ${
+                selectedOption === option ? "text-blue-700" : ""
+              }`}
               onClick={() => handleSelect(option)}
             >
               {option}

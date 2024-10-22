@@ -9,7 +9,7 @@ import {
   LayoutGrid,
   LayoutList,
 } from "lucide-react";
-import SelectItem from "../components/SelectItem2";
+import SelectItem from "../components/SelectItemShadcn";
 import { useSyncUrlParams } from "@/app/hooks/useSyncUrlParams";
 import PaginationInfo from "@/components/PaginationInfo";
 import MoviesOrderSelect from "@/components/MoviesOrderSelect";

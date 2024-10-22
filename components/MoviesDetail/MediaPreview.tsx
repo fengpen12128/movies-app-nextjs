@@ -5,6 +5,8 @@ import { PhotoProvider, PhotoView } from "react-photo-view";
 import { Image } from "@nextui-org/image";
 import NextImage from "next/image";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
+import InfitifyGrid from "./InfitifyGrid";
+import { useImageDisplay } from "@/app/hooks/useGlobalSettings";
 
 interface MoviesPreviewProps {
   media: MoviesMediaUrl;
@@ -12,6 +14,17 @@ interface MoviesPreviewProps {
 
 const MoviesPreview: React.FC<MoviesPreviewProps> = ({ media }) => {
   const { videoUrl, coverUrl, introUrls } = media;
+  const imageDisplay = useImageDisplay();
+
+  if (imageDisplay === "MasonryGrid") {
+    return (
+      <InfitifyGrid
+        introUrls={introUrls.map((x) => x.path)}
+        videoUrl={videoUrl || ""}
+        coverUrl={coverUrl || ""}
+      />
+    );
+  }
 
   return (
     <div className="w-full rounded grid grid-cols-2 sm:grid-cols-4 gap-2 p-2">

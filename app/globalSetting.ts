@@ -1,8 +1,9 @@
 
 export const DEFAULT_GLOBAL_SETTINGS: GlobalSettingsConfig = {
-    theme: 'system',
-    displayMode: 'normal',
-    moviesPreviewModalTheme: 'sample1',
+    theme: "system",
+    displayMode: "normal",
+    moviesPreviewModalTheme: "sample1",
+    infiniteGrid: false
 };
 
 // export function getGlobalSettings(): GlobalSettingsConfig {
