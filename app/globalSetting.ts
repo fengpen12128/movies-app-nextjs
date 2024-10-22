@@ -3,7 +3,7 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettingsConfig = {
     theme: "system",
     displayMode: "normal",
     moviesPreviewModalTheme: "sample1",
-    infiniteGrid: false
+    imageDisplay: "MasonryGrid"
 };
 
 // export function getGlobalSettings(): GlobalSettingsConfig {
