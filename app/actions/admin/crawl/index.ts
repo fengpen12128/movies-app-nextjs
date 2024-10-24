@@ -21,7 +21,6 @@ export async function runCrawl(config: CrawlConfig): Promise<DataResponse<CrawlR
         }
 
         const data: any = await response.json();
-        console.log("response_XXXXXXXXXXXXX", data);
 
 
         // Ensure the returned data contains jobId and batchId

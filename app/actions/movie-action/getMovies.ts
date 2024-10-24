@@ -25,7 +25,7 @@ export async function getMovies({
 }: MovieQueryParams): Promise<DataResponse<Movie[]>> {
     try {
         const skip = (page - 1) * DEFAULT_PAGE_SIZE;
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
         if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
