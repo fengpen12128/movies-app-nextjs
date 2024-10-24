@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import VideoPlayResource from "./VideoPlayResource";
 import MoviesInfo from "./MoviesInfo";
 import MoviesPreview from "./MediaPreview";
@@ -7,11 +8,25 @@ import RelationMovies from "./RelationMovies";
 const Index = ({ movieId }: { movieId: number }) => {
   return (
     <>
-      <MoviesInfo movieId={movieId} />
-      <VideoPlayResource movieId={movieId} />
-      <MoviesPreview movieId={movieId} />
-      <MagnetLinkTable movieId={movieId} />
-      <RelationMovies movieId={movieId} />
+      <Suspense fallback={<>Loading...</>}>
+        <MoviesInfo movieId={movieId} />
+      </Suspense>
+
+      <Suspense fallback={<>Loading...</>}>
+        <VideoPlayResource movieId={movieId} />
+      </Suspense>
+
+      <Suspense fallback={<>Loading...</>}>
+        <MoviesPreview movieId={movieId} />
+      </Suspense>
+
+      <Suspense fallback={<>Loading...</>}>
+        <MagnetLinkTable movieId={movieId} />
+      </Suspense>
+
+      <Suspense fallback={<>Loading...</>}>
+        <RelationMovies movieId={movieId} />
+      </Suspense>
     </>
   );
 };
