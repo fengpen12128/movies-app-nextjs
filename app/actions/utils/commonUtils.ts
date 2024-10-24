@@ -66,3 +66,33 @@ export const handleMovie = (
         return processMovie(movieInput);
     }
 }
+
+
+export const handleMovieInAdmin = (
+    movieInput: any,
+    options?: {
+        ctCode?: string[];
+        dmCode?: string[];
+    },
+): Movie | Movie[] => {
+    const processMovie = (movie: any): Movie => {
+        const collected = options?.ctCode ? options.ctCode.includes(movie.code) : false;
+        const downloaded = options?.dmCode ? options.dmCode.includes(movie.code) : false;
+
+        let result = {
+            ...movie,
+            rate: movie.rate ? parseFloat(movie.rate) : 0,
+            collected,
+            downloaded,
+        };
+
+
+        return result;
+    };
+
+    if (Array.isArray(movieInput)) {
+        return movieInput.map(processMovie);
+    } else {
+        return processMovie(movieInput);
+    }
+}

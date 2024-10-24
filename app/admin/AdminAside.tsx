@@ -2,7 +2,16 @@
 
 import React from "react";
 import Link from "next/link";
-import { Package2, Home, Database, Bot, Settings, Folder, LucideIcon } from "lucide-react";
+import {
+  Package2,
+  Home,
+  Database,
+  Bot,
+  Settings,
+  Folder,
+  Film,
+  LucideIcon,
+} from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -32,13 +41,13 @@ const AdminAside: React.FC = () => {
     {
       icon: Database,
       label: "Crawler Info",
-      href: "/admin/crawlerInfo",
+      href: "/admin/crawler/info",
       route: "crawlerInfo",
     },
     {
       icon: Bot,
       label: "Crawler Manager",
-      href: "/admin/crawlerManager",
+      href: "/admin/crawler/manager",
       route: "crawlerManager",
     },
     {
@@ -46,6 +55,12 @@ const AdminAside: React.FC = () => {
       label: "Resource Matching",
       href: "/admin/matching",
       route: "resourceMatching",
+    },
+    {
+      icon: Film,
+      label: "Movies Manager",
+      href: "/admin/moviesManager",
+      route: "moviesManager",
     },
   ];
 

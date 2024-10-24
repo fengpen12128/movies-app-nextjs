@@ -3,6 +3,10 @@
 import prisma from "@/app/lib/prisma"
 import dayjs from 'dayjs'
 
+// 假设 MovieeAppStatistic 类型定义在此文件中或已导入
+// 需要更新类型定义以包含 icon 属性
+
+
 export async function getMoiveeAppStatistic(): Promise<DataResponse<MovieeAppStatistic[]>> {
     try {
         const [moviesNumResult, actressNumResult, prefixNumResult] = await Promise.allSettled([
@@ -31,6 +35,7 @@ export async function getMoiveeAppStatistic(): Promise<DataResponse<MovieeAppSta
                 progressValue: 100,
                 progressLabel: "100% increase",
                 additionalInfo: "Movies Record Num",
+                icon: "film" // 添加适当的图标名称
             },
             {
                 key: "actressNum",
@@ -39,6 +44,7 @@ export async function getMoiveeAppStatistic(): Promise<DataResponse<MovieeAppSta
                 progressValue: 100,
                 progressLabel: "100% increase",
                 additionalInfo: "Actress Record Num",
+                icon: "user" // 添加适当的图标名称
             },
             {
                 key: "prefixNum",
@@ -47,6 +53,7 @@ export async function getMoiveeAppStatistic(): Promise<DataResponse<MovieeAppSta
                 progressValue: 100,
                 progressLabel: "100% increase",
                 additionalInfo: "Prefix Record Num",
+                icon: "tag" // 添加适当的图标名称
             }
         ]
 
