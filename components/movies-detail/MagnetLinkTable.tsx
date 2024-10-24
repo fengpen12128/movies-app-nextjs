@@ -7,23 +7,16 @@ import { message } from "react-message-popup";
 import { CopyIcon } from "@radix-ui/react-icons";
 import { useLocalStorage } from "usehooks-ts";
 import dayjs from "dayjs";
-import { useState, useEffect } from "react";
 
-import { getMagnetLinks } from "@/app/actions";
+interface MagnetLinkTableProps {
+  links: MagnetLink[];
+}
 
-const MagnetLinkTable = ({ movieId }: { movieId: number }) => {
+const MagnetLinkTable: React.FC<MagnetLinkTableProps> = ({ links }) => {
   const [savedLinks, setSavedLinks] = useLocalStorage<string[]>(
     "savedMagnetLinks",
     []
   );
-
-  const [links, setLinks] = useState<MagnetLink[]>([]);
-
-  useEffect(() => {
-    getMagnetLinks(movieId).then((res) => {
-      setLinks(res.data || []);
-    });
-  }, [movieId]);
 
   const showMagLinkName = (link: string) => {
     const dnMatch = link.match(/dn=([^&]*)/);

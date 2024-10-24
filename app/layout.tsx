@@ -4,6 +4,7 @@ import "@radix-ui/themes/styles.css";
 import SidesBar from "@/components/SidesBar";
 import { Theme } from "@radix-ui/themes";
 import { ReactNode } from "react";
+import ReactQueryProvider from "@/components/ReactQueryProvider";
 
 import { ibmPlexMono, zenMaruGothic } from "@/app/fonts";
 
@@ -29,7 +30,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
         radius="small"
       >
         <SidesBar />
-        <main id="app-main">{children}</main>
+        <main id="app-main">
+          <ReactQueryProvider>{children}</ReactQueryProvider>
+        </main>
       </Theme>
     </body>
   </html>

@@ -4,8 +4,9 @@ import prisma from "@/app/lib/prisma";
 import { cookies } from 'next/headers';
 export async function getMedia(movieId: number): Promise<DataResponse<MoviesMediaUrl>> {
 
-    const cookieStore = cookies();
+    const cookieStore = await cookies()
     const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+
 
     if (process.env.DEMO_ENV == 'true' || config.displayMode === 'demo') {
         const videoUrl = process.env.NEXT_PUBLIC_DEMO_VIDEO;

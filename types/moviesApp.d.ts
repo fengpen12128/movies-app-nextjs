@@ -6,6 +6,14 @@ declare interface PaginationData {
     totalPage: number;
 }
 
+declare interface MoviesDetail {
+    movie: Movie;
+    videoResources: VideoResource[];
+    media: MoviesMediaUrl | null;
+    magnetLinks: MagnetLink[];
+    relationMovies: Movie[];
+}
+
 declare interface DataResponse<T> {
     data?: T;
     code: 200 | 500;

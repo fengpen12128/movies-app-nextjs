@@ -3,17 +3,25 @@
 import { Button, Card, Select, SegmentedControl } from "@radix-ui/themes";
 import React, { useState, useCallback } from "react";
 import HeroVideoDialog from "../ui/hero-video-dialog";
+import { getVideoResource } from "@/app/actions";
+import { useQuery } from "@tanstack/react-query";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
-interface VideoPlayResourceProps {
-  resources: VideoResource[];
-}
-
-export default function VideoPlayResource({
-  resources,
-}: VideoPlayResourceProps): React.ReactElement {
+export default function VideoPlayResource({ movieId }: { movieId: number }) {
   const [playMode, setPlayMode] = useState<"IINA" | "Modal">("IINA");
   const [selectedVideoPath, setSelectedVideoPath] = useState<string | null>(
     null
+  );
+
+  const { data: resources = [], isLoading: isLoadingVideoResources } = useQuery(
+    {
+      queryKey: ["videoResources", movieId],
+      queryFn: async () => {
+        const res = await getVideoResource(movieId);
+        return res.data || [];
+      },
+      enabled: !!movieId, // 确保只有在 movieId 存在时才执行查询
+    }
   );
 
   const handleClick = useCallback(
@@ -39,14 +47,21 @@ export default function VideoPlayResource({
     <Card className="my-10">
       <div className="flex justify-between items-center mb-3">
         <div className="text-xl font-ibmPlexMono ">Select Play</div>
-        <SegmentedControl.Root size="2" radius="large" defaultValue="IINA">
+        <SegmentedControl.Root
+          onValueChange={(value: "IINA" | "Modal") => setPlayMode(value)}
+          size="2"
+          radius="large"
+          defaultValue="IINA"
+        >
           <SegmentedControl.Item value="IINA">IINA</SegmentedControl.Item>
           <SegmentedControl.Item value="Modal">Modal</SegmentedControl.Item>
         </SegmentedControl.Root>
       </div>
-      <div className="flex flex-wrap gap-3">
-        {resources.map((item: VideoResource) => {
-          return (
+      {isLoadingVideoResources ? (
+        <>Loading...</>
+      ) : (
+        <div className="flex flex-wrap gap-3">
+          {resources.map((item: VideoResource) => (
             <Button
               key={item.id}
               className="cursor-pointer"
@@ -58,9 +73,9 @@ export default function VideoPlayResource({
             >
               {item.path?.split("/")[0]} ({item.size})
             </Button>
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
       {selectedVideoPath && (
         <HeroVideoDialog
           directPlay={true}

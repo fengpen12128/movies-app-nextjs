@@ -50,7 +50,7 @@
     ".next/types/**/*.ts",
     "next.config.js",
     "lib/supabseStorageUtils.js",
-    "components/movies-detail/InfitifyGrid.tsx"
+    "components/movies-detail-parallel/InfitifyGrid.tsx"
   ],
   // 指定要排除的文件
   "exclude": ["node_modules"]

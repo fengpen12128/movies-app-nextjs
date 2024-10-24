@@ -9,14 +9,26 @@ import { usePathname } from "next/navigation";
 import dayjs from "dayjs";
 import { zenMaruGothic } from "@/app/fonts";
 import { useState } from "react";
-interface MoviesInfoProps {
-  movie: Movie;
-}
-const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
-  const pathname = usePathname();
+import { getMovieOne } from "@/app/actions";
+import { useQuery } from "@tanstack/react-query";
 
+const MoviesInfo: React.FC<{ movieId: number }> = ({ movieId }) => {
+  const pathname = usePathname();
   const [isCollecting, setIsCollecting] = useState(false);
-  const [isCollected, setIsCollected] = useState(movie.collected);
+  const [isCollected, setIsCollected] = useState(false);
+
+  const {
+    data: movie,
+    isLoading: isLoadingMovies,
+    error,
+  } = useQuery({
+    queryKey: ["movie", movieId],
+    queryFn: async () => {
+      const res = await getMovieOne(movieId);
+      return res.data;
+    },
+    enabled: !!movieId, // 确保只有在 movieId 存在时才执行查询
+  });
 
   const toggleCollect = async (): Promise<void> => {
     if (!movie) return;
@@ -30,6 +42,12 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
     }
     setIsCollecting(false);
   };
+
+  if (isLoadingMovies) return <>Loading..</>;
+
+  if (error) return <div>Error loading movie data</div>;
+
+  if (!movie) return <>Movies Not Found of {movieId}</>;
 
   const [prefix, suffix] = movie.code.split("-") || [];
 
@@ -54,7 +72,6 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
           height={403}
           loading="eager"
           priority
-        //   style={{ maxHeight: "500px", width: "auto" }}
           className=" object-contain"
           isBlurred
           alt="preview"

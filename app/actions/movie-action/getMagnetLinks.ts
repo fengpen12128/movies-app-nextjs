@@ -5,9 +5,6 @@ import { testMagnetLinks } from "../data";
 import { cookies } from "next/headers";
 import _ from "lodash";
 
-// 辅助函数：将大小字符串转换为字节数
-
-
 export async function getMagnetLinks(movieId: number): Promise<DataResponse<MagnetLink[]>> {
 
     const sizeToBytes = (size: string | null): number => {
@@ -18,9 +15,10 @@ export async function getMagnetLinks(movieId: number): Promise<DataResponse<Magn
         const num = parseFloat(match[1]);
         const unit = match[3].toUpperCase();
         return num * units[unit as keyof typeof units];
+
     }
 
-    const cookieStore = cookies();
+    const cookieStore = await cookies()
     const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
     if (process.env.DEMO_ENV == 'true' || config.displayMode === 'demo') {

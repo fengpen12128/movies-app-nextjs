@@ -12,7 +12,7 @@ import { testMovieData, actorNames } from "../data";
 
 export async function getMovieOne(movieId: number): Promise<DataResponse<Movie>> {
     try {
-        const cookieStore = cookies();
+        const cookieStore = await cookies();
         const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
         if (process.env.DEMO_ENV == 'true' || config.displayMode === 'demo') {
