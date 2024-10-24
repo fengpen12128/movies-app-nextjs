@@ -8,15 +8,24 @@ import { toggleCollection } from "@/app/actions";
 import { usePathname } from "next/navigation";
 import dayjs from "dayjs";
 import { zenMaruGothic } from "@/app/fonts";
-import { useState } from "react";
-interface MoviesInfoProps {
-  movie: Movie;
-}
-const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
+import { useState, useMemo, useEffect } from "react";
+import { getMovieOne } from "@/app/actions";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
+
+const MoviesInfo: React.FC<{ movieId: number }> = ({ movieId }) => {
   const pathname = usePathname();
 
   const [isCollecting, setIsCollecting] = useState(false);
-  const [isCollected, setIsCollected] = useState(movie.collected);
+  const [isCollected, setIsCollected] = useState(false);
+  const [movie, setMovie] = useState<Movie | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    setIsLoading(true);
+    getMovieOne(movieId).then((res) => {
+      setMovie(res.data || null);
+      setIsLoading(false);
+    });
+  }, [movieId]);
 
   const toggleCollect = async (): Promise<void> => {
     if (!movie) return;
@@ -30,6 +39,10 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
     }
     setIsCollecting(false);
   };
+
+  if (isLoading) return <>Loading...</>;
+
+  if (!movie) return <>Movies Not Found of {movieId}</>;
 
   const [prefix, suffix] = movie.code.split("-") || [];
 
@@ -54,7 +67,6 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
           height={403}
           loading="eager"
           priority
-        //   style={{ maxHeight: "500px", width: "auto" }}
           className=" object-contain"
           isBlurred
           alt="preview"

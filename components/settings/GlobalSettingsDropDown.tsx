@@ -2,7 +2,6 @@
 
 import { Button, DropdownMenu } from "@radix-ui/themes";
 import { GearIcon } from "@radix-ui/react-icons";
-import ThemeSettings from "./ThemeSettings";
 import DisplayModeSettings from "./DisplayModeSettings";
 import ModalThemeSettings from "./ModalThemeSettings";
 import ImageDisplaySettings from "./ImageDisplaySettings";
@@ -84,11 +83,6 @@ const GlobalSettings: React.FC = () => {
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Content>
-          <ThemeSettings
-            theme={globalSettings.theme ?? "system"}
-            onThemeChange={handleThemeChange}
-          />
-          <DropdownMenu.Separator />
           <DisplayModeSettings
             displayMode={globalSettings.displayMode ?? "normal"}
             onDisplayModeChange={handleDisplayModeChange}

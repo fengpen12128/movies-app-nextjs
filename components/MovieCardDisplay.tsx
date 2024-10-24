@@ -4,6 +4,9 @@ import MoviesCard from "./movie-card-styles/MoviesCard";
 import MoviesStack from "./MoivesStackCard";
 import MyPagination from "./MyPagination";
 import { nanoid } from "nanoid";
+import { MoviesPreviewModal } from "@/components/MoviesPreviewModal";
+import MoviesDetail from "@/components/movies-detail/Index";
+import { useState } from "react";
 
 export const StackDisplay: React.FC<{
   movies: ActressGroupedMovies[] | ActressGroupedDownloadMovies[];
@@ -39,15 +42,31 @@ export const CommonDisplay: React.FC<{
   if (!movies) {
     return <div>No movies found</div>;
   }
+  const [openMovieId, setOpenMovieId] = useState<number | null>(null);
+  const handleOpenModal = (id: number) => setOpenMovieId(id);
+  const handleCloseModal = () => setOpenMovieId(null);
 
   return (
-    <div className="mb-10">
-      <section className={colClassDia}>
-        {movies.map((x) => (
-          <MoviesCard key={x.id} {...x} />
-        ))}
-      </section>
-      <MyPagination {...pagination!} />
-    </div>
+    <>
+      <MoviesPreviewModal
+        open={openMovieId !== null}
+        setOpen={handleCloseModal}
+      >
+        {openMovieId !== null && <MoviesDetail movieId={openMovieId} />}
+      </MoviesPreviewModal>
+
+      <div className="mb-10">
+        <section className={colClassDia}>
+          {movies.map((x) => (
+            <MoviesCard
+              key={x.id}
+              {...x}
+              onOpenModal={() => handleOpenModal(x.id)}
+            />
+          ))}
+        </section>
+        {pagination && <MyPagination {...pagination!} />}
+      </div>
+    </>
   );
 };

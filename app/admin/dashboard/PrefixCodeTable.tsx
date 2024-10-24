@@ -18,7 +18,6 @@ import { useRequest } from "ahooks";
 import { Spinner } from "@radix-ui/themes";
 import { runCrawl } from "@/app/actions/admin/crawl";
 import { message } from "react-message-popup";
-import { CameraIcon, UserIcon } from "lucide-react";
 const PrefixCodeTable: React.FC = () => {
   const { data, loading } = useRequest(getPrefixStatistics);
   const [searchTerm, setSearchTerm] = useState("");

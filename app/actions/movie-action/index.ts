@@ -11,3 +11,4 @@ export * from "./getMoviesByActressId";
 export * from "./getVideoResource";
 export * from "./movies-collection";
 export * from "./getMoviesByActressName";
+export * from "./getTags";

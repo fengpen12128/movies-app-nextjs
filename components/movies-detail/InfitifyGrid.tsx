@@ -3,6 +3,7 @@ import { MasonryInfiniteGrid } from "@egjs/react-infinitegrid";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import "react-photo-view/dist/react-photo-view.css";
 import HeroVideoDialog from "@/components/ui/hero-video-dialog";
+import { Image } from "@nextui-org/image";
 
 type ImageItem = {
   groupKey: number;
@@ -49,7 +50,7 @@ const ImageItem = ({ path }: { path: string }) => (
   <div className="item" style={{ width: "33%" }}>
     <div className="thumbnail">
       <PhotoView src={path}>
-        <img
+        <Image
           src={path}
           alt="preview"
           className="cursor-pointer w-full h-auto"

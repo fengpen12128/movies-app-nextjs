@@ -2,6 +2,7 @@ declare interface MovieeAppStatistic {
     key?: string;
     title?: string;
     num?: number;
+    icon?: string;
     progressValue?: number;
     progressLabel?: string;
     additionalInfo?: string;

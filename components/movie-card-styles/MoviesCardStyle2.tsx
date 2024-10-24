@@ -6,7 +6,7 @@ import NextImage from "next/image";
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { MoviesPreviewModal } from "../MoviesPreviewModal";
-import MoviesDetail from "../MoviesDetail/Index";
+import MoviesDetail from "../movies-detail/Index";
 import { Star, Eye, Calendar, Bookmark, Download, Flame } from "lucide-react";
 
 const MoviesCard: React.FC<Movie> = ({

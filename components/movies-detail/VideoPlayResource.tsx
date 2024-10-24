@@ -1,20 +1,30 @@
 "use client";
 
 import { Button, Card, Select, SegmentedControl } from "@radix-ui/themes";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import HeroVideoDialog from "../ui/hero-video-dialog";
-
-interface VideoPlayResourceProps {
-  resources: VideoResource[];
-}
+import { getVideoResource } from "@/app/actions";
 
 export default function VideoPlayResource({
-  resources,
-}: VideoPlayResourceProps): React.ReactElement {
+  movieId,
+}: {
+  movieId: number;
+}) {
   const [playMode, setPlayMode] = useState<"IINA" | "Modal">("IINA");
   const [selectedVideoPath, setSelectedVideoPath] = useState<string | null>(
     null
   );
+
+  const [resources, setResources] = useState<VideoResource[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    getVideoResource(movieId).then((res) => {
+      setResources(res.data || []);
+      setIsLoading(false);
+    });
+  }, [movieId]);
 
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>, path: string): void => {

@@ -3,11 +3,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Film, User, Tag } from "lucide-react";
 
 interface NumShowCardProps {
   num?: string;
@@ -18,18 +17,25 @@ interface NumShowCardProps {
   additionalInfo?: string;
 }
 
-const NumShowCard: FC<NumShowCardProps> = ({
-  num,
-  title,
-  icon,
+const NumShowCard: FC<NumShowCardProps> = ({ num, title, additionalInfo }) => {
+  const getIcon = () => {
+    switch (title) {
+      case "Movies Num":
+        return <Film className="mr-2 h-4 w-4" />;
+      case "Actress Num":
+        return <User className="mr-2 h-4 w-4" />;
+      case "Prefix Num":
+        return <Tag className="mr-2 h-4 w-4" />;
+      default:
+        return null;
+    }
+  };
 
-  additionalInfo,
-}) => {
   return (
     <Card>
       <CardHeader className="pb-2">
         <CardDescription className="flex items-center">
-          {icon && <span className="mr-2">{icon}</span>}
+          {getIcon()}
           {title}
         </CardDescription>
         <CardTitle className="text-4xl">{num}</CardTitle>

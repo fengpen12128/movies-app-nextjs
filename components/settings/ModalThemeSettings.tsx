@@ -15,16 +15,28 @@ const ModalThemeSettings: FC<ThemeSettingsProps> = ({
     <>
       <DropdownMenu.Label>Movies Modal Theme</DropdownMenu.Label>
       <DropdownMenu.RadioGroup value={theme} onValueChange={onThemeChange}>
+        <DropdownMenu.RadioItem value="sample0">
+          <SquareIcon />
+          <Text size="2" style={{ marginLeft: "8px" }}>
+            样式0(bg-black/50)
+          </Text>
+        </DropdownMenu.RadioItem>
         <DropdownMenu.RadioItem value="sample1">
           <SquareIcon />
           <Text size="2" style={{ marginLeft: "8px" }}>
-            样式一(bg-black/50)
+            样式一(bg-black)
           </Text>
         </DropdownMenu.RadioItem>
         <DropdownMenu.RadioItem value="sample2">
           <CircleIcon />
           <Text size="2" style={{ marginLeft: "8px" }}>
             样式二 (backdrop-blur-md)
+          </Text>
+        </DropdownMenu.RadioItem>
+        <DropdownMenu.RadioItem value="sample3">
+          <CircleIcon />
+          <Text size="2" style={{ marginLeft: "8px" }}>
+            样式三 (radix-card )
           </Text>
         </DropdownMenu.RadioItem>
       </DropdownMenu.RadioGroup>

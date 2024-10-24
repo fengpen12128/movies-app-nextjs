@@ -45,7 +45,7 @@ declare interface Movie {
     viewCount?: number;
     collectedTime?: Date;
     downloadTime?: Date;
-    onClick?: () => void;
+    onOpenModal?: (open: boolean) => void;
 }
 
 declare interface MovieMedia {
@@ -131,7 +131,7 @@ declare interface ActressFav {
 declare interface GlobalSettingsConfig {
     theme: 'system' | 'light' | 'dark';
     displayMode: 'normal' | 'demo';
-    moviesPreviewModalTheme: 'sample1' | 'sample2';
+    moviesPreviewModalTheme: 'sample0' | 'sample1' | 'sample2' | 'sample3';
     imageDisplay: 'MasonryGrid' | 'grid';
 }
 

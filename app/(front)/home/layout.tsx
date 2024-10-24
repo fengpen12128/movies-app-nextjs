@@ -1,4 +1,4 @@
-import SharedLayout from "../shared-layout/layout";
+import SharedLayout from "../../shared-layout/layout";
 import HomeActionPanel from "@/components/action-panel/theme2/HomeActionPanel";
 import { ReactNode } from "react";
 

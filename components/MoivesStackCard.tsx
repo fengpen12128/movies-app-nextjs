@@ -69,22 +69,21 @@ const ActressMoviesList = ({ actressId }: { actressId: number }) => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const pathname = usePathname();
-  const type = pathname.includes("collected") ? "collection" : "download";
 
   useEffect(() => {
     setLoading(true);
-    if (type === "collection") {
+    if (pathname.includes("collection")) {
       getCollectedMoviesByActressId(actressId).then((res) => {
         setMovies(res.data || []);
         setLoading(false);
       });
-    } else if (type === "download") {
+    } else if (pathname.includes("download")) {
       getDownloadMoviesByActressId(actressId).then((res) => {
         setMovies(res.data || []);
         setLoading(false);
       });
     }
-  }, [actressId, type]);
+  }, [actressId, pathname]);
 
   if (loading) {
     return (
