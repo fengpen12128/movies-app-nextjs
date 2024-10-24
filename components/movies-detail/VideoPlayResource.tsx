@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Select, SegmentedControl } from "@radix-ui/themes";
+import { Button, Card, SegmentedControl } from "@radix-ui/themes";
 import React, { useState, useCallback } from "react";
 import HeroVideoDialog from "../ui/hero-video-dialog";
 
@@ -39,7 +39,12 @@ export default function VideoPlayResource({
     <Card className="my-10">
       <div className="flex justify-between items-center mb-3">
         <div className="text-xl font-ibmPlexMono ">Select Play</div>
-        <SegmentedControl.Root size="2" radius="large" defaultValue="IINA">
+        <SegmentedControl.Root
+          onValueChange={(value: "IINA" | "Modal") => setPlayMode(value)}
+          size="2"
+          radius="large"
+          defaultValue="IINA"
+        >
           <SegmentedControl.Item value="IINA">IINA</SegmentedControl.Item>
           <SegmentedControl.Item value="Modal">Modal</SegmentedControl.Item>
         </SegmentedControl.Root>

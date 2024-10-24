@@ -6,7 +6,7 @@ export default function RelationMovies({ relMovies }: { relMovies: Movie[] }) {
       <div className="pb-2 flex justify-between">
         <div className="text-xl font-ibmPlexMono">She also starred in</div>
       </div>
-      <CommonDisplay movies={relMovies} />
+      <CommonDisplay pageGrid={false} movies={relMovies} />
     </div>
   );
 }
