@@ -21,7 +21,8 @@ export async function getMovies({
     tags,
     batchId,
     filter,
-    order = "releaseDate"
+    order = "releaseDate",
+    maker
 }: MovieQueryParams): Promise<DataResponse<Movie[]>> {
     try {
         const skip = (page - 1) * DEFAULT_PAGE_SIZE;
@@ -101,6 +102,7 @@ export async function getMovies({
                         },
                     },
                 }),
+                ...(maker && { maker }),
                 ...(years && { releaseYear: Number(years) }),
                 ...(tags && {
                     tags: {

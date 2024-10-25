@@ -18,7 +18,7 @@ export async function getMagnetLinks(movieId: number): Promise<DataResponse<Magn
 
     }
 
-    const cookieStore = await cookies()
+    const cookieStore = cookies()
     const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
     if (process.env.DEMO_ENV == 'true' || config.displayMode === 'demo') {

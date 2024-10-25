@@ -20,13 +20,12 @@ import {
 import { getDashboardChartData } from "@/app/actions/admin/dashboard";
 import { useRequest } from "ahooks";
 
-export const description = "An interactive bar chart";
 
 const chartConfig = {
   views: {
     label: "Daily Views Number",
   },
-  broswerHistory: {
+  browserHistory: {
     label: "BrowserNum",
     color: "hsl(var(--chart-1))",
   },
@@ -41,11 +40,11 @@ export function BrowsingHistoryChart() {
   const chartData = (response?.data as DashboardChartData) || {};
 
   const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>("broswerHistory");
+    React.useState<keyof typeof chartConfig>("browserHistory");
 
   const total = React.useMemo(
     () => ({
-      broswerHistory: chartData?.browserHistory?.reduce(
+      browserHistory: chartData?.browserHistory?.reduce(
         (acc, curr) => acc + curr.yData,
         0
       ),
@@ -71,7 +70,7 @@ export function BrowsingHistoryChart() {
           </CardDescription>
         </div>
         <div className="flex">
-          {["broswerHistory", "collectionHistory"].map((key) => {
+          {["browserHistory", "collectionHistory"].map((key) => {
             const chart = key as keyof typeof chartConfig;
             return (
               <button

@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import dayjs from "dayjs";
 import { zenMaruGothic } from "@/app/fonts";
 import { useState } from "react";
+import Link from "next/link";
 interface MoviesInfoProps {
   movie: Movie;
 }
@@ -74,14 +75,27 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
         <ul className="space-y-4">
           <li className=" font-ibmPlexMono text-3xl text-[#0abab5] flex items-baseline">
             <span
-              className="hover:underline cursor-pointer  text-[1.15em] transition-colors duration-200 ease-in-out hover:text-[#08a19d]"
+              className="hover:underline hover:underline-offset-4 cursor-pointer  text-[1.15em] transition-colors duration-200 ease-in-out hover:text-[#08a19d]"
               onClick={() => handlePrefixClick(prefix)}
             >
               {prefix}
             </span>
             <span>-{suffix}</span>
           </li>
-          <InfoItem label="片商" value={maker} />
+          <InfoItem
+            label="片商"
+            value={
+              <>
+                <Link
+                  className="hover:underline hover:underline-offset-4"
+                  href={`/home?maker=${maker}`}
+                  target="_blank"
+                >
+                  {maker}
+                </Link>
+              </>
+            }
+          />
           <InfoItem label="评分" value={rate} />
           <InfoItem label="评分数" value={rateNum} />
           <InfoItem label="时长" value={duration} />

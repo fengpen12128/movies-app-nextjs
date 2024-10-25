@@ -4,6 +4,7 @@ export const movieSelect = {
     tags: true,
     duration: true,
     code: true,
+    maker: true,
     rate: true,
     rateNum: true,
     releaseDate: true,

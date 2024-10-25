@@ -97,6 +97,7 @@ declare interface MovieQueryParams {
     latest?: 'true' | 'false' | undefined
     order?: MovieOrder
     filter?: MovieFilter
+    maker?: string;
 }
 declare interface OrderOption {
     value: string;
