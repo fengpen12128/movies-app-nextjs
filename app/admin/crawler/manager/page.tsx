@@ -1,4 +1,5 @@
-"use client";
+"use client";;
+import { use } from "react";
 
 import { Card } from "@radix-ui/themes";
 import { Tabs, Tab } from "@nextui-org/react";

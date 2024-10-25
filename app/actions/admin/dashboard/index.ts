@@ -193,7 +193,7 @@ export async function deleteScheduleCrawlUrl(ids: number[]): Promise<DataRespons
     }
 }
 
-export async function getBrowsingHistoryStats(): Promise<DataResponse<BrowsingHistoryChartData[]>> {
+export async function getDashboardChartData(): Promise<DataResponse<DashboardChartData>> {
     try {
         const [browsingStats, collectionStats]: any = await Promise.all([
             prisma.$queryRaw`
@@ -210,42 +210,35 @@ export async function getBrowsingHistoryStats(): Promise<DataResponse<BrowsingHi
             `
         ]);
 
-        // 创建一个映射来存储所有日期的数据
-        const dateMap = new Map<string, { browserNum: number; collectedNum: number }>();
-
         // 处理浏览历史数据
-        browsingStats.forEach((stat: any) => {
-            const date = dayjs(stat.date).format('YYYY-MM-DD');
-            dateMap.set(date, { browserNum: Number(stat.count), collectedNum: 0 });
-        });
+        const browserHistory: ChartData[] = browsingStats.map((stat: any) => ({
+            xData: dayjs(stat.date).format('YYYY-MM-DD'),
+            yData: Number(stat.count)
+        }));
 
         // 处理收藏数据
-        collectionStats.forEach((stat: any) => {
-            const date = dayjs(stat.date).format('YYYY-MM-DD');
-            if (dateMap.has(date)) {
-                dateMap.get(date)!.collectedNum = Number(stat.count);
-            } else {
-                dateMap.set(date, { browserNum: 0, collectedNum: Number(stat.count) });
-            }
-        });
+        const collectionHistory: ChartData[] = collectionStats.map((stat: any) => ({
+            xData: dayjs(stat.date).format('YYYY-MM-DD'),
+            yData: Number(stat.count)
+        }));
 
-        // 将 Map 转换为数组并排序
-        const chartData: BrowsingHistoryChartData[] = Array.from(dateMap, ([viewedAt, stats]) => ({
-            viewedAt,
-            browserNum: stats.browserNum,
-            collectedNum: stats.collectedNum
-        })).sort((a, b) => a.viewedAt.localeCompare(b.viewedAt));
 
         return {
             code: 200,
-            data: chartData
+            data: {
+                browserHistory,
+                collectionHistory
+            }
         };
     } catch (error) {
         console.error("Error fetching browsing history and collection statistics:", error);
         return {
             code: 500,
             msg: "获取浏览历史和收藏统计数据失败",
-            data: []
+            data: {
+                browserHistory: [],
+                collectionHistory: []
+            }
         };
     }
 }

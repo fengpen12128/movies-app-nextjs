@@ -24,6 +24,7 @@ datasource db {
 model MoviesInfo {
     id              Int                   @id @default(autoincrement()) @map("id")
     code            String?               @unique(map: "code_uni") @map("code") @db.VarChar(100)
+    maker           String?               @map("maker") @db.VarChar(100)
     prefix          String?               @map("prefix") @db.VarChar(100)
     duration        String?               @map("duration") @db.VarChar(100)
     rate            Decimal?              @map("rate") @db.Decimal(10, 2)

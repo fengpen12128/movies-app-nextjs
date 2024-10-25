@@ -36,6 +36,7 @@ declare interface Actress {
 declare interface Movie {
     id: number;
     code: string;
+    maker?: string;
     prefix?: string;
     duration?: string;
     rate?: number;

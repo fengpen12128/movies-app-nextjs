@@ -14,8 +14,12 @@ declare interface PrefixCode {
     brand?: string;
 }
 
-type BrowsingHistoryChartData = {
-    viewedAt: string;
-    browserNum: number;
-    collectedNum: number;
+declare interface ChartData {
+    xData: string;
+    yData: number;
+};
+
+declare interface DashboardChartData {
+    browserHistory: ChartData[];
+    collectionHistory: ChartData[];
 };

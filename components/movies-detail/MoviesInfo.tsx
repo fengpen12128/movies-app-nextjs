@@ -42,8 +42,16 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
     window.open(`/home/?prefix=${prefix}`, "_blank");
   };
 
-  const { rate, rateNum, duration, releaseDate, actresses, tags, coverUrl } =
-    movie;
+  const {
+    rate,
+    maker,
+    rateNum,
+    duration,
+    releaseDate,
+    actresses,
+    tags,
+    coverUrl,
+  } = movie;
 
   return (
     <div className="flex p-2 gap-4 flex-col sm:flex-row">
@@ -54,7 +62,7 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
           height={403}
           loading="eager"
           priority
-        //   style={{ maxHeight: "500px", width: "auto" }}
+          //   style={{ maxHeight: "500px", width: "auto" }}
           className=" object-contain"
           isBlurred
           alt="preview"
@@ -73,6 +81,7 @@ const MoviesInfo: React.FC<MoviesInfoProps> = ({ movie }) => {
             </span>
             <span>-{suffix}</span>
           </li>
+          <InfoItem label="片商" value={maker} />
           <InfoItem label="评分" value={rate} />
           <InfoItem label="评分数" value={rateNum} />
           <InfoItem label="时长" value={duration} />

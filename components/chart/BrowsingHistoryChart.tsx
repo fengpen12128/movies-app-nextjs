@@ -17,7 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-import { getBrowsingHistoryStats } from "@/app/actions/admin/dashboard";
+import { getDashboardChartData } from "@/app/actions/admin/dashboard";
 import { useRequest } from "ahooks";
 
 export const description = "An interactive bar chart";
@@ -26,27 +26,33 @@ const chartConfig = {
   views: {
     label: "Daily Views Number",
   },
-  browserNum: {
+  broswerHistory: {
     label: "BrowserNum",
     color: "hsl(var(--chart-1))",
   },
-  collectedNum: {
+  collectionHistory: {
     label: "CollectedNum",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
 export function BrowsingHistoryChart() {
-  const { data: respone, loading } = useRequest(getBrowsingHistoryStats);
+  const { data: response, loading } = useRequest(getDashboardChartData);
+  const chartData = (response?.data as DashboardChartData) || {};
 
-  const chartData = respone?.data || [];
   const [activeChart, setActiveChart] =
-    React.useState<keyof typeof chartConfig>("browserNum");
+    React.useState<keyof typeof chartConfig>("broswerHistory");
 
   const total = React.useMemo(
     () => ({
-      browserNum: chartData.reduce((acc, curr) => acc + curr.browserNum, 0),
-      collectedNum: chartData.reduce((acc, curr) => acc + curr.collectedNum, 0),
+      broswerHistory: chartData?.browserHistory?.reduce(
+        (acc, curr) => acc + curr.yData,
+        0
+      ),
+      collectionHistory: chartData?.collectionHistory?.reduce(
+        (acc, curr) => acc + curr.yData,
+        0
+      ),
     }),
     [chartData]
   );
@@ -65,7 +71,7 @@ export function BrowsingHistoryChart() {
           </CardDescription>
         </div>
         <div className="flex">
-          {["browserNum", "collectedNum"].map((key) => {
+          {["broswerHistory", "collectionHistory"].map((key) => {
             const chart = key as keyof typeof chartConfig;
             return (
               <button
@@ -92,7 +98,7 @@ export function BrowsingHistoryChart() {
         >
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={chartData[activeChart as keyof DashboardChartData]}
             margin={{
               left: 12,
               right: 12,
@@ -100,7 +106,7 @@ export function BrowsingHistoryChart() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="viewedAt"
+              dataKey="xData"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
@@ -117,7 +123,7 @@ export function BrowsingHistoryChart() {
               content={
                 <ChartTooltipContent
                   className="w-[150px]"
-                  nameKey="num"
+                  nameKey="xData"
                   labelFormatter={(value) => {
                     return new Date(value).toLocaleDateString("en-US", {
                       month: "short",
@@ -128,7 +134,7 @@ export function BrowsingHistoryChart() {
                 />
               }
             />
-            <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+            <Bar dataKey="yData" fill={`var(--color-${activeChart})`} />
           </BarChart>
         </ChartContainer>
       </CardContent>

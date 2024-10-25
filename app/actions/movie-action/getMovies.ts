@@ -7,7 +7,7 @@ import {
     DEFAULT_PAGE_SIZE,
     getPaginationData,
 } from "@/app/actions/utils/commonUtils";
-//import { cookies } from 'next/headers';
+import { cookies } from 'next/headers';
 import { movieSelect } from "../querySelect";
 import { getDefaultOrder } from "./getOrder";
 import { testMovieData } from "../data";
@@ -25,10 +25,10 @@ export async function getMovies({
 }: MovieQueryParams): Promise<DataResponse<Movie[]>> {
     try {
         const skip = (page - 1) * DEFAULT_PAGE_SIZE;
-        // const cookieStore = await cookies();
-        // const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
+        const cookieStore = cookies();
+        const config: GlobalSettingsConfig = JSON.parse(cookieStore.get('config')?.value || '{}');
 
-        if (process.env.DEMO_ENV == 'true') {
+        if (process.env.DEMO_ENV == 'true' || config?.displayMode === 'demo') {
             return {
                 data: testMovieData.slice(skip, skip + DEFAULT_PAGE_SIZE),
                 pagination: getPaginationData(testMovieData.length, page, DEFAULT_PAGE_SIZE),
