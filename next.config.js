@@ -1,6 +1,3 @@
-import path from "path";
-
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
   output: "standalone",
@@ -19,13 +16,6 @@ const nextConfig = {
         hostname: "127.0.0.1",
       },
     ],
-  },
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      "@": path.resolve(process.cwd()),
-    };
-    return config;
   },
 };
 

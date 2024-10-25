@@ -52,7 +52,7 @@ const MoviesCard: React.FC<Movie> = ({
         )}
         <h4
           onClick={() => onOpenModal && onOpenModal(true)}
-          className=" flex items-center gap-1 text-xl cursor-pointer hover:underline"
+          className=" flex items-center gap-1 text-xl cursor-pointer hover:underline hover:underline-offset-4"
         >
           {dayjs(createdTime).add(6, "day").isAfter(dayjs()) && (
             <Flame className="text-red-400" size={18} />

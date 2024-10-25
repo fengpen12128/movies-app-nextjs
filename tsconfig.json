@@ -38,6 +38,7 @@
     "paths": {
       "@/*": ["./*"]
     },
+    "baseUrl": ".",
     // 指定类型根目录
     "typeRoots": ["./node_modules/@types", "./types"]
   },
