@@ -2,7 +2,6 @@ import { CommonDisplay } from "@/components/MovieCardDisplay";
 import { getMovies } from "@/app/actions";
 import MovieEmpty from "@/components/MovieEmpty";
 
-export const dynamic = "force-dynamic";
 
 const HomeContent: React.FC<MovieQueryParams> = async (params) => {
   const { data, pagination, code, msg } = await getMovies({
