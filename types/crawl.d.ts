@@ -5,8 +5,9 @@ declare interface CrawlResponse {
 
 declare interface CrawlUrl {
     url: string;
-    maxPage: number;
     save?: boolean;
+    web?: string;
+    maxPage?: number;
 }
 
 declare interface CrawlConfig {
@@ -35,13 +36,4 @@ declare type CrawlStatus = 'running' | 'pending' | 'finished' | 'not_found' | 'e
 declare interface UnDownloadNum {
     imageNum: number,
     videoNum: number,
-}
-
-declare interface ScheduleCrawlUrl {
-    id?: number;
-    web: string;
-    url: string;
-    uri: string;
-    maxPage: number;
-    createdTime?: Date;
 }

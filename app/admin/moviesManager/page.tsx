@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { z } from "zod";
 
-import { columns } from "./components/columns";
+
 import { DataTable } from "./components/data-table";
 import { movieSchema } from "./data/schema";
 import { getMoviesList } from "@/app/actions/admin";
@@ -17,7 +17,7 @@ export default async function TaskPage() {
   return (
     <div className="min-h-screen px-24">
       <div className="flex flex-col space-y-4">
-        <DataTable data={moviesData} columns={columns} />
+        <DataTable />
       </div>
     </div>
   );

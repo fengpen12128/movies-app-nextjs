@@ -2,10 +2,11 @@
 
 import prisma from "@/app/lib/prisma"
 import dayjs from 'dayjs'
-
+import { ScheduleCrawlUrl } from "@/app/admin/dashboard/ScheduleCrawlUrlTable/schema"
+import { PrefixCodes } from "@/app/admin/dashboard/PrefixCodeTable/schema"
 export async function getMoiveeAppStatistic(): Promise<DataResponse<MovieeAppStatistic[]>> {
     try {
-        const [moviesNumResult, actressNumResult, prefixNumResult] = await Promise.allSettled([
+        const [moviesNumResult, actressNumResult, prefixNumResult, scheduleCrawlUrlNumResult] = await Promise.allSettled([
             prisma.moviesInfo.count(),
             prisma.actress.count(),
             prisma.moviesInfo.groupBy({
@@ -16,40 +17,38 @@ export async function getMoiveeAppStatistic(): Promise<DataResponse<MovieeAppSta
                         not: null
                     }
                 }
-            })
+            }),
+            prisma.scheduleCrawlUrl.count()
         ]);
 
         const moviesNum = moviesNumResult.status === "fulfilled" ? moviesNumResult.value : 0;
         const actressNum = actressNumResult.status === "fulfilled" ? actressNumResult.value : 0;
         const prefixNum = prefixNumResult.status === "fulfilled" ? prefixNumResult.value.length : 0;
-
+        const scheduleCrawlUrlNum = scheduleCrawlUrlNumResult.status === "fulfilled" ? scheduleCrawlUrlNumResult.value : 0;
         const statisticData: MovieeAppStatistic[] = [
             {
                 key: "moviesNum",
                 title: "Movies Num",
                 num: moviesNum,
-                progressValue: 100,
-                progressLabel: "100% increase",
-                additionalInfo: "Movies Record Num",
                 icon: "film" // 添加适当的图标名称
             },
             {
                 key: "actressNum",
                 title: "Actress Num",
                 num: actressNum,
-                progressValue: 100,
-                progressLabel: "100% increase",
-                additionalInfo: "Actress Record Num",
                 icon: "user" // 添加适当的图标名称
             },
             {
                 key: "prefixNum",
                 title: "Prefix Num",
                 num: prefixNum,
-                progressValue: 100,
-                progressLabel: "100% increase",
-                additionalInfo: "Prefix Record Num",
                 icon: "tag" // 添加适当的图标名称
+            },
+            {
+                key: "scheduleCrawlUrlNum",
+                title: "Crawl Schedule Num",
+                num: scheduleCrawlUrlNum,
+                icon: "schedule" // 添加适当的图标名称
             }
         ]
 
@@ -65,10 +64,10 @@ export async function getMoiveeAppStatistic(): Promise<DataResponse<MovieeAppSta
     }
 }
 
-export async function getPrefixStatistics(): Promise<DataResponse<PrefixCode[]>> {
+export async function getPrefixStatistics(): Promise<DataResponse<PrefixCodes[]>> {
     try {
         const prefixStats = await prisma.moviesInfo.groupBy({
-            by: ['prefix'],
+            by: ['prefix', 'maker'],
             _count: {
                 prefix: true
             },
@@ -84,9 +83,10 @@ export async function getPrefixStatistics(): Promise<DataResponse<PrefixCode[]>>
             }
         });
 
-        const formattedStats: PrefixCode[] = prefixStats.map(stat => ({
-            code: stat.prefix || '',
+        const formattedStats: PrefixCodes[] = prefixStats.map(stat => ({
+            prefix: stat.prefix || '',
             num: stat._count.prefix,
+            maker: stat.maker || ''
         }));
 
         return {
@@ -102,22 +102,23 @@ export async function getPrefixStatistics(): Promise<DataResponse<PrefixCode[]>>
     }
 }
 
-export async function getScheduleCrawlUrl({ page, pageSize = 20, web, uri }: { page: number, pageSize?: number, web?: string, uri?: string }): Promise<DataResponse<ScheduleCrawlUrl[]>> {
+export async function getScheduleCrawlUrl({ web, url }: { web?: string, url?: string } = {}): Promise<DataResponse<ScheduleCrawlUrl[]>> {
     try {
         const schedules = await prisma.scheduleCrawlUrl.findMany({
-            skip: (page - 1) * pageSize,
-            take: pageSize,
             where: {
                 ...(web && {
                     web: {
                         contains: web || ''
-                    }
+                    },
                 }),
-                ...(uri && {
-                    uri: {
-                        contains: uri || ''
-                    }
+                ...(url && {
+                    url: {
+                        contains: url || ''
+                    },
                 })
+            },
+            orderBy: {
+                createdTime: 'desc'
             }
         });
         return {
@@ -133,32 +134,20 @@ export async function getScheduleCrawlUrl({ page, pageSize = 20, web, uri }: { p
     }
 }
 
-export async function addScheduleCrawlUrl(data: ScheduleCrawlUrl): Promise<DataResponse<void>> {
+export async function addScheduleCrawlUrl(
+    data: ScheduleCrawlUrl | ScheduleCrawlUrl[]
+): Promise<DataResponse<void>> {
     try {
-        // console.log('data_XXXXXXXX', data)
-        // const exist = await prisma.scheduleCrawlUrl.findUnique({
-        //     where: {
-        //         url_uri: {
-        //             url: data.url,
-        //             uri: data.uri
-        //         }
-        //     }
-        // })
-        // if (exist) {
-        //     return {
-        //         code: 500,
-        //         msg: "existed..."
-        //     }
-        // }
+        const dataArray = Array.isArray(data) ? data : [data];
 
-        await prisma.scheduleCrawlUrl.create({
-            data: {
-                url: data.url,
-                uri: data.uri,
-                web: 'Javdb',
-
-            }
+        await prisma.scheduleCrawlUrl.createMany({
+            data: dataArray.map(item => ({
+                url: item.url,
+                web: item.web,
+            })),
+            skipDuplicates: true, // 跳过重复的URL
         });
+
         return {
             code: 200,
             msg: "添加成功"
@@ -172,10 +161,11 @@ export async function addScheduleCrawlUrl(data: ScheduleCrawlUrl): Promise<DataR
     }
 }
 
-export async function deleteScheduleCrawlUrl(ids: number[]): Promise<DataResponse<void>> {
+
+export async function deleteScheduleCrawlUrl(urls: string[]): Promise<DataResponse<void>> {
     try {
         await prisma.scheduleCrawlUrl.deleteMany({
-            where: { id: { in: ids } }
+            where: { url: { in: urls } }
         });
         return {
             code: 200,

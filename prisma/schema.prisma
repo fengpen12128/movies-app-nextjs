@@ -191,11 +191,8 @@ model BrowsingHistory {
 model ScheduleCrawlUrl {
     id          Int       @id @default(autoincrement())
     web         String    @db.VarChar(100)
-    url         String    @db.VarChar(200)
-    uri         String    @db.VarChar(100)
-    maxPage     Int       @default(1) @map("max_page")
+    url         String    @unique @db.VarChar(200)
     createdTime DateTime? @default(now()) @map("created_time")
 
-    @@unique([url, uri])
     @@map("schedule_crawl_url")
 }

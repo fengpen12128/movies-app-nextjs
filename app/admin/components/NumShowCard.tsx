@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Film, User, Tag } from "lucide-react";
+import { Film, User, Tag, List } from "lucide-react";
 
 interface NumShowCardProps {
   num?: string;
@@ -26,6 +26,8 @@ const NumShowCard: FC<NumShowCardProps> = ({ num, title, additionalInfo }) => {
         return <User className="mr-2 h-4 w-4" />;
       case "Prefix Num":
         return <Tag className="mr-2 h-4 w-4" />;
+      case "Crawl Schedule Num":
+        return <List className="mr-2 h-4 w-4" />;
       default:
         return null;
     }

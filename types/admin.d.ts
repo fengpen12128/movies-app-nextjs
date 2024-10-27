@@ -9,9 +9,9 @@ declare interface MovieeAppStatistic {
 }
 
 declare interface PrefixCode {
-    code: string;
+    prefix: string;
     num: number;
-    brand?: string;
+    maker?: string;
 }
 
 declare interface ChartData {

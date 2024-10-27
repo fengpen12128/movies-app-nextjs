@@ -175,9 +175,10 @@ export async function getCrawlScheduledUrls(): Promise<DataResponse<CrawlUrl[]>>
 
         let formattedUrls: CrawlUrl[] = [];
         if (data && data.length > 0) {
-            formattedUrls = data.map(({ url, uri, maxPage }) => ({
-                url: `${url}/${uri}`,
-                maxPage,
+            formattedUrls = data.map(({ url, web }) => ({
+                url: url,
+                web: web,
+                maxPage: 1,
             }));
         }
 

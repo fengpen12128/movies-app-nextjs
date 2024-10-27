@@ -18,7 +18,7 @@ export async function getMoviesList({
     batchId,
     filter,
     order = "releaseDate"
-}: MovieQueryParams): Promise<DataResponse<Movie[]>> {
+}: MovieQueryParams = {}): Promise<DataResponse<Movie[]>> {
     try {
         const skip = (page - 1) * DEFAULT_PAGE_SIZE;
 

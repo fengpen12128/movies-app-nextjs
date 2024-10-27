@@ -55,10 +55,7 @@ export const useCrawlerOperations = (
     const saveCrawlUrls = async (crawlUrls: CrawlUrl[]) => {
         crawlUrls = crawlUrls.filter(url => url.save);
         crawlUrls.forEach(async crawlUrl => {
-            const urlParts = new URL(crawlUrl.url);
-            const baseUrl = `${urlParts.protocol}//${urlParts.hostname}${urlParts.pathname}`;
-            const uri = urlParts.pathname.split('/').pop() || '';
-            const { code, msg } = await addScheduleCrawlUrl({ ...crawlUrl, web: "Javdb", url: baseUrl, uri: uri });
+            const { code, msg } = await addScheduleCrawlUrl({ ...crawlUrl, web: "Javdb", url: crawlUrl.url });
             if (code !== 200) {
                 message.error(msg!);
                 return;

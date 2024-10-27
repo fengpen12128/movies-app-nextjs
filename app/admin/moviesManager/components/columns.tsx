@@ -3,12 +3,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Movie } from "../data/schema";
+import { MovieTable } from "../data/schema";
 import { DataTableColumnHeader } from "./data-table-column-header";
-import { DataTableRowActions } from "./data-table-row-actions";
+import { ArrowUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 import dayjs from "dayjs";
 
-export const columns: ColumnDef<Movie>[] = [
+export const columns: ColumnDef<MovieTable>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -41,15 +43,6 @@ export const columns: ColumnDef<Movie>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="ID" />
-    ),
-    cell: ({ row }) => <div className="w-[50px]">{row.getValue("id")}</div>,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "code",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Code" />
@@ -60,9 +53,18 @@ export const columns: ColumnDef<Movie>[] = [
   },
   {
     accessorKey: "releaseDate",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Release Date" />
-    ),
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-transparent"
+        >
+          Created Time
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const releaseDate = row.getValue("releaseDate") as Date;
       return (
@@ -74,17 +76,35 @@ export const columns: ColumnDef<Movie>[] = [
   },
   {
     accessorKey: "rate",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Rate" />
-    ),
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-transparent"
+        >
+          Created Time
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => <div className="w-[40px]">{row.getValue("rate")}</div>,
     enableHiding: false,
   },
   {
     accessorKey: "rateNum",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Rate Num" />
-    ),
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-transparent"
+        >
+          Created Time
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => (
       <div className="w-[40px]">{row.getValue("rateNum")}</div>
     ),
@@ -93,9 +113,7 @@ export const columns: ColumnDef<Movie>[] = [
   },
   {
     accessorKey: "actresses",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Actresses" />
-    ),
+    header: "Actresses",
     cell: ({ row }) => {
       const actresses = row.getValue("actresses") as {
         id: number;
@@ -155,44 +173,22 @@ export const columns: ColumnDef<Movie>[] = [
   },
   {
     accessorKey: "createdTime",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Scraped Time" />
-    ),
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="hover:bg-transparent"
+        >
+          Created Time
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => (
       <div className="w-[200px]">
         {dayjs(row.getValue("createdTime")).format("YYYY-MM-DD HH:mm:ss")}
       </div>
     ),
   },
-  //   {
-  //     accessorKey: "priority",
-  //     header: ({ column }) => (
-  //       <DataTableColumnHeader column={column} title="Priority" />
-  //     ),
-  //     cell: ({ row }) => {
-  //       const priority = priorities.find(
-  //         (priority) => priority.value === row.getValue("priority")
-  //       );
-
-  //       if (!priority) {
-  //         return null;
-  //       }
-
-  //       return (
-  //         <div className="flex items-center">
-  //           {priority.icon && (
-  //             <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-  //           )}
-  //           <span>{priority.label}</span>
-  //         </div>
-  //       );
-  //     },
-  //     filterFn: (row, id, value) => {
-  //       return value.includes(row.getValue(id));
-  //     },
-  //   },
-  //   {
-  //     id: "actions",
-  //     cell: ({ row }) => <DataTableRowActions row={row} />,
-  //   },
 ];

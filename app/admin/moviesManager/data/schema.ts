@@ -18,4 +18,4 @@ export const movieSchema = z.object({
     updatedTime: z.date().nullable().optional(),
 })
 
-export type Movie = z.infer<typeof movieSchema>
+export type MovieTable = z.infer<typeof movieSchema>
