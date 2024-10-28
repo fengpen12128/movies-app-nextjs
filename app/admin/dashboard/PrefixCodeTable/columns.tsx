@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { PrefixCodes } from "./schema";
-import { DataTableColumnHeader } from "@/app/admin/moviesManager/components/data-table-column-header";
+import { DataTableColumnHeader } from "@/app/admin/components/column-header";
 import { Button as NextUIButton } from "@nextui-org/react";
 import Link from "next/link";
 

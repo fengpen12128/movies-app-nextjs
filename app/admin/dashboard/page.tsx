@@ -41,18 +41,10 @@ const Page = async () => {
               </TabsList>
             </div>
             <TabsContent value="prefix">
-              <Card>
-                <CardContent>
-                  <PrefixCodeTable />
-                </CardContent>
-              </Card>
+              <PrefixCodeTable />
             </TabsContent>
             <TabsContent value="schedule">
-              <Card>
-                <CardContent>
-                  <ScheduleCrawlUrlTable />
-                </CardContent>
-              </Card>
+              <ScheduleCrawlUrlTable />
             </TabsContent>
           </Tabs>
         </div>

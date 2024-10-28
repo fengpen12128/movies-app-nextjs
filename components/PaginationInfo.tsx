@@ -13,7 +13,7 @@ const PaginationInfo: React.FC = () => {
   const { totalCount, totalPage } = pagination;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex text-muted-foreground items-center gap-2">
       <Text size="2" weight="medium">
         共 {totalCount} 条
       </Text>

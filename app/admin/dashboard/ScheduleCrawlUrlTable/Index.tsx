@@ -37,6 +37,9 @@ import { AddDialog } from "./components/AddDialog";
 import { toast } from "sonner"; // 需要安装: npm install sonner
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 const Index = () => {
   const queryClient = useQueryClient();
@@ -116,8 +119,8 @@ const Index = () => {
   if (!queryResult && !isLoading) return <div>No data available</div>;
 
   return (
-    <>
-      <div className="space-y-2 bg-black p-5 rounded-md">
+    <Card>
+      <CardContent className="space-y-2  p-5 rounded-md">
         <div className="flex items-center mb-4 justify-between">
           <div className="flex items-center space-x-4">
             <Input
@@ -137,6 +140,11 @@ const Index = () => {
               selectedCount={table.getSelectedRowModel().rows.length}
               onDelete={handleDelete}
               disabled={table.getSelectedRowModel().rows.length === 0}
+              trigger={
+                <Button variant="outline" size="sm">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              }
             />
           </div>
         </div>
@@ -144,7 +152,7 @@ const Index = () => {
         <div className="rounded-md border">
           <div className="h-[500px] overflow-auto">
             <Table>
-              <TableHeader className="sticky top-0 bg-black z-10">
+              <TableHeader className="sticky top-0  z-10">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
@@ -202,8 +210,8 @@ const Index = () => {
             </Table>
           </div>
         </div>
-      </div>
-    </>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -57,20 +57,40 @@ export async function getMovies({
                     }
                 }
             }
+
+            let downloadFilter = null;
             if (filterArr.includes("nd")) {
-                return {
+                downloadFilter = {
                     code: {
                         notIn: dmCode
                     }
                 }
+            } else if (filterArr.includes("ed")) {
+                downloadFilter = {
+                    code: {
+                        in: dmCode
+                    }
+                }
             }
 
+            let collectionFilter = null;
             if (filterArr.includes("nc")) {
-                return {
+                collectionFilter = {
                     code: {
                         notIn: ctCode
                     }
                 }
+            } else if (filterArr.includes("ec")) {
+                collectionFilter = {
+                    code: {
+                        in: ctCode
+                    }
+                }
+            }
+
+            return {
+                ...downloadFilter,
+                ...collectionFilter
             }
         }
 

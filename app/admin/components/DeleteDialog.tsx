@@ -15,20 +15,13 @@ interface DeleteDialogProps {
   selectedCount: number;
   onDelete: () => void;
   disabled?: boolean;
+  trigger: React.ReactNode;
 }
 
-export function DeleteDialog({ selectedCount, onDelete, disabled = false }: DeleteDialogProps) {
+export function DeleteDialog({ selectedCount, onDelete, disabled = false, trigger }: DeleteDialogProps) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <button
-          className="p-2 hover:bg-gray-100 rounded-full text-gray-600 hover:text-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
-          title="Delete selected items"
-          disabled={disabled}
-        >
-          <Trash2 size={20} />
-        </button>
-      </AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>确认删除</AlertDialogTitle>

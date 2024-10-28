@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { message } from 'react-message-popup';
-import { getSpiderStatus, runCrawl } from '@/app/actions/admin/crawl';
+import { getSpiderStatus, runCrawl, updateCrawlStatsStatus } from '@/app/actions/admin/crawl';
 import { addScheduleCrawlUrl } from '@/app/actions/admin/dashboard';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface CrawlState {
     status: string;
@@ -14,6 +15,7 @@ export const useCrawlerOperations = (
     targets: CrawlUrl[],
 ) => {
 
+    const queryClient = useQueryClient();
 
     const [crawlState, setCrawlState] = useState<CrawlState>(initialState);
     const [showStopDialog, setShowStopDialog] = useState(false);
@@ -31,6 +33,7 @@ export const useCrawlerOperations = (
                 setStatusCheckInterval(null);
                 message.success("Crawling completed");
                 onFinished(batchId!);
+                await updateCrawlStatsStatus(batchId!);
                 return true;
             }
             return false;
@@ -70,6 +73,7 @@ export const useCrawlerOperations = (
                 message.error(msg!);
                 return;
             }
+            queryClient.invalidateQueries({ queryKey: ["crawlRecord"] });
             await saveCrawlUrls(targets);
             setCrawlState(prevState => ({
                 ...prevState,

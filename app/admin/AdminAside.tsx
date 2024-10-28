@@ -11,6 +11,9 @@ import {
   Folder,
   Film,
   LucideIcon,
+  Bug,
+  Info,
+  GalleryHorizontalEnd,
 } from "lucide-react";
 import {
   Tooltip,
@@ -39,20 +42,32 @@ const AdminAside: React.FC = () => {
   const navItems: NavItem[] = [
     { icon: Home, label: "Dashboard", href: "/admin", route: "admin" },
     {
-      icon: Database,
-      label: "Crawler Info",
-      href: "/admin/crawler/info",
-      route: "crawlerInfo",
-    },
-    {
-      icon: Bot,
+      icon: Bug,
       label: "Crawler Manager",
       href: "/admin/crawler/manager",
       route: "crawlerManager",
     },
     {
+      icon: Info,
+      label: "Crawler Info",
+      href: "/admin/crawler/info",
+      route: "crawlerInfo",
+    },
+    {
+      icon: Info,
+      label: "Crawler Info2",
+      href: "/admin/crawler-info",
+      route: "crawlerInfo2",
+    },
+    {
       icon: Folder,
       label: "Resource Matching",
+      href: "/admin/matching",
+      route: "resourceMatching",
+    },
+    {
+      icon: GalleryHorizontalEnd,
+      label: "Media",
       href: "/admin/matching",
       route: "resourceMatching",
     },

@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import usePageStore from "@/store/commonStore";
 
 const MyPagination = ({ current, totalPage, totalCount }: PaginationData) => {
-  const { replace } = useRouter();
+  const { push } = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState<number>(Number(current));
@@ -21,7 +21,7 @@ const MyPagination = ({ current, totalPage, totalCount }: PaginationData) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     newSearchParams.set("page", page.toString());
     setCurrentPage(page);
-    replace(`${pathname}?${newSearchParams.toString()}` as any);
+    push(`${pathname}?${newSearchParams.toString()}` as any);
   };
 
   const handleGotoPageKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

@@ -33,7 +33,11 @@ interface DownloadProcess {
 const ClawerTable: React.FC = () => {
   const [downloadLoading, setDownloadLoading] = useState(false);
   const [downloadProcess, setDownloadProcess] = useState<DownloadProcess>({});
-  const { data: crawlResponse, loading, error } = useRequest(getCrawlRecord);
+  const {
+    data: crawlResponse,
+    loading,
+    error,
+  } = useRequest(() => getCrawlRecord({ page: 1, limit: 20 }));
   const { data: crawlData, pagination } = crawlResponse || {};
 
   const [unDownloadNum, setUnDownloadNum] = useState<number>(0);
@@ -186,12 +190,6 @@ const ClawerTable: React.FC = () => {
             {crawlData.map((row: CrawlStat) => (
               <TableRow key={row.id}>
                 <TableCell className="dark:text-gray-300">
-                  {/* <Link
-                    href={`/admin/crawlerManager?batchId=${row.batchId}`}
-                    className="text-blue-500 hover:underline dark:text-blue-400"
-                  >
-                    {row.batchId}
-                  </Link> */}
                   <CrawlParamsHoverCard
                     batchId={row.batchId}
                     crawlParams={row.urls || []}

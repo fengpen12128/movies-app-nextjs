@@ -47,28 +47,6 @@ export default function CollectionActionPanel() {
       { value: "crawlDate", label: "爬取日期", icon: <Clock size={16} /> },
     ],
   };
-  const orderOptions: OrderOption[] = [
-    {
-      value: "favoriteDesc",
-      label: "收藏日期 Desc",
-      icon: <Star className="mr-2 h-4 w-4" />,
-    },
-    {
-      value: "favoriteAsc",
-      label: "收藏日期 Asc",
-      icon: <Star className="mr-2 h-4 w-4" />,
-    },
-    {
-      value: "releaseDate",
-      label: "上映日期",
-      icon: <Calendar className="mr-2 h-4 w-4" />,
-    },
-    {
-      value: "crawlDate",
-      label: "爬取日期",
-      icon: <Clock className="mr-2 h-4 w-4" />,
-    },
-  ];
 
   return (
     <Card>

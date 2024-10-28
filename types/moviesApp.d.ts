@@ -54,6 +54,7 @@ declare interface Movie {
     viewCount?: number;
     collectedTime?: Date;
     downloadTime?: Date;
+    batchNum?: string;
     onOpenModal?: (open: boolean) => void;
 }
 
@@ -88,6 +89,7 @@ declare interface MagnetLink {
 // 查询参数接口
 declare interface MovieQueryParams {
     page?: number;
+    pageSize?: number;
     search?: string;
     prefix?: string;
     actressName?: string;
@@ -105,7 +107,7 @@ declare interface OrderOption {
     icon: React.ReactNode;
 };
 
-declare type MovieOrder = "releaseDate" | "crawlDate" | "favoriteDesc" | "favoriteAsc" | "downloadDesc" | "downloadAsc";
+declare type MovieOrder = "releaseDate" | "crawlDate" | "favoriteDesc" | "favoriteAsc" | "downloadDesc" | "downloadAsc" | "rateDesc" | "rateAsc" | 'rateNumDesc' | 'rateNumAsc' | 'releaseDateAsc';
 declare type MovieFilter = "latest" | "popular" | "highRated" | "recommended";
 
 // 爬虫相关接口

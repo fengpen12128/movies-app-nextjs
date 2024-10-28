@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { DataList } from "@radix-ui/themes";
 import { message } from "react-message-popup";
-import ClawerLogView from "@/app/admin/crawler/log-view/ClawerLogView";
+import ClawerLogView from "@/app/admin/logView/ClawerLogView";
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import AlertDialogCommon from "@/components/radix/AlertDialog";
 import { useCrawlTargets } from "@/app/hooks/useCrawlTargets";

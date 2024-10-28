@@ -23,6 +23,7 @@ import {
   ColumnFiltersState,
   getPaginationRowModel,
 } from "@tanstack/react-table";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { columns } from "./columns";
 import { getPrefixStatistics } from "@/app/actions/admin/dashboard";
 import { useQuery } from "@tanstack/react-query";
@@ -74,81 +75,82 @@ const Index = () => {
 
   return (
     <>
-      <div className="space-y-2 bg-black p-5 rounded-md">
-        <div className="flex items-center mb-4 justify-between">
-          <div className="flex items-center space-x-4">
-            <Input
-              placeholder="Search prefix ..."
-              onChange={(e) => handleSearch(e.target.value, "prefix")}
-              className="h-8 w-[150px] lg:w-[250px]"
-            />
-            <Input
-              placeholder="Search maker ..."
-              onChange={(e) => handleSearch(e.target.value, "maker")}
-              className="h-8 w-[150px] lg:w-[250px]"
-            />
+      <Card>
+        <CardContent className="space-y-2 py-4 rounded-md">
+          <div className="flex items-center mb-4 justify-between">
+            <div className="flex items-center space-x-4">
+              <Input
+                placeholder="Search prefix ..."
+                onChange={(e) => handleSearch(e.target.value, "prefix")}
+                className="h-8 w-[150px] lg:w-[250px]"
+              />
+              <Input
+                placeholder="Search maker ..."
+                onChange={(e) => handleSearch(e.target.value, "maker")}
+                className="h-8 w-[150px] lg:w-[250px]"
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="rounded-md border">
-          <div className="h-[500px] overflow-auto">
-            <Table>
-              <TableHeader className="sticky top-0 bg-black z-10">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead key={header.id}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </TableHead>
-                      );
-                    })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      <LoadingSpinner />
-                    </TableCell>
-                  </TableRow>
-                ) : table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
+          <div className="rounded-md border">
+            <div className="h-[500px] overflow-auto">
+              <Table>
+                <TableHeader className="sticky top-0  z-10">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead key={header.id}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                          </TableHead>
+                        );
+                      })}
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                  ))}
+                </TableHeader>
+                <TableBody>
+                  {isLoading ? (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        <LoadingSpinner />
+                      </TableCell>
+                    </TableRow>
+                  ) : table.getRowModel().rows?.length ? (
+                    table.getRowModel().rows.map((row) => (
+                      <TableRow key={row.id}>
+                        {row.getVisibleCells().map((cell) => (
+                          <TableCell key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </>
   );
 };

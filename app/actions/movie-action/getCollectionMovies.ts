@@ -78,9 +78,6 @@ export async function getCollectionMovies({
             rate: Number(x.MovieInfo?.rate ?? 0)
         }))
 
-        let handledMovies: Movie[] | ActressGroupedMovies[] = [];
-
-
         const handled = handleMovie(flatMovies, {
             ctCode,
             dmCode,

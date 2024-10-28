@@ -22,8 +22,6 @@ export async function runCrawl(config: CrawlConfig): Promise<DataResponse<CrawlR
 
         const data: any = await response.json();
 
-
-        // Ensure the returned data contains jobId and batchId
         if (!data.jobId || !data.batchId) {
             throw new Error("Invalid response from crawler server");
         }
@@ -41,20 +39,25 @@ export async function runCrawl(config: CrawlConfig): Promise<DataResponse<CrawlR
             msg: `error: ${error}`,
             code: 500
         }
-
     }
 }
 
-export async function getCrawlRecord(page: number = 1, limit: number = 20): Promise<DataResponse<CrawlStat[]>> {
+export async function getCrawlRecord({ page = 1, limit = 20, batchId }: { page?: number, limit?: number, batchId?: string }): Promise<DataResponse<CrawlStat[]>> {
     const skip = (page - 1) * limit;
+    const q = {
+        ...(batchId && { batchId })
+    }
     try {
         const [crawlStats, count] = await Promise.all([
             prisma.crawlStat.findMany({
                 skip,
                 take: limit,
                 orderBy: { startedTime: "desc" },
+                where: q
             }),
-            prisma.crawlStat.count(),
+            prisma.crawlStat.count({
+                where: q
+            }),
         ]);
 
         const processedCrawlParams = await Promise.all(
@@ -99,15 +102,17 @@ export async function getCrawlRecordByBatchId(batchId: string): Promise<DataResp
 
 export async function processCrawlParams(parsedParams: any): Promise<CrawlStat> {
 
-    let crawlStatus: CrawlStatus = "error";
-    const statusResponse = await getSpiderStatus(parsedParams.jobId);
-    if (statusResponse.code === 200 && statusResponse.data) {
-        crawlStatus = statusResponse.data;
-    }
-
-
     parsedParams.urls = JSON.parse(parsedParams.crawlParams.urls)
 
+    let crawlStatus: CrawlStatus = "error";
+    if (parsedParams.crawlStatus === 1) {
+        crawlStatus = "finished";
+    } else {
+        const statusResponse = await getSpiderStatus(parsedParams.jobId);
+        if (statusResponse.code === 200 && statusResponse.data) {
+            crawlStatus = statusResponse.data;
+        }
+    }
     return {
         ...parsedParams,
         crawlStatus
@@ -223,6 +228,26 @@ export async function getUnDownloadNum(): Promise<DataResponse<UnDownloadNum>> {
                 imageNum,
                 videoNum
             },
+            code: 200
+        }
+    } catch (error) {
+        return {
+            msg: `error: ${error}`,
+            code: 500
+        }
+    }
+}
+
+export async function updateCrawlStatsStatus(batchId: string): Promise<DataResponse<boolean>> {
+    try {
+        await prisma.crawlStat.update({
+            where: { batchId },
+            data: {
+                crawlStatus: 1
+            }
+        });
+        return {
+            msg: 'success',
             code: 200
         }
     } catch (error) {

@@ -6,7 +6,7 @@ import MyPagination from "./MyPagination";
 import { nanoid } from "nanoid";
 import { MoviesPreviewModal } from "@/components/MoviesPreviewModal";
 import MoviesDetail from "@/components/movies-detail/Index";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const StackDisplay: React.FC<{
   movies: ActressGroupedMovies[] | ActressGroupedDownloadMovies[];

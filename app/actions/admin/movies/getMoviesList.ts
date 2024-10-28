@@ -7,9 +7,11 @@ import {
     DEFAULT_PAGE_SIZE,
     getPaginationData,
 } from "@/app/actions/utils/commonUtils";
-
+import { MovieTable } from "@/app/admin/moviesManager/components/schema";
+import { getMoviesManagerOrder } from "@/app/actions/movie-action/getOrder";
 export async function getMoviesList({
     page = 1,
+    pageSize = DEFAULT_PAGE_SIZE,
     search,
     prefix,
     actressName,
@@ -18,9 +20,9 @@ export async function getMoviesList({
     batchId,
     filter,
     order = "releaseDate"
-}: MovieQueryParams = {}): Promise<DataResponse<Movie[]>> {
+}: MovieQueryParams = {}): Promise<DataResponse<MovieTable[]>> {
     try {
-        const skip = (page - 1) * DEFAULT_PAGE_SIZE;
+        const skip = (page - 1) * pageSize;
 
 
         let relevantCodes: string[] = [];
@@ -31,18 +33,17 @@ export async function getMoviesList({
             });
             relevantCodes = batchRecords.map((record: { code: string }) => record.code);
         }
-        const { ctCode, dmCode } = await getCollectionAndDownloadCode();
-
 
 
         let moviesQuery: any = {
             skip,
-            take: DEFAULT_PAGE_SIZE,
-            orderBy: { releaseDate: "desc" as const },
+            take: pageSize,
+            orderBy: getMoviesManagerOrder(order),
             select: {
                 id: true,
                 tags: true,
                 duration: true,
+                batchNum: true,
                 code: true,
                 rate: true,
                 rateNum: true,
@@ -98,15 +99,16 @@ export async function getMoviesList({
             prisma.moviesInfo.count({ where: moviesQuery.where }),
         ]);
 
+        console.log(moviesQuery);
 
-        const handled = handleMovieInAdmin(movies, {
-            ctCode,
-            dmCode,
-        });
-        const pagination = getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE);
+
+        const handled = handleMovieInAdmin(movies);
+        const pagination = getPaginationData(totalCount, page, pageSize);
+
+
 
         return {
-            data: handled as Movie[] || [],
+            data: handled as MovieTable[] || [],
             pagination,
             code: 200,
         };

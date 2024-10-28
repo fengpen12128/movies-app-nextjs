@@ -33,7 +33,7 @@ export default async function CollectionCardSection({
   }
 
   if (isFlexArrangement) {
-    useCommonstore.getState().setPagination(pagination!);
+    // useCommonstore.getState().setPagination(pagination!);
     return <CommonDisplay movies={data as Movie[]} pagination={pagination!} />;
   }
 

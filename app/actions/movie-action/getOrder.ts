@@ -35,3 +35,29 @@ export function getDownloadOrder(order: MovieOrder) {
             return { createdTime: 'desc' as const };
     }
 }
+
+export function getMoviesManagerOrder(order: MovieOrder) {
+    switch (order) {
+        case 'rateDesc':
+            return { rate: 'desc' as const };
+        case 'rateAsc':
+            return { rate: 'asc' as const };
+        case 'rateNumDesc':
+            return [
+                { rateNum: { sort: 'desc', nulls: 'last' } },
+                { id: 'desc' }
+            ];
+        case 'rateNumAsc':
+            return [
+                { rateNum: { sort: 'asc', nulls: 'last' } },
+                { id: 'asc' }
+            ]
+
+        case 'releaseDate':
+            return { releaseDate: 'desc' as const };
+        case 'releaseDateAsc':
+            return { releaseDate: 'asc' as const };
+        default:
+            return { rate: 'desc' as const };
+    }
+}
