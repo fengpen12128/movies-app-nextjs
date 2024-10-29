@@ -14,7 +14,6 @@
     display: none;
 }
 
-
 :root {
     --nav-filter-bg: rgba(60, 60, 60, 0.6);
     --nav-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
@@ -24,8 +23,6 @@
     --nav-filter-bg-hover: rgba(60, 60, 60, 0.8);
 }
 
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -34,7 +31,6 @@
     display: none;
     /* Chrome, Safari and Opera */
 }
-
 
 .flex-between {
     @apply flex justify-between items-center;

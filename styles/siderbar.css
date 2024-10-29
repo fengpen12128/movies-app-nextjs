@@ -3,7 +3,6 @@
     top: 20%;
     left: 40px;
     z-index: 1000;
-    /* transform: translateY(-50%); */
 }
 
 .sidebar .navbar {
@@ -108,11 +107,74 @@
 
 @media screen and (max-width: 700px) {
     .sidebar {
-        display: none;
+        display: block;
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        width: 90%;
+        padding: 6px;
+        margin: 10px auto;
+        border-radius: 10px;
+        /* background: var(--nav-filter-bg); */
+        box-shadow: var(--nav-shadow);
+        @apply bg-black/60;
+        @apply backdrop-blur-lg;
+        @apply border-1;
+    }
+
+    .sidebar .navbar {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        padding: 0;
+        background: none;
+        box-shadow: none;
+        backdrop-filter: none;
+    }
+
+    .sidebar .navbar:hover {
+        padding: 0;
+        margin-left: 0;
+    }
+
+    .sidebar .navbar .sidebar__item {
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 8px;
+        border-radius: 50%;
+    }
+
+    .sidebar .navbar:hover .sidebar__item {
+        width: 30px;
+        padding: 8px;
+    }
+
+    .sidebar .navbar .sidebar__icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    /* 确保移动端下的激活状态样式正确 */
+    .sidebar .navbar .sidebar__item.active {
+        background: var(--nav-action-item-bg);
     }
 }
 
-
+/* 移除之前为固定导航添加的主内容边距 */
+@media screen and (max-width: 700px) {
+    main {
+        margin-top: 0;
+    }
+}
 
 @media screen and (min-width: 1560px) {
     .sidebar {

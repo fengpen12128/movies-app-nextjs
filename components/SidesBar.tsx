@@ -53,7 +53,7 @@ const SidesBar: React.FC = () => {
   return (
     <>
       <div className="sidebar">
-        <div className="navbar">
+        <nav className="navbar">
           {list.map((item) => {
             const { title, icon, path } = item;
             const isActive =
@@ -65,20 +65,20 @@ const SidesBar: React.FC = () => {
                 className={isActive ? "active sidebar__item" : "sidebar__item"}
                 key={title}
               >
-                <div>
-                  {icon === "home" && <Home size={16} />}
-                  {icon === "favorites" && <Heart size={16} />}
-                  {icon === "download" && <Download size={16} />}
-                  {icon === "match" && <Folder size={16} />}
-                  {icon === "admin" && <Settings size={16} />}
+                <div className="sidebar__icon">
+                  {icon === "home" && <Home size={20} />}
+                  {icon === "favorites" && <Heart size={20} />}
+                  {icon === "download" && <Download size={20} />}
+                  {icon === "match" && <Folder size={20} />}
+                  {icon === "admin" && <Settings size={20} />}
                 </div>
-                <p className={`${ibmPlexMono.className} sidebar__title`}>
+                <p className={`${ibmPlexMono.className} sidebar__title desktop-only`}>
                   {title}
                 </p>
               </Link>
             );
           })}
-        </div>
+        </nav>
       </div>
     </>
   );

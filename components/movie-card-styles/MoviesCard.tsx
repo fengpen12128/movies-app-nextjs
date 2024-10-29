@@ -21,7 +21,8 @@ const MoviesCard: React.FC<Movie> = ({
   return (
     <Card>
       <Inset clip="padding-box" side="top" pb="current">
-        <div style={{ position: "relative", width: "100%", height: "240px" }}>
+        {/* <div className="relative w-full h-[240px] "> */}
+        <div className="relative aspect-[4/3] ">
           <Image
             alt={`preview`}
             onClick={() => onOpenModal && onOpenModal(true)}
@@ -57,7 +58,7 @@ const MoviesCard: React.FC<Movie> = ({
           {dayjs(createdTime).add(6, "day").isAfter(dayjs()) && (
             <Flame className="text-red-400" size={18} />
           )}{" "}
-          <span>{code}</span>
+          <span className="font-ibmPlexMono">{code}</span>
         </h4>
         <div className="flex items-center w-full justify-between text-sm text-gray-400">
           <div className="flex items-center justify-start flex-grow">

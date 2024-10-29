@@ -6,7 +6,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useQueryState } from "nuqs";
 import GlobalSettings from "@/components/settings/GlobalSettingsDropDown";
-import _ from "lodash";
+import capitalize from "lodash/capitalize";
 import { getTags } from "@/app/actions";
 
 interface ExpandedOptions {
@@ -94,7 +94,7 @@ export default function SearchBar() {
   }, []);
 
   return (
-    <Card className="mt-10 mb-5 relative" size="4">
+    <Card className="mb-5 relative" size="4">
       <div className="absolute right-0 top-0 p-4">
         <GlobalSettings />
       </div>
@@ -129,7 +129,7 @@ export default function SearchBar() {
             <div key={x.title} className="flex flex-col space-y-2">
               <div className="flex justify-between items-center">
                 <label className=" text-lg font-bold text-gray-300 mr-2">
-                  {_.capitalize(x.title)}
+                  {capitalize(x.title)}
                 </label>
                 {shouldShowExpandButton(x.title) && (
                   <Button
@@ -138,7 +138,11 @@ export default function SearchBar() {
                     onClick={() => toggleOptions(x.title)}
                   >
                     {expandedOptions[x.title] ? "Show Less" : "Show More"}
-                    {expandedOptions[x.title] ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    {expandedOptions[x.title] ? (
+                      <ChevronUp size={16} />
+                    ) : (
+                      <ChevronDown size={16} />
+                    )}
                   </Button>
                 )}
               </div>

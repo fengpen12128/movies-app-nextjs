@@ -21,7 +21,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => (
     lang="en"
     className={`${ibmPlexMono.variable} ${zenMaruGothic.variable} dark`}
   >
-    <body className="app ">
+    <body className="app">
       <Theme
         panelBackground="translucent"
         appearance="dark"
