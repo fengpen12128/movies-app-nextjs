@@ -39,7 +39,7 @@ export const GET = async (req, { params }) => {
       ...file,
       onlineUrl:
         file.onlineUrl && !file.onlineUrl.startsWith("http")
-          ? `https://${file.onlineUrl}`
+          ? `https:${file.onlineUrl}`
           : file.onlineUrl,
     }));
     movie.releaseDate = movie.releaseDate.toLocaleDateString();
