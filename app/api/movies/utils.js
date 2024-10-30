@@ -25,6 +25,7 @@ export const formatMovie = (
 ) => {
   const formattedMovie = {
     ...movie,
+    onlineUrl: movie.files?.find((file) => file.type === 2)?.onlineUrl,
     coverUrl: movie.files?.find((file) => file.type === 2)?.path || "",
     releaseDate: dayjs(movie.releaseDate).format("YYYY-MM-DD"),
     collected: collectedMovieCode.has(movie.code),

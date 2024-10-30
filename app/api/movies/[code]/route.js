@@ -35,6 +35,13 @@ export const GET = async (req, { params }) => {
     });
 
     movie.coverUrl = movie.files.find((file) => file.type === 2)?.path;
+    movie.files = movie.files.map((file) => ({
+      ...file,
+      onlineUrl:
+        file.onlineUrl && !file.onlineUrl.startsWith("http")
+          ? `https://${file.onlineUrl}`
+          : file.onlineUrl,
+    }));
     movie.releaseDate = movie.releaseDate.toLocaleDateString();
     movie.collected = collected ? true : false;
     movie.videoResource = videoResource;

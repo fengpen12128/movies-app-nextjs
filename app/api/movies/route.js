@@ -14,7 +14,6 @@ export const POST = async (request) => {
     prefix,
     actressName,
   } = await request.json();
-  console.log("page", page);
 
   try {
     const skip = (page - 1) * limit;
