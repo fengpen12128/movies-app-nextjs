@@ -64,6 +64,7 @@ const SidesBar: React.FC = () => {
                 href={path as any}
                 className={isActive ? "active sidebar__item" : "sidebar__item"}
                 key={title}
+                target={path === "/admin" ? "_blank" : undefined}
               >
                 <div className="sidebar__icon">
                   {icon === "home" && <Home size={20} />}
