@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import MoviesCard from "@/components/movie-card-styles/MoviesCard";
 import { StackCardContentModal } from "@/components/MoviesPreviewModal";
 import { Card, Spinner } from "@radix-ui/themes";
+import { CommonDisplay } from "@/components/MovieCardDisplay";
 import {
   getCollectedMoviesByActressId,
   getDownloadMoviesByActressId,
@@ -94,10 +95,11 @@ const ActressMoviesList = ({ actressId }: { actressId: number }) => {
   }
 
   return (
-    <section className="grid mt-4 gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3">
-      {movies.map((x) => (
-        <MoviesCard key={x.id} {...x} />
-      ))}
-    </section>
+    <CommonDisplay pageGrid={false} movies={movies} />
+    // <section className="grid mt-4 gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3">
+    //   {movies.map((x) => (
+    //     <MoviesCard key={x.id} {...x} />
+    //   ))}
+    // </section>
   );
 };

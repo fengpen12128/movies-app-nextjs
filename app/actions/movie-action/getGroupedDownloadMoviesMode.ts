@@ -73,7 +73,7 @@ export async function getGroupedDownloadMovies({ page = 1, order = "downloadDesc
         const groupedByActress = new Map<number, ActressGroupedDownloadMovies>();
 
         for (const movie of handledMovies) {
-            if (movie.actresses && movie.actresses.length <= 2) {
+            if (movie.actresses && movie.actresses.length < 2) {
                 for (const actress of movie.actresses) {
                     if (!groupedByActress.has(actress.id)) {
                         groupedByActress.set(actress.id, {

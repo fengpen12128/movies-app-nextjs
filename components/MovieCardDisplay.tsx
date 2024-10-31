@@ -14,8 +14,18 @@ export const StackDisplay: React.FC<{
 }> = ({ movies, pagination }) => {
   const colClassDia = `grid mt-8 gap-5 grid-cols-1 sm:grid-cols-4`;
 
+  const [openMovieId, setOpenMovieId] = useState<number | null>(null);
+  const handleOpenModal = (id: number) => setOpenMovieId(id);
+  const handleCloseModal = () => setOpenMovieId(null);
+
   return (
     <>
+      <MoviesPreviewModal
+        open={openMovieId !== null}
+        setOpen={handleCloseModal}
+      >
+        {openMovieId !== null && <MoviesDetail movieId={openMovieId} />}
+      </MoviesPreviewModal>
       <section className={colClassDia}>
         {movies.map((x) =>
           x.grouped ? (
@@ -25,7 +35,11 @@ export const StackDisplay: React.FC<{
               actress={x.actress}
             />
           ) : (
-            <MoviesCard key={nanoid()} {...(x.movies as Movie)} />
+            <MoviesCard
+              onOpenModal={() => handleOpenModal((x.movies as Movie).id)}
+              key={nanoid()}
+              {...(x.movies as Movie)}
+            />
           )
         )}
       </section>
