@@ -51,6 +51,7 @@ const HomeActionPanel: React.FC = async () => {
                     key={x.title}
                     title={x.title}
                     options={x.options}
+                    showSearch={x.title === "Prefix"}
                   />
                 ))}
             </CardContent>

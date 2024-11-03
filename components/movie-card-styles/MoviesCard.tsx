@@ -22,15 +22,17 @@ const MoviesCard: React.FC<Movie> = ({
     <Card>
       <Inset clip="padding-box" side="top" pb="current">
         {/* <div className="relative w-full h-[240px] "> */}
-        <div className="relative aspect-[4/3] ">
-          <Image
-            alt={`preview`}
-            onClick={() => onOpenModal && onOpenModal(true)}
-            loading="eager"
-            src={coverUrl!}
-            className="cursor-pointer object-contain"
-            fill
-          />
+        <div className="relative  cursor-pointer  overflow-hidden">
+          <div className="aspect-[400/269] ">
+            <Image
+              alt={`preview`}
+              onClick={() => onOpenModal && onOpenModal(true)}
+              loading="eager"
+              src={coverUrl!}
+              className="transition-transform duration-300 hover:scale-110 object-contain"
+              fill
+            />
+          </div>
         </div>
       </Inset>
       <div className="flex flex-col items-start gap-2  relative">
