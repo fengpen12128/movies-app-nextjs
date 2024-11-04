@@ -81,7 +81,7 @@ export async function getCollectionMovies({
         const handled = handleMovie(flatMovies, {
             ctCode,
             dmCode,
-        });
+        }, config);
 
 
 

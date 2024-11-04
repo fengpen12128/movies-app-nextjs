@@ -81,7 +81,7 @@ export async function getDownloadMovies({ page = 1, collected, order = "download
         const handled = handleMovie(downloadMovies, {
             ctCode,
             dmCode,
-        });
+        }, config);
 
 
 
