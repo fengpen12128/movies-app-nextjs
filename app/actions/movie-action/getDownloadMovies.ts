@@ -74,9 +74,6 @@ export async function getDownloadMovies({ page = 1, collected, order = "download
             };
         });
 
-
-
-
         const pagination = getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE);
         const handled = handleMovie(downloadMovies, {
             ctCode,

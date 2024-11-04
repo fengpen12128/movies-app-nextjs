@@ -54,7 +54,7 @@ export const CommonDisplay: React.FC<{
   pagination?: PaginationData;
   pageGrid?: boolean;
 }> = ({ movies, pagination, pageGrid = true }) => {
-  const colClass = useGridColumn();
+  const colClass = useGridColumn(pageGrid);
 
   if (!movies) {
     return <div>No movies found</div>;

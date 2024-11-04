@@ -71,7 +71,7 @@ export async function getActressRelMovies(movieId: number): Promise<DataResponse
         const handled = handleMovie(filteredRelMovies, {
             ctCode,
             dmCode,
-        });
+        }, config);
 
 
 

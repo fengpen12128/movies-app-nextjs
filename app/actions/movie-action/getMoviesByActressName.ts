@@ -128,7 +128,7 @@ export async function getMoviesByActressName({
         const movies = handleMovie(actressMovies, {
             ctCode,
             dmCode,
-        });
+        }, config);
 
         const pagination = getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE);
 
