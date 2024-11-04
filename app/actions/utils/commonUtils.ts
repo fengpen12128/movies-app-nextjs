@@ -1,5 +1,6 @@
 import prisma from "@/app/lib/prisma";
 
+
 export const DEFAULT_PAGE_SIZE = 50;
 
 
@@ -43,7 +44,9 @@ export const handleMovie = (
         ctCode?: string[];
         dmCode?: string[];
     },
+    config?: any
 ): Movie | Movie[] => {
+
     const processMovie = (movie: any): Movie => {
         const collected = options?.ctCode ? options.ctCode.includes(movie.code) : false;
         const downloaded = options?.dmCode ? options.dmCode.includes(movie.code) : false;
@@ -55,6 +58,10 @@ export const handleMovie = (
             collected,
             downloaded,
         };
+
+        if (config?.coverSetting === 'front') {
+            result.coverUrl = movie.files && movie.files[0] ? `${process.env.MINIO_PATH}/${movie.files[0].path.replace('.jpg', '_front.jpg')}` : '';
+        }
 
 
         return result;

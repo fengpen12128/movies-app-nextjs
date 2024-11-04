@@ -9,6 +9,7 @@ import { useLocalStorage } from "usehooks-ts";
 import { DEFAULT_GLOBAL_SETTINGS } from "@/app/globalSetting";
 import Cookies from "js-cookie";
 import { useEffect, useRef } from "react";
+import CoverSetting from "./CoverSetting";
 
 const GlobalSettings: React.FC = () => {
   const [globalSettings, setGlobalSettings, removeGlobalSettings] =
@@ -45,13 +46,6 @@ const GlobalSettings: React.FC = () => {
     prevSettingsRef.current = globalSettings;
   }, [globalSettings]);
 
-  const handleThemeChange = (newTheme: string): void => {
-    setGlobalSettings((prevSettings) => ({
-      ...prevSettings,
-      theme: newTheme as GlobalThemeConfig,
-    }));
-  };
-
   const handleDisplayModeChange = (newMode: string): void => {
     setGlobalSettings((prevSettings) => ({
       ...prevSettings,
@@ -70,6 +64,13 @@ const GlobalSettings: React.FC = () => {
     setGlobalSettings((prevSettings) => ({
       ...prevSettings,
       imageDisplay: newImageDisplay as GlobalImageDisplayConfig,
+    }));
+  };
+
+  const handleCoverSettingChange = (newCoverSetting: string): void => {
+    setGlobalSettings((prevSettings) => ({
+      ...prevSettings,
+      coverSetting: newCoverSetting as GlobalCoverSettingConfig,
     }));
   };
 
@@ -96,6 +97,11 @@ const GlobalSettings: React.FC = () => {
           <ImageDisplaySettings
             imageDisplay={globalSettings.imageDisplay ?? "MasonryGrid"}
             onImageDisplayChange={handleImageDisplayChange}
+          />
+          <DropdownMenu.Separator />
+          <CoverSetting
+            coverSetting={globalSettings.coverSetting ?? "front"}
+            onCoverSettingChange={handleCoverSettingChange}
           />
         </DropdownMenu.Content>
       </DropdownMenu.Root>

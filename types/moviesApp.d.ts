@@ -45,6 +45,7 @@ declare interface Movie {
     releaseYear?: number | null;
     batchNum?: string;
     coverUrl?: string;
+    frontCoverUrl?: string;
     collected?: boolean;
     downloaded?: boolean;
     tags?: Tag[];
@@ -145,12 +146,14 @@ declare interface GlobalSettingsConfig {
     displayMode: 'normal' | 'demo';
     moviesPreviewModalTheme: 'sample0' | 'sample1' | 'sample2' | 'sample3';
     imageDisplay: 'MasonryGrid' | 'grid';
+    coverSetting: 'front' | 'complete';
 }
 
 type GlobalThemeConfig = GlobalSettingsConfig['theme'];
 type GlobalDisplayModeConfig = GlobalSettingsConfig['displayMode'];
 type GlobalMoviesPreviewModalThemeConfig = GlobalSettingsConfig['moviesPreviewModalTheme'];
 type GlobalImageDisplayConfig = GlobalSettingsConfig['imageDisplay'];
+type GlobalCoverSettingConfig = GlobalSettingsConfig['coverSetting'];
 
 declare interface ActressGroupedMovies {
     actress: {

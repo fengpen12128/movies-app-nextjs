@@ -22,3 +22,9 @@ export function useImageDisplay(): GlobalImageDisplayConfig {
     const [globalSettings] = useGlobalSettings();
     return globalSettings?.imageDisplay ?? DEFAULT_GLOBAL_SETTINGS.imageDisplay;
 }
+
+
+export function useCoverSetting(): GlobalCoverSettingConfig {
+    const [globalSettings] = useGlobalSettings();
+    return globalSettings?.coverSetting ?? DEFAULT_GLOBAL_SETTINGS.coverSetting;
+}

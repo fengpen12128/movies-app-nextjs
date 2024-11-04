@@ -6,7 +6,8 @@ import MyPagination from "./MyPagination";
 import { nanoid } from "nanoid";
 import { MoviesPreviewModal } from "@/components/MoviesPreviewModal";
 import MoviesDetail from "@/components/movies-detail/Index";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useGridColumn } from "@/app/hooks/useGridColumn";
 
 export const StackDisplay: React.FC<{
   movies: ActressGroupedMovies[] | ActressGroupedDownloadMovies[];
@@ -53,9 +54,8 @@ export const CommonDisplay: React.FC<{
   pagination?: PaginationData;
   pageGrid?: boolean;
 }> = ({ movies, pagination, pageGrid = true }) => {
-  const colClassDia = `grid mt-4 gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${
-    pageGrid ? "2xl:grid-cols-4" : ""
-  }`;
+  const colClass = useGridColumn();
+
   if (!movies) {
     return <div>No movies found</div>;
   }
@@ -73,7 +73,7 @@ export const CommonDisplay: React.FC<{
       </MoviesPreviewModal>
 
       <div className="mb-10">
-        <section className={colClassDia}>
+        <section className={colClass}>
           {movies.map((x) => (
             <MoviesCard
               key={x.id}
