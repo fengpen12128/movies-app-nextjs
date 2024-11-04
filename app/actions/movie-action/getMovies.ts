@@ -147,7 +147,7 @@ export async function getMovies({
         const handled = handleMovie(movies, {
             ctCode,
             dmCode,
-        });
+        }, config);
         const pagination = getPaginationData(totalCount, page, DEFAULT_PAGE_SIZE);
 
         return {
