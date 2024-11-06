@@ -56,6 +56,7 @@ declare interface Movie {
     collectedTime?: Date;
     downloadTime?: Date;
     batchNum?: string;
+    coverDisplay?: string;
     onOpenModal?: (open: boolean) => void;
 }
 

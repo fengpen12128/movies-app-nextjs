@@ -38,6 +38,10 @@ import PaginationInfo from "@/components/PaginationInfo";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { Card, CardContent } from "@/components/ui/card";
+import { DeleteDialog } from "@/app/admin/components/DeleteDialog";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
+import { useDeleteMovie } from "../hooks/useDeleteMovie";
 
 export function DataTable() {
   const [rowSelection, setRowSelection] = React.useState({});
@@ -195,6 +199,14 @@ export function DataTable() {
     },
   });
 
+  const { handleDelete, isPending } = useDeleteMovie(() => {
+    table.setRowSelection({});
+  });
+
+  const selectedIds = table
+    .getSelectedRowModel()
+    .rows.map((row) => row.original.id);
+
   return (
     <>
       <Card>
@@ -213,8 +225,19 @@ export function DataTable() {
       <Card>
         <CardContent className="space-y-2  p-5 rounded-md">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="flex items-center space-x-2">
               <DataTableViewOptions table={table} />
+              <DeleteDialog
+                selectedCount={table.getSelectedRowModel().rows.length}
+                onDelete={() => handleDelete(selectedIds)}
+                isPending={isPending}
+                disabled={table.getSelectedRowModel().rows.length === 0}
+                trigger={
+                  <Button variant="outline" size="sm">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                }
+              />
             </div>
             <PaginationInfo />
           </div>

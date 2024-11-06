@@ -8,12 +8,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Trash2 } from "lucide-react";
 import { MovieTable } from "./schema";
-import { Trash2, DeleteIcon } from "lucide-react";
 import { DeleteDialog } from "@/app/admin/components/DeleteDialog";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useState } from "react";
+import { useDeleteMovie } from "../hooks/useDeleteMovie";
 
 interface DataTableRowActionsProps {
   row: Row<MovieTable>;
@@ -21,26 +20,11 @@ interface DataTableRowActionsProps {
 
 export function DataTableRowActions({ row }: DataTableRowActionsProps) {
   const movie = row.original;
-  const queryClient = useQueryClient();
-
-  const { mutate: handleDelete, isPending } = useMutation({
-    mutationFn: async () => {
-      // TODO: 实现删除逻辑
-      console.log("Delete movie:", movie);
-    },
-    onSuccess: () => {
-      // 删除成功后刷新数据
-      queryClient.invalidateQueries({ queryKey: ["moviesList"] });
-      toast.success("删除成功");
-    },
-    onError: (error) => {
-      console.error("Delete failed:", error);
-      toast.error("删除失败");
-    },
-  });
+  const [open, setOpen] = useState(false);
+  const { handleDelete, isPending } = useDeleteMovie(() => setOpen(false));
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
           <span className="sr-only">Open menu</span>
@@ -48,19 +32,23 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>
-          <DeleteDialog
-            selectedCount={1}
-            onDelete={() => handleDelete()}
-            disabled={isPending}
-            trigger={
+        <DeleteDialog
+          selectedCount={1}
+          onDelete={() => handleDelete(movie.id)}
+          disabled={isPending}
+          trigger={
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault();
+              }}
+            >
               <div className="flex items-center gap-2 w-full">
-                <Trash2 className="h-4 w-4 text-red-600" />
+                <Trash2 className="h-4 w-4" />
                 <span>删除</span>
               </div>
-            }
-          />
-        </DropdownMenuItem>
+            </DropdownMenuItem>
+          }
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -125,7 +125,7 @@ const Demo2 = () => {
           <Image
             src={heroImage}
             alt="Hero Image"
-            layout="fill"
+
             objectFit="cover"
           />
           <div className="absolute bottom-8 left-8 z-20">
@@ -150,7 +150,6 @@ const Demo2 = () => {
               <Image
                 src={image}
                 alt={`Sample ${index + 1}`}
-                layout="fill"
                 objectFit="cover"
               />
               <div className="absolute inset-0 bg-black/30" />
@@ -212,7 +211,6 @@ const Demo2 = () => {
                   <Image
                     src={item.imageUrl}
                     alt={`Photo by ${item.author}`}
-                    layout="fill"
                     className="object-cover"
                   />
                   {/* 渐变遮罩 */}

@@ -17,10 +17,10 @@ const MoviesCard: React.FC<Movie> = ({
   collectedTime,
   downloadTime,
   onOpenModal,
+  coverDisplay = "front",
 }) => {
   return (
     <Card>
-      {/*
       <Inset clip="padding-box" side="top" pb="current">
         <div className="relative  cursor-pointer  overflow-hidden">
           <div className="aspect-[400/269] ">
@@ -34,23 +34,8 @@ const MoviesCard: React.FC<Movie> = ({
             />
           </div>
         </div>
-      </Inset> */}
-
-      <Inset clip="padding-box" side="top" pb="current">
-        {/* <div className="relative w-full h-[240px] "> */}
-        <div className="relative  cursor-pointer  overflow-hidden">
-          <div className="aspect-[380/540] ">
-            <Image
-              alt={`preview`}
-              onClick={() => onOpenModal && onOpenModal(true)}
-              loading="eager"
-              src={coverUrl!}
-              className="transition-transform duration-300 hover:scale-110 object-contain"
-              fill
-            />
-          </div>
-        </div>
       </Inset>
+
       <div className="flex flex-col items-start gap-2  relative">
         {collected && collectedTime && (
           <div className="absolute top-0 right-0 flex items-center text-sm text-gray-400">
@@ -82,9 +67,9 @@ const MoviesCard: React.FC<Movie> = ({
           <div className="flex items-center justify-start flex-grow">
             <Star className="mr-1 text-yellow-400" size={14} />
             <span>{rate}</span>
-            <span className="mx-2">•</span>
-            <Eye className="mr-1" size={14} />
-            <span>{viewCount} views</span>
+            {/* <span className="mx-2">•</span> */}
+            {/* <Eye className="mr-1" size={14} /> */}
+            {/* <span>{viewCount} views</span> */}
             <span className="mx-2">•</span>
             <Calendar className="mr-1" size={14} />
             <span>

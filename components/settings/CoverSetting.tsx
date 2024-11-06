@@ -24,7 +24,7 @@ const CoverSetting: FC<CoverSettingProps> = ({
             正面
           </Text>
         </DropdownMenu.RadioItem>
-        <DropdownMenu.RadioItem value="demo">
+        <DropdownMenu.RadioItem value="complete">
           <StackIcon />
           <Text size="2" style={{ marginLeft: "8px" }}>
             全部

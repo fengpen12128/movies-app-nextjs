@@ -3,5 +3,5 @@ export const DEFAULT_GLOBAL_SETTINGS: GlobalSettingsConfig = {
     displayMode: "normal",
     moviesPreviewModalTheme: "sample1",
     imageDisplay: "MasonryGrid",
-    coverSetting: "front"
+    coverSetting: "complete"
 };

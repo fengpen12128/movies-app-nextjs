@@ -61,6 +61,9 @@ export const handleMovie = (
 
         if (config?.coverSetting === 'front') {
             result.coverUrl = movie.files && movie.files[0] ? `${process.env.MINIO_PATH}/${movie.files[0].path.replace('.jpg', '_front.jpg')}` : '';
+            result.coverDisplay = 'front';
+        } else {
+            result.coverDisplay = 'complete';
         }
 
 

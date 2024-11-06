@@ -5,74 +5,97 @@ import { GearIcon } from "@radix-ui/react-icons";
 import DisplayModeSettings from "./DisplayModeSettings";
 import ModalThemeSettings from "./ModalThemeSettings";
 import ImageDisplaySettings from "./ImageDisplaySettings";
-import { useLocalStorage } from "usehooks-ts";
+import { useLocalStorageState } from "ahooks";
 import { DEFAULT_GLOBAL_SETTINGS } from "@/app/globalSetting";
 import Cookies from "js-cookie";
 import { useEffect, useRef } from "react";
 import CoverSetting from "./CoverSetting";
 
 const GlobalSettings: React.FC = () => {
-  const [globalSettings, setGlobalSettings, removeGlobalSettings] =
-    useLocalStorage<GlobalSettingsConfig>(
-      "GlobalSettings",
-      DEFAULT_GLOBAL_SETTINGS
-    );
+  const [globalSettings, setGlobalSettings] =
+    useLocalStorageState<GlobalSettingsConfig>("GlobalSettings", {
+      defaultValue: DEFAULT_GLOBAL_SETTINGS,
+      listenStorageChange: true,
+    });
 
   const isFirstRender = useRef(true);
   const prevSettingsRef = useRef<GlobalSettingsConfig | null>(null);
 
   useEffect(() => {
+    // 如果 globalSettings 为 undefined，使用默认值
+    const currentSettings = globalSettings || DEFAULT_GLOBAL_SETTINGS;
+
     if (isFirstRender.current) {
       if (!Cookies.get("config")) {
-        Cookies.set("config", JSON.stringify(globalSettings), { expires: 7 });
+        Cookies.set("config", JSON.stringify(currentSettings), { expires: 7 });
       }
       isFirstRender.current = false;
       return;
     }
 
     const prevSettings = prevSettingsRef.current;
-    Cookies.set("config", JSON.stringify(globalSettings), { expires: 7 });
+    Cookies.set("config", JSON.stringify(currentSettings), { expires: 7 });
 
     // 检查是否有实际变化
     if (
       prevSettings &&
-      prevSettings.displayMode !== globalSettings.displayMode
+      prevSettings.displayMode !== currentSettings.displayMode
     ) {
       if (typeof window !== "undefined") {
         window.location.reload();
       }
     }
 
-    prevSettingsRef.current = globalSettings;
+    // 在存储之前确保值不为 undefined
+    prevSettingsRef.current = currentSettings;
   }, [globalSettings]);
 
   const handleDisplayModeChange = (newMode: string): void => {
-    setGlobalSettings((prevSettings) => ({
-      ...prevSettings,
-      displayMode: newMode as GlobalDisplayModeConfig,
-    }));
+    setGlobalSettings((prevSettings) => {
+      if (!prevSettings) return DEFAULT_GLOBAL_SETTINGS;
+      return {
+        ...DEFAULT_GLOBAL_SETTINGS,
+        ...prevSettings,
+        displayMode: newMode as GlobalDisplayModeConfig,
+      };
+    });
   };
 
   const handleModalThemeChange = (newTheme: string): void => {
-    setGlobalSettings((prevSettings) => ({
-      ...prevSettings,
-      moviesPreviewModalTheme: newTheme as GlobalMoviesPreviewModalThemeConfig,
-    }));
+    setGlobalSettings((prevSettings) => {
+      if (!prevSettings) return DEFAULT_GLOBAL_SETTINGS;
+      return {
+        ...DEFAULT_GLOBAL_SETTINGS,
+        ...prevSettings,
+        moviesPreviewModalTheme:
+          newTheme as GlobalMoviesPreviewModalThemeConfig,
+      };
+    });
   };
 
   const handleImageDisplayChange = (newImageDisplay: string): void => {
-    setGlobalSettings((prevSettings) => ({
-      ...prevSettings,
-      imageDisplay: newImageDisplay as GlobalImageDisplayConfig,
-    }));
+    setGlobalSettings((prevSettings) => {
+      if (!prevSettings) return DEFAULT_GLOBAL_SETTINGS;
+      return {
+        ...DEFAULT_GLOBAL_SETTINGS,
+        ...prevSettings,
+        imageDisplay: newImageDisplay as GlobalImageDisplayConfig,
+      };
+    });
   };
 
   const handleCoverSettingChange = (newCoverSetting: string): void => {
-    setGlobalSettings((prevSettings) => ({
-      ...prevSettings,
-      coverSetting: newCoverSetting as GlobalCoverSettingConfig,
-    }));
+    setGlobalSettings((prevSettings) => {
+      if (!prevSettings) return DEFAULT_GLOBAL_SETTINGS;
+      return {
+        ...DEFAULT_GLOBAL_SETTINGS,
+        ...prevSettings,
+        coverSetting: newCoverSetting as GlobalCoverSettingConfig,
+      };
+    });
   };
+
+  const settings = globalSettings || DEFAULT_GLOBAL_SETTINGS;
 
   return (
     <>
@@ -85,22 +108,22 @@ const GlobalSettings: React.FC = () => {
 
         <DropdownMenu.Content>
           <DisplayModeSettings
-            displayMode={globalSettings.displayMode ?? "normal"}
+            displayMode={settings.displayMode}
             onDisplayModeChange={handleDisplayModeChange}
           />
           <DropdownMenu.Separator />
           <ModalThemeSettings
-            theme={globalSettings.moviesPreviewModalTheme ?? "sample1"}
+            theme={settings.moviesPreviewModalTheme}
             onThemeChange={handleModalThemeChange}
           />
           <DropdownMenu.Separator />
           <ImageDisplaySettings
-            imageDisplay={globalSettings.imageDisplay ?? "MasonryGrid"}
+            imageDisplay={settings.imageDisplay}
             onImageDisplayChange={handleImageDisplayChange}
           />
           <DropdownMenu.Separator />
           <CoverSetting
-            coverSetting={globalSettings.coverSetting ?? "front"}
+            coverSetting={settings.coverSetting}
             onCoverSettingChange={handleCoverSettingChange}
           />
         </DropdownMenu.Content>

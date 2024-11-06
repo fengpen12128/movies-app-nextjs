@@ -59,6 +59,7 @@ export async function getMoviesList({
                 },
             },
             where: {
+                deletedAt: null,
                 ...(search && {
                     OR: [
                         { code: { contains: search, mode: "insensitive" } },

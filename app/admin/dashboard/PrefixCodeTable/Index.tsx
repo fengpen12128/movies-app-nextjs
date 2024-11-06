@@ -31,6 +31,15 @@ import { z } from "zod";
 import { prefixCodeSchema } from "./schema";
 import { Input } from "@/components/ui/input";
 import { PrefixCodes } from "./schema";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 const Index = () => {
   const { data: queryResult, isLoading } = useQuery({
     queryKey: ["prefixStatistics"],
@@ -56,7 +65,7 @@ const Index = () => {
   );
 
   const table = useReactTable({
-    data: queryResult as PrefixCodes[],
+    data: (queryResult as PrefixCodes[]) || [],
     columns,
     state: {
       columnFilters,
@@ -65,10 +74,14 @@ const Index = () => {
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    // 移除不必要的功能
-    // getFacetedRowModel: getFacetedRowModel(),
-    // getFacetedUniqueValues: getFacetedUniqueValues(),
-    // getPaginationRowModel: getPaginationRowModel(),
+    // 启用分页功能
+    getPaginationRowModel: getPaginationRowModel(),
+    // 设置每页显示30条数据
+    initialState: {
+      pagination: {
+        pageSize: 30,
+      },
+    },
   });
 
   if (!queryResult && !isLoading) return <div>No data available</div>;
@@ -148,6 +161,40 @@ const Index = () => {
                 </TableBody>
               </Table>
             </div>
+          </div>
+          <div className="flex items-center justify-center space-x-2 py-4">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() =>
+                      table.getCanPreviousPage() && table.previousPage()
+                    }
+                    className={
+                      !table.getCanPreviousPage()
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer"
+                    }
+                  />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">
+                    {table.getState().pagination.pageIndex + 1} /{" "}
+                    {table.getPageCount()}
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => table.getCanNextPage() && table.nextPage()}
+                    className={
+                      !table.getCanNextPage()
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer"
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           </div>
         </CardContent>
       </Card>

@@ -40,7 +40,12 @@ const AdminAside: React.FC = () => {
   };
 
   const navItems: NavItem[] = [
-    { icon: Home, label: "Dashboard", href: "/admin", route: "admin" },
+    {
+      icon: Home,
+      label: "Dashboard",
+      href: "/admin/dashboard",
+      route: "admin",
+    },
     {
       icon: Bug,
       label: "Crawler Manager",

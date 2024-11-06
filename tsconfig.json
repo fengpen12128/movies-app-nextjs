@@ -52,7 +52,7 @@
     "next.config.js",
     "lib/supabseStorageUtils.js",
     "components/movies-detail-parallel/InfitifyGrid.tsx"
-  ],
+, "app/lib/demo.js"  ],
   // 指定要排除的文件
   "exclude": ["node_modules"]
 }

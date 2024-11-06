@@ -10,33 +10,47 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Trash2 } from "lucide-react";
+import { useState } from "react";
 
 interface DeleteDialogProps {
   selectedCount: number;
   onDelete: () => void;
   disabled?: boolean;
   trigger: React.ReactNode;
+  isPending?: boolean;
 }
 
-export function DeleteDialog({ selectedCount, onDelete, disabled = false, trigger }: DeleteDialogProps) {
+export function DeleteDialog({
+  selectedCount,
+  onDelete,
+  disabled = false,
+  trigger,
+  isPending = false,
+}: DeleteDialogProps) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild disabled={disabled}>{trigger}</AlertDialogTrigger>
+
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>确认删除</AlertDialogTitle>
           <AlertDialogDescription>
-            你确定要删除选中的 {selectedCount} 条记录吗？
-            此操作无法撤销。
+            你确定要删除选中的 {selectedCount} 条记录吗？ 此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction
-            onClick={onDelete}
-            className="bg-red-600 hover:bg-red-700"
+            onClick={() => {
+              onDelete();
+              setOpen(false);
+            }}
+            className="hover:bg-red-700 hover:text-white"
+            disabled={disabled || isPending}
           >
-            删除
+            {isPending ? "删除中..." : "删除"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
