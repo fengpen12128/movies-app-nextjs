@@ -22,13 +22,13 @@ export async function runCrawl(config: CrawlConfig): Promise<DataResponse<CrawlR
 
         const data: any = await response.json();
 
-        if (!data.jobId || !data.batchId) {
+        if (!data.jobId || !data.batchNum) {
             throw new Error("Invalid response from crawler server");
         }
 
         return {
             data: {
-                batchId: data.batchId,
+                batchNum: data.batchNum,
                 jobId: data.jobId.jobid
             },
             code: 200,
@@ -42,10 +42,10 @@ export async function runCrawl(config: CrawlConfig): Promise<DataResponse<CrawlR
     }
 }
 
-export async function getCrawlRecord({ page = 1, limit = 20, batchId }: { page?: number, limit?: number, batchId?: string }): Promise<DataResponse<CrawlStat[]>> {
+export async function getCrawlRecord({ page = 1, limit = 20, batchNum }: { page?: number, limit?: number, batchNum?: string }): Promise<DataResponse<CrawlStat[]>> {
     const skip = (page - 1) * limit;
     const q = {
-        ...(batchId && { batchId })
+        ...(batchNum && { batchNum })
     }
     try {
         const [crawlStats, count] = await Promise.all([
@@ -79,13 +79,13 @@ export async function getCrawlRecord({ page = 1, limit = 20, batchId }: { page?:
     }
 }
 
-export async function getCrawlRecordByBatchId(batchId: string): Promise<DataResponse<CrawlStat>> {
+export async function getCrawlRecordByBatchNum(batchNum: string): Promise<DataResponse<CrawlStat>> {
     const crawlStat = await prisma.crawlStat.findUnique({
-        where: { batchId },
+        where: { batchNum },
     });
     if (!crawlStat) {
         return {
-            msg: `Crawl record not found for batchId: ${batchId}`,
+            msg: `Crawl record not found for batchNum: ${batchNum}`,
             code: 500
         }
     }
@@ -200,6 +200,31 @@ export async function getCrawlScheduledUrls(): Promise<DataResponse<CrawlUrl[]>>
     }
 }
 
+export async function getUnDownloadImageNum(): Promise<DataResponse<number>> {
+    try {
+        console.log('Fetching undownloaded image count...');
+        const count = await prisma.downloadUrls.count({
+            where: {
+                status: {
+                    not: 1
+                },
+                type: {
+                    in: [1, 2]
+                }
+            }
+        })
+        return {
+            data: count,
+            code: 200
+        }
+    } catch (error) {
+        return {
+            msg: `error: ${error}`,
+            code: 500
+        }
+    }
+}
+
 export async function getUnDownloadNum(): Promise<DataResponse<UnDownloadNum>> {
     try {
         const [imageNum, videoNum] = await Promise.all([
@@ -238,10 +263,10 @@ export async function getUnDownloadNum(): Promise<DataResponse<UnDownloadNum>> {
     }
 }
 
-export async function updateCrawlStatsStatus(batchId: string): Promise<DataResponse<boolean>> {
+export async function updateCrawlStatsStatus(batchNum: string): Promise<DataResponse<boolean>> {
     try {
         await prisma.crawlStat.update({
-            where: { batchId },
+            where: { batchNum },
             data: {
                 crawlStatus: 1
             }

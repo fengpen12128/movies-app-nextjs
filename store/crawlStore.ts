@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
 interface CrawlState {
-    batchId: string | null;
-    setBatchId: (id: string | null) => void;
+    batchNum: string | null;
+    setbatchNum: (id: string | null) => void;
 }
 
 const useCrawlStore = create<CrawlState>((set) => ({
-    batchId: null,
-    setBatchId: (id) => set({ batchId: id }),
+    batchNum: null,
+    setbatchNum: (id) => set({ batchNum: id }),
 }));
 
 export default useCrawlStore;

@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 
 interface CrawlState {
     status: string;
-    batchId: string | null;
+    batchNum: string | null;
     jobId: string;
 }
 
@@ -21,7 +21,7 @@ export const useCrawlerOperations = (
     const [showStopDialog, setShowStopDialog] = useState(false);
     const [statusCheckInterval, setStatusCheckInterval] = useState<NodeJS.Timeout | null>(null);
 
-    const checkSpiderStatus = useCallback(async (jobId: string, onFinished: (batchId: string) => void, batchId: string) => {
+    const checkSpiderStatus = useCallback(async (jobId: string, onFinished: (batchNum: string) => void, batchNum: string) => {
         try {
             const { data: crawlStatus, code, msg } = await getSpiderStatus(jobId);
 
@@ -32,8 +32,8 @@ export const useCrawlerOperations = (
                 }
                 setStatusCheckInterval(null);
                 message.success("Crawling completed");
-                onFinished(batchId!);
-                await updateCrawlStatsStatus(batchId!);
+                onFinished(batchNum!);
+                await updateCrawlStatsStatus(batchNum!);
                 return true;
             }
             return false;
@@ -43,13 +43,13 @@ export const useCrawlerOperations = (
         }
     }, [statusCheckInterval]);
 
-    const intervalCheckSpiderStatus = (jobId: string, onFinished: (batchId: string) => void, batchId: string) => {
-        if (!jobId || !batchId) {
-            message.error("jobId or batchId is empty");
+    const intervalCheckSpiderStatus = (jobId: string, onFinished: (batchNum: string) => void, batchNum: string) => {
+        if (!jobId || !batchNum) {
+            message.error("jobId or batchNum is empty");
             return;
         }
         const statusInterval = setInterval(
-            () => checkSpiderStatus(jobId, onFinished, batchId),
+            () => checkSpiderStatus(jobId, onFinished, batchNum),
             1000
         );
         setStatusCheckInterval(statusInterval);
@@ -66,7 +66,7 @@ export const useCrawlerOperations = (
         })
     }
 
-    const startCrawling = async (onFinished: (batchId: string) => void) => {
+    const startCrawling = async (onFinished: (batchNum: string) => void) => {
         try {
             const { data: res, code, msg } = await runCrawl({ urls: targets });
             if (code !== 200 || !res) {
@@ -78,13 +78,13 @@ export const useCrawlerOperations = (
             setCrawlState(prevState => ({
                 ...prevState,
                 jobId: res.jobId,
-                batchId: res.batchId,
+                batchNum: res.batchNum,
                 status: "running"
             }));
 
             if (res.jobId) {
                 const statusInterval = setInterval(
-                    () => checkSpiderStatus(res.jobId, onFinished, res.batchId),
+                    () => checkSpiderStatus(res.jobId, onFinished, res.batchNum),
                     1000
                 );
                 setStatusCheckInterval(statusInterval);

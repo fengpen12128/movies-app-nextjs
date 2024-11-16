@@ -7,7 +7,7 @@ import React from "react";
 
 interface CrawlInfo {
   id: string;
-  batchId: string;
+  batchNum: string;
   newlyIncreasedNum: number;
   updatedNum: number;
   createdTime: string;
@@ -46,7 +46,7 @@ const CrawlInfoAlert: React.FC = () => {
               </Callout.Icon>
               <Callout.Text>
                 <span>
-                  批次:{info.batchId} 爬取结束。 新增: {info.newlyIncreasedNum},
+                  批次:{info.batchNum} 爬取结束。 新增: {info.newlyIncreasedNum},
                   更新: {info.updatedNum}。
                   {/* 资源下载大小: {info.downloadSize}。*/} 结束时间{" "}
                   {info.createdTime}。

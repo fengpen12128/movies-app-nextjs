@@ -4,21 +4,21 @@ import { insertMovieData } from "../utils";
 
 interface RouteParams {
   params: {
-    batchId: string;
+    batchNum: string;
   };
 }
 
 export async function GET(req: NextRequest, { params }: RouteParams) {
-  const { batchId } = params;
+  const { batchNum } = params;
 
-  if (!batchId) {
-    return NextResponse.json({ msg: "batchId is empty" }, { status: 500 });
+  if (!batchNum) {
+    return NextResponse.json({ msg: "batchNum is empty" }, { status: 500 });
   }
 
   try {
     const movieDataArray = await prisma.crawlSourceData.findMany({
       select: { data: true },
-      where: { batchId: batchId },
+      where: { batchNum: batchNum },
     });
 
     console.log("margined num : ", movieDataArray.length);

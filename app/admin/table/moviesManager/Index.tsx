@@ -6,44 +6,35 @@ import {
   ColumnFiltersState,
   SortingState,
   VisibilityState,
-  flexRender,
+  useReactTable,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
 } from "@tanstack/react-table";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-import { movieSchema, MovieTable } from "./schema";
+import { movieSchema } from "./schema";
 import { getMoviesList } from "@/app/actions/admin";
 import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { columns } from "./columns";
 
 import { DataTablePagination } from "../../components/data-table-pagination";
-import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTableToolbar } from "./searchToolbar";
 import useCommonstore from "@/store/commonStore";
 import PaginationInfo from "@/components/PaginationInfo";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { DataTableViewOptions } from "./data-table-view-options";
-import { Card, CardContent } from "@/components/ui/card";
+import { DataTableViewOptions } from "./ViewOption";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { DeleteDialog } from "@/app/admin/components/DeleteDialog";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
-import { useDeleteMovie } from "../hooks/useDeleteMovie";
+import { Trash2, AlertCircle } from "lucide-react";
+import { useDeleteMovie } from "../../hooks/useDeleteMovie";
+import { useDeleteMoviesByCondition } from "../../hooks/useDeleteMoviesByCondition";
+import { DataTable as CommonDataTable } from "@/app/admin/components/CommonDataTable";
 
-export function DataTable() {
+export default function MoviesManagerTable() {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -120,7 +111,7 @@ export function DataTable() {
         pageSize: pageSize,
         search: searchParams.code,
         actressName: searchParams.actress,
-        batchId: searchParams.batchNum,
+        batchNum: searchParams.batchNum,
         order: orderValue, // 传入排序值
       });
       useCommonstore.getState().setPagination(response.pagination!);
@@ -202,19 +193,26 @@ export function DataTable() {
   const { handleDelete, isPending } = useDeleteMovie(() => {
     table.setRowSelection({});
   });
+  const { handleConditionDelete, isPending: isConditionDeletePending } =
+    useDeleteMoviesByCondition();
 
   const selectedIds = table
     .getSelectedRowModel()
     .rows.map((row) => row.original.id);
 
+  // 添加一个函数来检查所有搜索条件是否为空
+  const isSearchEmpty = React.useCallback(() => {
+    return !Object.values(inputValues).some((value) => value.trim());
+  }, [inputValues]);
+
   return (
-    <>
+    <div className="flex flex-col space-y-4">
       <Card>
-        <CardContent className=" p-5 rounded-md">
+        <CardContent className="p-5 rounded-md">
           <DataTableToolbar
             table={table}
             onSearch={handleSearch}
-            onOrderChange={handleOrderChange} // 添加排序处理函数
+            onOrderChange={handleOrderChange}
             searchCode={inputValues.code}
             searchActress={inputValues.actress}
             searchBatchNum={inputValues.batchNum}
@@ -223,92 +221,62 @@ export function DataTable() {
       </Card>
 
       <Card>
-        <CardContent className="space-y-2  p-5 rounded-md">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <DataTableViewOptions table={table} />
-              <DeleteDialog
-                selectedCount={table.getSelectedRowModel().rows.length}
-                onDelete={() => handleDelete(selectedIds)}
-                isPending={isPending}
-                disabled={table.getSelectedRowModel().rows.length === 0}
-                trigger={
-                  <Button variant="outline" size="sm">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                }
-              />
+        <CardContent className="space-y-2 p-5 rounded-md">
+          <CommonDataTable
+            table={table}
+            columns={columns.length}
+            isLoading={isLoading}
+            height="calc(100vh - 300px)"
+            scrollable={true}
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <DataTableViewOptions table={table} />
+                <DeleteDialog
+                  selectedCount={table.getSelectedRowModel().rows.length}
+                  onDelete={() => handleDelete(selectedIds)}
+                  isPending={isPending}
+                  disabled={table.getSelectedRowModel().rows.length === 0}
+                  trigger={
+                    <Button variant="outline" size="sm">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  }
+                />
+                <DeleteDialog
+                  selectedCount={
+                    useCommonstore.getState().pagination?.totalCount || 0
+                  }
+                  onDelete={() =>
+                    handleConditionDelete({
+                      search: searchParams.code,
+                      actressName: searchParams.actress,
+                      batchNum: searchParams.batchNum,
+                    })
+                  }
+                  isPending={isConditionDeletePending}
+                  disabled={isSearchEmpty()}
+                  trigger={
+                    <Button variant="outline" size="sm">
+                      <AlertCircle className="h-4 w-4 mr-2" />
+                      删除筛选结果
+                    </Button>
+                  }
+                />
+              </div>
+              <PaginationInfo />
             </div>
-            <PaginationInfo />
-          </div>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                        </TableHead>
-                      );
-                    })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center relative"
-                    >
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <LoadingSpinner />
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ) : table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
-                    >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          </CommonDataTable>
+        </CardContent>
+
+        <CardFooter>
           <DataTablePagination
             table={table}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
           />
-        </CardContent>
+        </CardFooter>
       </Card>
-    </>
+    </div>
   );
 }

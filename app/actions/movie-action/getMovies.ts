@@ -19,7 +19,7 @@ export async function getMovies({
     actressName,
     years,
     tags,
-    batchId,
+    batchNum,
     filter,
     order = "releaseDate",
     maker
@@ -38,9 +38,9 @@ export async function getMovies({
         }
 
         let relevantCodes: string[] = [];
-        if (batchId) {
+        if (batchNum) {
             const batchRecords = await prisma.crawlBatchRecord.findMany({
-                where: { batchId: batchId },
+                where: { batchNum },
                 select: { code: true },
             });
             relevantCodes = batchRecords.map((record: { code: string }) => record.code);
@@ -131,7 +131,7 @@ export async function getMovies({
                         },
                     },
                 }),
-                ...(batchId && {
+                ...(batchNum && {
                     code: { in: relevantCodes },
                 }),
                 ...(filterWhere)

@@ -97,7 +97,7 @@ declare interface MovieQueryParams {
     actressName?: string;
     years?: string | number;
     tags?: string;
-    batchId?: string;
+    batchNum?: string;
     latest?: 'true' | 'false' | undefined
     order?: MovieOrder
     filter?: MovieFilter
@@ -179,17 +179,17 @@ declare interface ActressGroupedDownloadMovies {
 }
 
 declare interface MovieResource {
-    matchCode: string;
+    id: number;
+    matchCode?: string;
     isMatched?: boolean;
     path: string;
     size: string;
-    createdTime: Date;
-    isPair?: boolean;
+    downloadDate: Date;
 }
 
 declare interface ResourceServerData {
     path: string;
     name: string;
     size: string;
-    createdTime: string;
+    downloadDate: string;
 }

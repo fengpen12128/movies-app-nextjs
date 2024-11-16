@@ -2,24 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 
 interface UpdateStatusRequest {
-  batchId: string;
+  batchNum: string;
   downloadStatus: string;
   downloadSize?: number;
 }
 
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
   try {
-    const { batchId, downloadStatus, downloadSize }: UpdateStatusRequest = await request.json();
+    const { batchNum, downloadStatus, downloadSize }: UpdateStatusRequest = await request.json();
 
-    if (!batchId) {
+    if (!batchNum) {
       return NextResponse.json(
-        { error: "batchId is required" },
+        { error: "batchNum is required" },
         { status: 400 }
       );
     }
 
     await prisma.crawlStat.update({
-      where: { batchId: batchId },
+      where: { batchNum: batchNum },
       data: {
         downloadStatus: parseInt(downloadStatus),
         downloadSize: downloadSize?.toString() ?? null,

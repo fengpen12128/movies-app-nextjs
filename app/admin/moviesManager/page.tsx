@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { DataTable } from "./components/data-table";
+import MoviesManagerTable from "../table/moviesManager/Index";
 
 export const metadata: Metadata = {
   title: "Movies Manager",
@@ -8,10 +8,8 @@ export const metadata: Metadata = {
 
 export default async function TaskPage() {
   return (
-    <div className="min-h-screen px-24">
-      <div className="flex flex-col space-y-4">
-        <DataTable />
-      </div>
+    <div className="px-24">
+      <MoviesManagerTable />
     </div>
   );
 }

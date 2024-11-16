@@ -7,7 +7,7 @@ import { MovieTable } from "./schema";
 import { DataTableColumnHeader } from "../../components/column-header";
 import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DataTableRowActions } from "./data-table-row-actions";
+import { DataTableRowActions } from "./rowActions";
 
 import dayjs from "dayjs";
 

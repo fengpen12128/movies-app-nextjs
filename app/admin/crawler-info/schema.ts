@@ -24,7 +24,7 @@ export const TransStatus = {
 } as const
 
 export const crawlerInfoSchema = z.object({
-    batchId: z.string().optional().nullable(),
+    batchNum: z.string().optional().nullable(),
     newlyIncreasedNum: z.number().int().nonnegative().optional().nullable(),
     updatedNum: z.number().int().nonnegative().optional().nullable(),
     startedTime: z.date().optional().nullable(),

@@ -28,7 +28,7 @@ export async function GET(req, { params }) {
   try {
     const query = {
       where: {
-        batchId: batchNum,
+        batchNum: batchNum,
       },
       skip,
       take: 10,

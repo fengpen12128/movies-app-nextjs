@@ -83,15 +83,15 @@ const ClawerTable: React.FC = () => {
     scheduled: "定时执行",
   };
 
-  const handleDataTrans = (batchId: string) => executeSpiderEndActions(batchId);
+  const handleDataTrans = (batchNum: string) => executeSpiderEndActions(batchNum);
 
   const renderTransButton = (
     transStatus: number,
-    batchId: string,
+    batchNum: string,
     isFinished: boolean,
     jobId?: string
   ) => {
-    if (transferringBatches.includes(batchId)) {
+    if (transferringBatches.includes(batchNum)) {
       return (
         <Button variant="outline" size="sm" disabled>
           转换中...
@@ -108,7 +108,7 @@ const ClawerTable: React.FC = () => {
 
           <Button
             onClick={() => {
-              window.open(`/admin/clawerLogView?jobId=${jobId}`, "_blank");
+              window.open(`/admin/logView?jobId=${jobId}`, "_blank");
             }}
             variant="outline"
             size="sm"
@@ -116,7 +116,7 @@ const ClawerTable: React.FC = () => {
             View Log
           </Button>
           <Link
-            href={`/home?batchId=${batchId}`}
+            href={`/home?batchNum=${batchNum}`}
             className="flex items-center text-blue-500 hover:underline dark:text-blue-400"
             target="_blank"
             rel="noopener noreferrer"
@@ -134,7 +134,7 @@ const ClawerTable: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => handleDataTrans(batchId)}
+            onClick={() => handleDataTrans(batchNum)}
           >
             转换数据
           </Button>
@@ -191,7 +191,7 @@ const ClawerTable: React.FC = () => {
               <TableRow key={row.id}>
                 <TableCell className="dark:text-gray-300">
                   <CrawlParamsHoverCard
-                    batchId={row.batchId}
+                    batchNum={row.batchNum}
                     crawlParams={row.urls || []}
                   />
                 </TableCell>
@@ -228,7 +228,7 @@ const ClawerTable: React.FC = () => {
                   <div className="flex flex-row items-center space-x-2">
                     {renderTransButton(
                       Number(row.transStatus ?? 0),
-                      row.batchId,
+                      row.batchNum,
                       row.crawlStatus === "finished",
                       row.jobId
                     )}

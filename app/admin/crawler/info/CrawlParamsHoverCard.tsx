@@ -16,10 +16,10 @@ import {
 } from "@/components/ui/table";
 
 export function CrawlParamsHoverCard({
-  batchId,
+  batchNum,
   crawlParams,
 }: {
-  batchId: string;
+  batchNum: string;
   crawlParams: CrawlUrl[];
 }) {
   return (
@@ -27,10 +27,10 @@ export function CrawlParamsHoverCard({
       <HoverCardTrigger asChild>
         {/* <Button variant="link">@nextjs</Button> */}
         <Link
-          href={`/admin/crawlerManager?batchId=${batchId}`}
+          href={`/admin/crawlerManager?batchNum=${batchNum}`}
           className="text-blue-500 hover:underline dark:text-blue-400"
         >
-          {batchId}
+          {batchNum}
         </Link>
       </HoverCardTrigger>
       <HoverCardContent className="w-[450px] max-h-[400px] overflow-y-auto">

@@ -10,7 +10,7 @@ export async function getResourceList(st?: string): Promise<DataResponse<MovieRe
     try {
         const [movies, movieResources] = await Promise.all([
             prisma.moviesInfo.findMany({ select: { code: true } }),
-            prisma.moviesVideoResource.findMany({ select: { movieCode: true } }),
+            prisma.moviesVideoResource.findMany({ select: { matchCode: true } }),
         ]);
 
         let serverData: ResourceServerData[] = [];
@@ -37,9 +37,9 @@ export async function getResourceList(st?: string): Promise<DataResponse<MovieRe
         }
 
         const movieCodes = movies.map((movie) => movie.code?.toLowerCase());
-        const movieResourcesCodes = movieResources.map((movie) => movie.movieCode?.toLowerCase())
+        const movieResourcesCodes = movieResources.map((movie) => movie.matchCode?.toLowerCase())
 
-        serverData = serverData.sort((a, b) => dayjs(b.createdTime).diff(dayjs(a.createdTime)));
+        serverData = serverData.sort((a, b) => dayjs(b.downloadDate).diff(dayjs(a.downloadDate)));
 
         const data = serverData.map((item) => {
             const itemNameLower = item.path.toLowerCase();
@@ -47,15 +47,15 @@ export async function getResourceList(st?: string): Promise<DataResponse<MovieRe
                 itemNameLower.includes(code ?? '')
             );
             return {
-                matchCode: matchedCode?.toUpperCase() ?? '',
+                matchCode: matchedCode?.toUpperCase() || '',
                 size: item.size,
-                createdTime: dayjs(item.createdTime).toDate(),
+                downloadDate: dayjs(item.downloadDate).toDate(),
                 path: item.path,
                 isMatched: matchedCode ? movieResourcesCodes.includes(matchedCode.toLowerCase()) : false,
                 isPair: !!matchedCode,
             };
         });
-        let res: MovieResource[] = [];
+        let res: any = [];
 
         if (st === "is") {
             res = data.filter((item) => item.isPair);
@@ -75,7 +75,7 @@ export async function saveResourceList(resourceList: MovieResource[] | MovieReso
     try {
         await prisma.moviesVideoResource.createMany({
             data: resources.map((item) => ({
-                movieCode: item.matchCode,
+                matchCode: item.matchCode || null,
                 path: item.path,
                 size: String(item.size),
             })),
@@ -83,13 +83,13 @@ export async function saveResourceList(resourceList: MovieResource[] | MovieReso
         });
 
         resources.forEach(async (item) => {
-            const { code, msg } = await saveCollectionIfNotExists(item.matchCode);
+            const { code, msg } = await saveCollectionIfNotExists(item.matchCode ?? '');
             if (code !== 200) {
                 message.error(msg!);
             }
         });
 
-        revalidatePath("/matching");
+        revalidatePath("/matching2");
 
         return { data: true, code: 200, msg: "保存成功" };
     } catch (error) {

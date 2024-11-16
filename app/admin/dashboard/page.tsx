@@ -11,6 +11,7 @@ import { nanoid } from "nanoid";
 import PrefixCodeTable from "./PrefixCodeTable/Index";
 import ScriptListBox from "../components/ScriptListBox";
 import ScheduleCrawlUrlTable from "./ScheduleCrawlUrlTable/Index";
+import DownloadCard from "../components/DownloadCard";
 
 const Page = async () => {
   const { data: statisticData, code, msg } = await getMoiveeAppStatistic();
@@ -48,12 +49,13 @@ const Page = async () => {
             </TabsContent>
           </Tabs>
         </div>
-        <div>
+        <div className="space-y-4">
           <Card>
             <div className="p-4">
               <ScriptListBox />
             </div>
           </Card>
+          <DownloadCard />
         </div>
       </main>
     </>

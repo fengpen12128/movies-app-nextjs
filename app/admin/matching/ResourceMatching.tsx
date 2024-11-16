@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Tabs } from "@radix-ui/themes";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import MatchedResources from "./MatchedResources";
 import UnmatchedResources from "./UnmatchedResources";
 
@@ -10,20 +10,20 @@ export default function ResourceMatching() {
 
   return (
     <div>
-      <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
-        <Tabs.List className="mb-4">
-          <Tabs.Trigger value="matched">已匹配资源</Tabs.Trigger>
-          <Tabs.Trigger value="unmatched">未匹配资源</Tabs.Trigger>
-        </Tabs.List>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="mb-4">
+          <TabsTrigger value="matched">已匹配资源</TabsTrigger>
+          <TabsTrigger value="unmatched">未匹配资源</TabsTrigger>
+        </TabsList>
 
-        <Tabs.Content value="matched">
+        <TabsContent value="matched">
           <MatchedResources />
-        </Tabs.Content>
+        </TabsContent>
 
-        <Tabs.Content value="unmatched">
+        <TabsContent value="unmatched">
           <UnmatchedResources />
-        </Tabs.Content>
-      </Tabs.Root>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ClawerInfoPage = () => {
   const [searchParams, setSearchParams] = useState({
-    batchId: "",
+    batchNum: "",
     status: "",
     page: 1,
   });

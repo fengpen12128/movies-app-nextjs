@@ -15,12 +15,6 @@ datasource db {
     relationMode = "prisma"
 }
 
-// datasource db {
-//     provider  = "postgresql"
-//     url       = env("SUPABASE_MOVIES_POSTGRES_URL") // uses connection pooling
-//     directUrl = env("SUPABASE_MOVIES_POSTGRES_PRISMA_URL") // uses a direct connection
-// }
-
 model MoviesInfo {
     id           Int                   @id @default(autoincrement()) @map("id")
     code         String?               @unique(map: "code_uni") @map("code") @db.VarChar(100)
@@ -106,26 +100,26 @@ model MoviesTag {
 }
 
 model MoviesVideoResource {
-    id          Int         @id @default(autoincrement()) @map("id")
-    movieCode   String      @map("movie_code") @db.VarChar(100)
-    path        String      @map("path") @db.VarChar(400)
-    size        String?     @map("size") @db.VarChar(100)
-    createdTime DateTime?   @default(now()) @map("created_time")
-    MovieInfo   MoviesInfo? @relation(fields: [movieCode], references: [code])
-    deletedTime DateTime?   @map("deleted_time")
+    id           Int         @id @default(autoincrement()) @map("id")
+    matchCode    String?     @map("match_code") @db.VarChar(100)
+    path         String      @map("path") @db.VarChar(400)
+    size         String?     @map("size") @db.VarChar(100)
+    downloadDate DateTime?   @map("download_date")
+    MovieInfo    MoviesInfo? @relation(fields: [matchCode], references: [code])
+    deletedTime  DateTime?   @map("deleted_time")
 
-    @@unique([movieCode, path])
+    @@unique([matchCode, path])
     @@map("movies_video_resource")
 }
 
 model DownloadUrls {
-    id      Int     @id(map: "downloads_urls_pkey") @default(autoincrement())
-    batchId String? @map("batch_id")
-    url     String
-    code    String
-    status  Int     @default(0)
-    size    Int?
-    type    Int?
+    id       Int     @id(map: "downloads_urls_pkey") @default(autoincrement())
+    batchNum String? @map("batch_num")
+    url      String
+    code     String
+    status   Int     @default(0)
+    size     Int?
+    type     Int?
 
     @@map("download_urls")
 }
@@ -144,7 +138,7 @@ model CrawlSourceData {
     id          Int     @id @default(autoincrement())
     data        Json
     code        String? @default(dbgenerated("(data ->> 'code'::text)"))
-    batchId     String? @default(dbgenerated("(data ->> 'batch_id'::text)")) @map("batch_id")
+    batchNum    String? @default(dbgenerated("(data ->> 'batch_num'::text)")) @map("batch_num")
     createdTime String? @default(dbgenerated("(data ->> 'created_time'::text)")) @map("created_time")
     updatedTime String? @default(dbgenerated("(data ->> 'updated_time'::text)")) @map("updated_time")
 
@@ -153,7 +147,7 @@ model CrawlSourceData {
 
 model CrawlStat {
     id                Int       @id @default(autoincrement())
-    batchId           String?   @unique @map("batch_id")
+    batchNum          String?   @unique @map("batch_num")
     jobId             String?   @unique @map("job_id")
     crawlStatus       Int?      @default(0) @map("crawl_status")
     transStatus       Int?      @default(0) @map("trans_status")
@@ -171,10 +165,10 @@ model CrawlStat {
 }
 
 model CrawlBatchRecord {
-    id      Int    @id @default(autoincrement())
-    batchId String @map("batch_id")
-    code    String
-    type    Int    @map("type")
+    id       Int    @id @default(autoincrement())
+    batchNum String @map("batch_num")
+    code     String
+    type     Int    @map("type")
 
     @@map("crawl_batch_record")
 }
@@ -193,6 +187,7 @@ model ScheduleCrawlUrl {
     id          Int       @id @default(autoincrement())
     web         String    @db.VarChar(100)
     url         String    @unique @db.VarChar(200)
+    remark      String?   @map("remark") @db.VarChar(200)
     createdTime DateTime? @default(now()) @map("created_time")
 
     @@map("schedule_crawl_url")

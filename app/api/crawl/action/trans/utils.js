@@ -20,7 +20,7 @@ export async function insertMovieData(movie) {
     releaseYear: new Date(movie.release_date).getFullYear(),
     crawlWebsite: movie.crawl_website,
     crawlUrl: movie.crawl_url,
-    batchNum: movie.batch_id,
+    batchNum: movie.batch_num,
     updatedTime: movie.updated_time ? new Date(movie.updated_time) : null,
     createdTime: movie.created_time ? new Date(movie.created_time) : new Date(),
     actresses: {

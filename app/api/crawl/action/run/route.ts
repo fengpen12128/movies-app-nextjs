@@ -7,7 +7,7 @@ interface CrawlParams {
 
 interface CrawlResponse {
   jobId: string;
-  batchId: string;
+  batchNum: string;
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse<CrawlResponse | { error: string }>> {
@@ -28,8 +28,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<CrawlResp
 
     const data: CrawlResponse = await response.json();
 
-    // 确保返回的数据包含 jobId 和 batchId
-    if (!data.jobId || !data.batchId) {
+    // 确保返回的数据包含 jobId 和 batchNum
+    if (!data.jobId || !data.batchNum) {
       throw new Error("Invalid response from crawler server");
     }
 

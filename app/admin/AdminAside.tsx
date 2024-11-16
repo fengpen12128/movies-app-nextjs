@@ -73,7 +73,7 @@ const AdminAside: React.FC = () => {
     {
       icon: GalleryHorizontalEnd,
       label: "Media",
-      href: "/admin/matching",
+      href: "/admin/matching2",
       route: "resourceMatching",
     },
     {

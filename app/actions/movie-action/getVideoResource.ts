@@ -20,10 +20,10 @@ export async function getVideoResource(movieId: number): Promise<DataResponse<Vi
         }
 
         const videoResource = await prisma.moviesVideoResource.findMany({
-            where: { movieCode: movie.code },
+            where: { matchCode: movie.code },
             select: {
                 path: true,
-                createdTime: true,
+                downloadDate: true,
                 size: true,
                 id: true
             }

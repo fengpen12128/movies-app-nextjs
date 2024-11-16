@@ -59,7 +59,7 @@ export async function getGroupedDownloadMovies({ page = 1, order = "downloadDesc
 
         const movies = allMoviesWithActress.filter((x) => x.MovieInfo)
         const flatMovies = movies.map(x => ({
-            downloadTime: x.createdTime,
+            downloadTime: x.downloadDate,
             ...x.MovieInfo,
             rate: Number(x.MovieInfo?.rate ?? 0)
         }))

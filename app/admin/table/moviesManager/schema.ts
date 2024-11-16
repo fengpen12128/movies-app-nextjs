@@ -1,7 +1,6 @@
 import { z } from "zod"
 
-// We're keeping a simple non-relational schema here.
-// IRL, you will have a schema for your data models.
+
 export const movieSchema = z.object({
     id: z.number(),
     code: z.string(),
@@ -16,6 +15,6 @@ export const movieSchema = z.object({
         .nullable().optional(),
     createdTime: z.date().nullable().optional(),
     updatedTime: z.date().nullable().optional(),
-})
+});
 
 export type MovieTable = z.infer<typeof movieSchema>

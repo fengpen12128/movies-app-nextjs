@@ -1,47 +1,42 @@
 "use client";
 
 import React from "react";
-import { LoadingSpinner } from "@/components/LoadingSpinner";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import {
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
-  flexRender,
   getSortedRowModel,
   SortingState,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
+
+import { Card, CardContent } from "@/components/ui/card";
+import { DataTable } from "@/app/admin/components/CommonDataTable";
 import { columns } from "./columns";
 import { getCrawlRecord } from "@/app/actions/admin/crawl";
-import { z } from "zod";
 import { crawlerInfoSchema } from "./schema";
-import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent } from "@/components/ui/card";
 import { CrawlerInfos } from "./schema";
-
 import { TablePagination } from "./components/TablePagination";
 import usePageStore from "@/store/commonStore";
 import { Toolbar } from "./toolbar";
 
 const CrawlerInfoTable = () => {
   const [page, setPage] = React.useState(1);
-  const [searchBatchId, setSearchBatchId] = React.useState("");
+  const [searchbatchNum, setSearchbatchNum] = React.useState("");
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
-  const { data: queryResult, isLoading, refetch } = useQuery({
-    queryKey: ["crawlRecord", page, searchBatchId],
+  const {
+    data: queryResult,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["crawlRecord", page, searchbatchNum],
     queryFn: async () => {
       const response = await getCrawlRecord({
         page,
         limit: 20,
-        batchId: searchBatchId,
+        batchNum: searchbatchNum,
       });
       usePageStore.setState({ pagination: response.pagination });
       try {
@@ -52,8 +47,6 @@ const CrawlerInfoTable = () => {
       }
     },
   });
-
-  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
     data: (queryResult as CrawlerInfos[]) || [],
@@ -76,67 +69,20 @@ const CrawlerInfoTable = () => {
   return (
     <Card className="h-full">
       <CardContent className="p-6 h-full flex flex-col">
-        <Toolbar
-          table={table}
-          onSearch={setSearchBatchId}
-          searchBatchId={searchBatchId}
-          onRefresh={() => refetch()}
-        />
-        <div className="flex-1 overflow-auto border rounded-md">
-          <Table>
-            <TableHeader className="sticky top-0 bg-background z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    <LoadingSpinner />
-                  </TableCell>
-                </TableRow>
-              ) : table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
-                    No results.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+        <div className="flex-1">
+          <DataTable
+            table={table}
+            columns={columns.length}
+            isLoading={isLoading}
+            height="100%"
+          >
+            <Toolbar
+              table={table}
+              onSearch={setSearchbatchNum}
+              searchbatchNum={searchbatchNum}
+              onRefresh={() => refetch()}
+            />
+          </DataTable>
         </div>
         <TablePagination currentPage={page} onPageChange={handlePageChange} />
       </CardContent>

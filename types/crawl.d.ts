@@ -1,6 +1,6 @@
 declare interface CrawlResponse {
     jobId: string,
-    batchId: string
+    batchNum: string
 }
 
 declare interface CrawlUrl {
@@ -19,7 +19,7 @@ declare interface CrawlConfig {
 declare interface CrawlStat {
     id: number;
     jobId: string;
-    batchId: string;
+    batchNum: string;
     executeType: string;
     newlyIncreasedNum: number;
     updatedNum: number;

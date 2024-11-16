@@ -125,7 +125,7 @@ export default function MatchedResources() {
                   {movie.size ? filesize(movie.size) : ""}
                 </Table.Cell>
                 <Table.Cell>
-                  {dayjs(movie.createdTime).format("YYYY-MM-DD HH:mm:ss")}
+                  {dayjs(movie.downloadDate).format("YYYY-MM-DD HH:mm:ss")}
                 </Table.Cell>
                 <Table.Cell>
                   {movie.isMatched ? (

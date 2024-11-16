@@ -2,17 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/app/lib/prisma";
 
 interface UpdateTransStatusRequest {
-    batchId: string;
+    batchNum: string;
     transStatus: string;
 }
 
 export async function PATCH(request: NextRequest): Promise<NextResponse> {
     try {
-        const { batchId, transStatus }: UpdateTransStatusRequest = await request.json();
+        const { batchNum, transStatus }: UpdateTransStatusRequest = await request.json();
 
-        if (!batchId || transStatus === undefined) {
+        if (!batchNum || transStatus === undefined) {
             return NextResponse.json(
-                { error: "batchId and transStatus are required" },
+                { error: "batchNum and transStatus are required" },
                 { status: 400 }
             );
         }
@@ -21,13 +21,13 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
         const [newCount, updateCount] = await Promise.all([
             prisma.crawlSourceData.count({
                 where: {
-                    batchId: batchId,
+                    batchNum: batchNum,
                     updatedTime: null,
                 },
             }),
             prisma.crawlSourceData.count({
                 where: {
-                    batchId: batchId,
+                    batchNum: batchNum,
                     updatedTime: {
                         not: null,
                     },
@@ -36,7 +36,7 @@ export async function PATCH(request: NextRequest): Promise<NextResponse> {
         ]);
 
         const updatedCrawlStat = await prisma.crawlStat.update({
-            where: { batchId: batchId },
+            where: { batchNum: batchNum },
             data: {
                 transStatus: parseInt(transStatus),
                 newlyIncreasedNum: newCount,

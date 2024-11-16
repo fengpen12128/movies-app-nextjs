@@ -17,7 +17,7 @@ export const columns: ColumnDef<CrawlerInfos>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "batchId",
+    accessorKey: "batchNum",
     header: ({ column }) => {
       return (
         <Button
@@ -31,7 +31,7 @@ export const columns: ColumnDef<CrawlerInfos>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className=" w-[100px]">{row.getValue("batchId")}</div>
+      <div className=" w-[100px]">{row.getValue("batchNum")}</div>
     ),
   },
   {

@@ -3,17 +3,17 @@
 import prisma from "@/app/lib/prisma";
 
 
-export async function saveCrawlBatchRecord(batchId: string): Promise<DataResponse<void>> {
+export async function saveCrawlBatchRecord(batchNum: string): Promise<DataResponse<void>> {
     try {
         // Query crawlSourceData for the current batch
         const sourceData = await prisma.crawlSourceData.findMany({
-            where: { batchId: batchId },
+            where: { batchNum: batchNum },
         });
 
         // Insert data into CrawlBatchRecord
         await prisma.crawlBatchRecord.createMany({
             data: sourceData.map((item) => ({
-                batchId: batchId,
+                batchNum: batchNum,
                 code: item.code ?? '',
                 type: item.updatedTime ? 2 : 1, // 1 for new, 2 for update
             })),
@@ -34,7 +34,7 @@ export async function saveCrawlBatchRecord(batchId: string): Promise<DataRespons
 
 
 
-export async function updateTransStatus(batchId: string): Promise<DataResponse<boolean>> {
+export async function updateTransStatus(batchNum: string): Promise<DataResponse<boolean>> {
     try {
 
 
@@ -42,13 +42,13 @@ export async function updateTransStatus(batchId: string): Promise<DataResponse<b
         const [newCount, updateCount] = await Promise.all([
             prisma.crawlSourceData.count({
                 where: {
-                    batchId: batchId,
+                    batchNum: batchNum,
                     updatedTime: null,
                 },
             }),
             prisma.crawlSourceData.count({
                 where: {
-                    batchId: batchId,
+                    batchNum: batchNum,
                     updatedTime: {
                         not: null,
                     },
@@ -57,7 +57,7 @@ export async function updateTransStatus(batchId: string): Promise<DataResponse<b
         ]);
 
         await prisma.crawlStat.update({
-            where: { batchId: batchId },
+            where: { batchNum: batchNum },
             data: {
                 transStatus: 1,
                 newlyIncreasedNum: newCount,

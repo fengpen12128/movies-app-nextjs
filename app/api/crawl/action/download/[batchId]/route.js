@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
-  const { batchId } = params;
+  const { batchNum } = params;
   const { searchParams } = new URL(req.url);
   const mode = searchParams.get("mode") || "async";
 
-  if (!batchId) {
-    return NextResponse.json({ msg: "batchId is empty" }, { status: 500 });
+  if (!batchNum) {
+    return NextResponse.json({ msg: "batchNum is empty" }, { status: 500 });
   }
 
   try {
@@ -15,13 +15,8 @@ export async function GET(req, { params }) {
         ? `${process.env.CRAWLER_SERVER}/start-download-async`
         : `${process.env.CRAWLER_SERVER}/start-download-sync`;
 
-
     const taskInfo = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ batchId }),
+      method: "get",
     });
     return NextResponse.json(taskInfo, { status: 200 });
   } catch (error) {

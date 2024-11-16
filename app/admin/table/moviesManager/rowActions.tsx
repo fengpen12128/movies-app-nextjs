@@ -12,7 +12,7 @@ import { MoreHorizontal, Trash2 } from "lucide-react";
 import { MovieTable } from "./schema";
 import { DeleteDialog } from "@/app/admin/components/DeleteDialog";
 import { useState } from "react";
-import { useDeleteMovie } from "../hooks/useDeleteMovie";
+import { useDeleteMovie } from "../../hooks/useDeleteMovie";
 
 interface DataTableRowActionsProps {
   row: Row<MovieTable>;

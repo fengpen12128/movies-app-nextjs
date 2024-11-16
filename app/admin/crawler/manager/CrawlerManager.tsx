@@ -25,15 +25,15 @@ import { useCrawlTargets } from "@/app/hooks/useCrawlTargets";
 import { useSpiderActions } from "@/app/hooks/useSpiderActions";
 import { useCrawlerOperations } from "@/app/hooks/useCrawlerOperations";
 import {
-  getCrawlRecordByBatchId,
+  getCrawlRecordByBatchNum,
   getCrawlScheduledUrls,
 } from "@/app/actions/admin/crawl";
 
 interface CrawlerManagerProps {
-  batchId: string;
+  batchNum: string;
 }
 
-const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
+const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchNum }) => {
   const { targets, addTarget, removeTarget, updateTarget, setAllTargets } =
     useCrawlTargets();
 
@@ -50,7 +50,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
     stopCrawling,
     confirmStopCrawling,
   } = useCrawlerOperations(
-    { status: "idle", batchId: null, jobId: "" },
+    { status: "idle", batchNum: null, jobId: "" },
     targets
   );
 
@@ -59,7 +59,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
       data: crawlStat,
       code,
       msg,
-    } = await getCrawlRecordByBatchId(batchId);
+    } = await getCrawlRecordByBatchNum(batchNum);
 
     if (code !== 200 || !crawlStat) {
       message.error(msg!);
@@ -69,7 +69,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
     setCrawlState((prevState) => ({
       ...prevState,
       status: crawlStat.crawlStatus ?? "idle",
-      batchId: crawlStat.batchId ?? null,
+      batchNum: crawlStat.batchNum ?? null,
       jobId: crawlStat.jobId ?? "",
     }));
     setAllTargets(crawlStat.urls || []);
@@ -77,23 +77,23 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
       intervalCheckSpiderStatus(
         crawlStat.jobId,
         executeSpiderEndActions,
-        crawlStat.batchId
+        crawlStat.batchNum
       );
     }
   };
 
   useEffect(() => {
-    if (batchId) {
+    if (batchNum) {
       getCrawlParamsAndStatus();
     }
-  }, [batchId]);
+  }, [batchNum]);
 
   const handleViewLogs = () => {
     if (!crawlState.jobId) {
       message.error("任务未开始");
       return;
     }
-    window.open(`/clawerLogView?jobId=${crawlState.jobId}`, "_blank");
+    window.open(`/admin/logView?jobId=${crawlState.jobId}`, "_blank");
   };
 
   const handleFetchScheduledUrls = async () => {
@@ -128,7 +128,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
             radius="medium"
             placeholder="Enter URL to crawl"
             className="flex-grow"
-            disabled={crawlState.status === "running" || !!batchId}
+            disabled={crawlState.status === "running" || !!batchNum}
           />
           <TextField.Root
             size="3"
@@ -141,7 +141,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
             radius="medium"
             placeholder="Max pages"
             className="w-32"
-            disabled={crawlState.status === "running" || !!batchId}
+            disabled={crawlState.status === "running" || !!batchNum}
           />
           <Checkbox
             size="3"
@@ -166,7 +166,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
           className="flex gap-2"
           style={{
             visibility:
-              crawlState.status === "running" || !!batchId
+              crawlState.status === "running" || !!batchNum
                 ? "hidden"
                 : "visible",
           }}
@@ -244,8 +244,8 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
             <DataList.Value>{crawlState.jobId}</DataList.Value>
           </DataList.Item>
           <DataList.Item>
-            <DataList.Label minWidth="88px">BatchId</DataList.Label>
-            <DataList.Value>{crawlState.batchId}</DataList.Value>
+            <DataList.Label minWidth="88px">batchNum</DataList.Label>
+            <DataList.Value>{crawlState.batchNum}</DataList.Value>
           </DataList.Item>
         </DataList.Root>
       </Card>

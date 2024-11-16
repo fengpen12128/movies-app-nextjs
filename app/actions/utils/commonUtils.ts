@@ -6,12 +6,12 @@ export const DEFAULT_PAGE_SIZE = 50;
 
 export const getCollectionAndDownloadCode = async (): Promise<{ ctCode: string[], dmCode: string[] }> => {
     const [downloadMovies, collectedMovies] = await Promise.all([
-        prisma.moviesVideoResource.findMany({ select: { movieCode: true } }),
+        prisma.moviesVideoResource.findMany({ select: { matchCode: true } }),
         prisma.moviesCollection.findMany({ select: { movieCode: true } }),
     ]);
 
     const ctCode = collectedMovies.map((item) => item.movieCode).filter((item): item is string => item !== null);
-    const dmCode = downloadMovies.map((item) => item.movieCode).filter((item): item is string => item !== null);
+    const dmCode = downloadMovies.map((item) => item.matchCode).filter((item): item is string => item !== null);
 
     return { ctCode, dmCode };
 };

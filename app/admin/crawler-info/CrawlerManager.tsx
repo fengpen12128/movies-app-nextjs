@@ -21,7 +21,7 @@ import { useCrawlTargets } from "@/app/hooks/useCrawlTargets";
 import { useSpiderActions } from "@/app/hooks/useSpiderActions";
 import { useCrawlerOperations } from "@/app/hooks/useCrawlerOperations";
 import {
-  getCrawlRecordByBatchId,
+  getCrawlRecordByBatchNum,
   getCrawlScheduledUrls,
 } from "@/app/actions/admin/crawl";
 import { useQueryClient } from "@tanstack/react-query";
@@ -56,10 +56,10 @@ const DataListItem = ({
 );
 
 interface CrawlerManagerProps {
-  batchId?: string;
+  batchNum?: string;
 }
 
-const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
+const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchNum }) => {
   const queryClient = useQueryClient();
   const { targets, addTarget, removeTarget, updateTarget, setAllTargets } =
     useCrawlTargets();
@@ -77,18 +77,18 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
     stopCrawling,
     confirmStopCrawling,
   } = useCrawlerOperations(
-    { status: "idle", batchId: null, jobId: "" },
+    { status: "idle", batchNum: null, jobId: "" },
     targets
   );
 
   const getCrawlParamsAndStatus = async () => {
-    if (!batchId) return; // 添加空值检查
+    if (!batchNum) return; // 添加空值检查
 
     const {
       data: crawlStat,
       code,
       msg,
-    } = await getCrawlRecordByBatchId(batchId);
+    } = await getCrawlRecordByBatchNum(batchNum);
 
     if (code !== 200 || !crawlStat) {
       message.error(msg || "获取爬虫状态失败"); // 提供默认错误消息
@@ -98,7 +98,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
     setCrawlState((prevState) => ({
       ...prevState,
       status: crawlStat.crawlStatus ?? "idle",
-      batchId: crawlStat.batchId ?? null,
+      batchNum: crawlStat.batchNum ?? null,
       jobId: crawlStat.jobId ?? "",
     }));
     setAllTargets(crawlStat.urls || []);
@@ -106,23 +106,23 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
       intervalCheckSpiderStatus(
         crawlStat.jobId,
         executeSpiderEndActions,
-        crawlStat.batchId
+        crawlStat.batchNum
       );
     }
   };
 
   useEffect(() => {
-    if (batchId) {
+    if (batchNum) {
       getCrawlParamsAndStatus();
     }
-  }, [batchId]);
+  }, [batchNum]);
 
   const handleViewLogs = () => {
     if (!crawlState.jobId) {
       message.error("任务未开始");
       return;
     }
-    window.open(`/clawerLogView?jobId=${crawlState.jobId}`, "_blank");
+    window.open(`/admin/logView?jobId=${crawlState.jobId}`, "_blank");
   };
 
   const handleFetchScheduledUrls = async () => {
@@ -155,7 +155,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
                 onChange={(e) => updateTarget(index, "url", e.target.value)}
                 placeholder="Enter URL to crawl"
                 className="flex-grow"
-                disabled={crawlState.status === "running" || !!batchId}
+                disabled={crawlState.status === "running" || !!batchNum}
               />
               <Input
                 value={target.maxPage || ""}
@@ -166,7 +166,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
                 }}
                 placeholder="Max pages"
                 className="w-32"
-                disabled={crawlState.status === "running" || !!batchId}
+                disabled={crawlState.status === "running" || !!batchNum}
               />
               <Checkbox
                 checked={target.save}
@@ -194,7 +194,7 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
               className="flex gap-2"
               style={{
                 visibility:
-                  crawlState.status === "running" || !!batchId
+                  crawlState.status === "running" || !!batchNum
                     ? "hidden"
                     : "visible",
               }}
@@ -279,8 +279,8 @@ const CrawlerManager: React.FC<CrawlerManagerProps> = ({ batchId }) => {
               <DataListItem label="JobId">
                 <span>{crawlState.jobId}</span>
               </DataListItem>
-              <DataListItem label="BatchId">
-                <span>{crawlState.batchId}</span>
+              <DataListItem label="batchNum">
+                <span>{crawlState.batchNum}</span>
               </DataListItem>
             </CardContent>
           </Card>

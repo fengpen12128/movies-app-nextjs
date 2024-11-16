@@ -4,9 +4,9 @@ import prisma from "@/app/lib/prisma";
 import { insertMovieData } from "@/app/actions/utils/dataTranScript";
 import { revalidatePath } from 'next/cache'
 
-export async function transformSourceData({ batchId, isFullData = false }: { batchId?: string, isFullData: boolean }) {
-    if (!isFullData && !batchId) {
-        throw new Error("batchId is required when not processing full data");
+export async function transformSourceData({ batchNum, isFullData = false }: { batchNum?: string, isFullData: boolean }) {
+    if (!isFullData && !batchNum) {
+        throw new Error("batchNum is required when not processing full data");
     }
 
     try {
@@ -19,7 +19,7 @@ export async function transformSourceData({ batchId, isFullData = false }: { bat
         } else {
             movieDataArray = await prisma.crawlSourceData.findMany({
                 select: { data: true },
-                where: { batchId: batchId },
+                where: { batchNum },
             });
         }
 

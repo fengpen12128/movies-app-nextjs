@@ -177,7 +177,7 @@ export async function getDownloadMoviesByActressId(
             };
         }
 
-        let moviesQuery = {
+        let moviesQuery: any = {
             skip,
             take: pageSize,
             orderBy: { createdTime: "desc" as const },
@@ -220,8 +220,8 @@ export async function getDownloadMoviesByActressId(
 
         const movies = downloadMovies
             .filter((x: any) => x.MovieInfo)
-            .map(x => ({
-                collectedTime: x.createdTime,
+            .map((x: any) => ({
+                collectedTime: x.downloadDate,
                 ...x.MovieInfo,
                 rate: Number(x.MovieInfo?.rate ?? 0)
             }));

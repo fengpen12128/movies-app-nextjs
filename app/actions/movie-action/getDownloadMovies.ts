@@ -26,7 +26,7 @@ export async function getDownloadMovies({ page = 1, collected, order = "download
         const { ctCode, dmCode } = await getCollectionAndDownloadCode();
 
 
-        let q = {
+        let q: any = {
             where: {
                 movieCode: {
                     ...(collected === 'true' && { in: ctCode }),
@@ -57,7 +57,7 @@ export async function getDownloadMovies({ page = 1, collected, order = "download
         };
 
         let [result, totalCount] = await Promise.all([
-            prisma.moviesVideoResource.findMany(q as any),
+            prisma.moviesVideoResource.findMany(q),
             prisma.moviesVideoResource.count({ where: q.where }),
         ]);
 

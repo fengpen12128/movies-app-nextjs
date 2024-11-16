@@ -8,14 +8,14 @@ import { RefreshCw } from "lucide-react";
 interface ToolbarProps<TData> {
   table: Table<TData>;
   onSearch: (value: string) => void;
-  searchBatchId: string;
+  searchbatchNum: string;
   onRefresh: () => void;
 }
 
 export function Toolbar<TData>({
   table,
   onSearch,
-  searchBatchId,
+  searchbatchNum,
   onRefresh,
 }: ToolbarProps<TData>) {
   return (
@@ -27,7 +27,7 @@ export function Toolbar<TData>({
         <Input
           id="batch-input"
           placeholder="Search batch number..."
-          value={searchBatchId}
+          value={searchbatchNum}
           onChange={(event) => {
             onSearch(event.target.value);
           }}

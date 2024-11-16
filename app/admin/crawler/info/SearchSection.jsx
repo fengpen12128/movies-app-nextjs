@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 const SearchSection = ({ onSearch }) => {
   const form = useForm({
     defaultValues: {
-      batchId: "",
+      batchNum: "",
       dateRange: { from: null, to: null },
       status: "",
     },
@@ -30,7 +30,7 @@ const SearchSection = ({ onSearch }) => {
         <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
           <FormField
             control={form.control}
-            name="batchId"
+            name="batchNum"
             render={({ field }) => (
               <FormItem className="flex-grow">
                 <FormControl>

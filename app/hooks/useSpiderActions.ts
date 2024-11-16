@@ -7,27 +7,27 @@ export const useSpiderActions = () => {
     const [transferringBatches, setTransferringBatches] = useState<string[]>([]);
     const [downloadingBatches, setDownloadingBatches] = useState<string[]>([]);
 
-    const handleTransData = async (batchId: string) => {
-        if (!batchId) {
-            message.error("batchId is null");
+    const handleTransData = async (batchNum: string) => {
+        if (!batchNum) {
+            message.error("batchNum is null");
             return;
         }
-        setTransferringBatches((prev) => [...prev, batchId]);
+        setTransferringBatches((prev) => [...prev, batchNum]);
         try {
-            await transformSourceData({ batchId, isFullData: false });
+            await transformSourceData({ batchNum, isFullData: false });
             message.success("Data transfer successful");
-            await updateTransStatus(batchId);
+            await updateTransStatus(batchNum);
         } catch (error) {
             message.error("Data migration failed");
             throw error;
         } finally {
-            setTransferringBatches((prev) => prev.filter(id => id !== batchId));
+            setTransferringBatches((prev) => prev.filter(id => id !== batchNum));
         }
     };
 
-    const handleSaveCrawlBatchRecord = async (batchId: string) => {
+    const handleSaveCrawlBatchRecord = async (batchNum: string) => {
         try {
-            const { code, msg } = await saveCrawlBatchRecord(batchId);
+            const { code, msg } = await saveCrawlBatchRecord(batchNum);
             if (code === 200) {
                 message.success("Crawl batch record processed successfully");
             } else {
@@ -38,26 +38,26 @@ export const useSpiderActions = () => {
         }
     };
 
-    const handleDownloadData = async (batchId: string) => {
-        setDownloadingBatches((prev) => [...prev, batchId]);
+    const handleDownloadData = async (batchNum: string) => {
+        setDownloadingBatches((prev) => [...prev, batchNum]);
         try {
-            await fetch(`/api/crawl/action/download/${batchId}?mode=sync`);
-            await updateMediaDownloadStatus(batchId);
+            await fetch(`/api/crawl/action/download/${batchNum}?mode=sync`);
+            await updateMediaDownloadStatus(batchNum);
             message.success("媒体下载完成");
         } catch (error) {
             console.error("Error downloading data:", error);
             message.error("媒体下载失败");
         } finally {
-            setDownloadingBatches((prev) => prev.filter(id => id !== batchId));
+            setDownloadingBatches((prev) => prev.filter(id => id !== batchNum));
         }
     };
 
-    const updateMediaDownloadStatus = async (batchId: string) => {
+    const updateMediaDownloadStatus = async (batchNum: string) => {
         try {
             const response = await fetch("/api/crawl/action/download/updateStatus", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ batchId: batchId, downloadStatus: 1 }),
+                body: JSON.stringify({ batchNum: batchNum, downloadStatus: 1 }),
             });
             if (!response.ok) throw new Error("Failed to update download status");
             console.log("Download status updated");
@@ -67,11 +67,11 @@ export const useSpiderActions = () => {
         }
     };
 
-    const executeSpiderEndActions = async (newBatchId: string | null) => {
-        if (!newBatchId) return;
-        await handleTransData(newBatchId);
-        await handleSaveCrawlBatchRecord(newBatchId);
-        // await handleDownloadData(newBatchId);
+    const executeSpiderEndActions = async (newbatchNum: string | null) => {
+        if (!newbatchNum) return;
+        await handleTransData(newbatchNum);
+        await handleSaveCrawlBatchRecord(newbatchNum);
+        // await handleDownloadData(newbatchNum);
     };
 
     return {

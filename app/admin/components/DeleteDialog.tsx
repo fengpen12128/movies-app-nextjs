@@ -9,7 +9,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Trash2 } from "lucide-react";
 import { useState } from "react";
 
 interface DeleteDialogProps {
@@ -31,7 +30,9 @@ export function DeleteDialog({
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild disabled={disabled}>{trigger}</AlertDialogTrigger>
+      <AlertDialogTrigger asChild disabled={disabled}>
+        {trigger}
+      </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -47,7 +48,7 @@ export function DeleteDialog({
               onDelete();
               setOpen(false);
             }}
-            className="hover:bg-red-700 hover:text-white"
+            className="bg-red-800 text-white    hover:bg-red-900"
             disabled={disabled || isPending}
           >
             {isPending ? "删除中..." : "删除"}

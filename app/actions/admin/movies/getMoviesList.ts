@@ -7,7 +7,7 @@ import {
     DEFAULT_PAGE_SIZE,
     getPaginationData,
 } from "@/app/actions/utils/commonUtils";
-import { MovieTable } from "@/app/admin/moviesManager/components/schema";
+import { MovieTable } from "@/app/admin/table/moviesManager/schema";
 import { getMoviesManagerOrder } from "@/app/actions/movie-action/getOrder";
 export async function getMoviesList({
     page = 1,
@@ -17,23 +17,21 @@ export async function getMoviesList({
     actressName,
     years,
     tags,
-    batchId,
+    batchNum,
     filter,
     order = "releaseDate"
 }: MovieQueryParams = {}): Promise<DataResponse<MovieTable[]>> {
     try {
         const skip = (page - 1) * pageSize;
 
-
         let relevantCodes: string[] = [];
-        if (batchId) {
+        if (batchNum) {
             const batchRecords = await prisma.crawlBatchRecord.findMany({
-                where: { batchId: batchId },
+                where: { batchNum },
                 select: { code: true },
             });
             relevantCodes = batchRecords.map((record: { code: string }) => record.code);
         }
-
 
         let moviesQuery: any = {
             skip,
@@ -88,7 +86,7 @@ export async function getMoviesList({
                         },
                     },
                 }),
-                ...(batchId && {
+                ...(batchNum && {
                     code: { in: relevantCodes },
                 }),
 
@@ -99,9 +97,6 @@ export async function getMoviesList({
             prisma.moviesInfo.findMany(moviesQuery),
             prisma.moviesInfo.count({ where: moviesQuery.where }),
         ]);
-
-        console.log(moviesQuery);
-
 
         const handled = handleMovieInAdmin(movies);
         const pagination = getPaginationData(totalCount, page, pageSize);
