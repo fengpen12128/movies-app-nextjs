@@ -8,7 +8,7 @@ import {
 
 export async function runCrawl(config: CrawlConfig): Promise<DataResponse<CrawlResponse>> {
     try {
-        const response = await fetch(`${process.env.CRAWLER_SERVER}/run-spider`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/run-spider`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -122,7 +122,7 @@ export async function processCrawlParams(parsedParams: any): Promise<CrawlStat> 
 export async function getSpiderStatus(jobId: string): Promise<DataResponse<CrawlStatus>> {
     try {
         const response = await fetch(
-            `${process.env.CRAWLER_SERVER}/spider-status/${jobId}`,
+            `${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/spider-status/${jobId}`,
             { cache: 'no-store' } // 确保每次都获取最新状态
         );
         if (!response.ok) {
@@ -147,7 +147,7 @@ export async function getSpiderLog(jobId: string): Promise<DataResponse<string>>
 
     try {
         const response = await fetch(
-            `${process.env.CRAWLER_SERVER}/spider-log/${jobId}`,
+            `${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/spider-log/${jobId}`,
             {
                 cache: "no-store",
             }

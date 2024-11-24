@@ -13,7 +13,7 @@ export async function GET(request) {
     let data = [];
     try {
       const response = await fetch(
-        "http://192.168.1.22:9101/getDownloadVideo",
+        `${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/getDownloadVideo`,
         {
           method: "GET",
           headers: {

@@ -19,7 +19,7 @@ export async function transformSourceData({ batchNum, isFullData = false }: { ba
         } else {
             movieDataArray = await prisma.crawlSourceData.findMany({
                 select: { data: true },
-                where: { batchNum },
+                where: { batchNum: batchNum },
             });
         }
 

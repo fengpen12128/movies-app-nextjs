@@ -15,7 +15,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   try {
     const response = await fetch(
-      `${process.env.CRAWLER_SERVER}/spider-status/${jobId}`
+      `${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/spider-status/${jobId}`
     );
 
     if (!response.ok) {

@@ -2,8 +2,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  let res = await prisma.crawlStat.findMany();
-  console.log(res);
+    const movieDataArray = await prisma.crawlSourceData.findMany({
+        select: { data: true },
+        where: { batchNum: "1731759331" },
+    });
+    console.log(movieDataArray);
 }
 
 main()

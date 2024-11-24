@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request) {
     try {
         const response = await fetch(
-            `${process.env.CRAWLER_SERVER}/download-statistics`
+            `${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/download-statistics`
         );
         const data: ProcessStats = await response.json();
         return NextResponse.json(data, { status: 200 });

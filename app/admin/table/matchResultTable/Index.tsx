@@ -24,7 +24,7 @@ import { saveResourceList } from "@/app/actions/resource";
 import { message } from "react-message-popup";
 
 const renameVideos = async () => {
-  const response = await fetch("http://127.0.0.1:8001/rename-videos");
+  const response = await fetch(`${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/rename-videos`);
   if (!response.ok) {
     throw new Error("重命名失败");
   }

@@ -25,14 +25,14 @@ export function getCollectionOrder(order: MovieOrder) {
 export function getDownloadOrder(order: MovieOrder) {
     switch (order) {
         case 'downloadAsc':
-            return { createdTime: 'asc' as const };
+            return { downloadDate: 'asc' as const };
         case 'releaseDate':
             return { MovieInfo: { releaseDate: 'desc' as const } };
         case 'crawlDate':
             return { MovieInfo: { createdTime: 'desc' as const } };
         case 'downloadDesc':
         default:
-            return { createdTime: 'desc' as const };
+            return { downloadDate: 'desc' as const };
     }
 }
 

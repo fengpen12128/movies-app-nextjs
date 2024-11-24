@@ -28,10 +28,11 @@ export async function getDownloadMovies({ page = 1, collected, order = "download
 
         let q: any = {
             where: {
-                movieCode: {
+                matchCode: {
                     ...(collected === 'true' && { in: ctCode }),
                     ...(collected === 'false' && { notIn: ctCode }),
                 },
+                isMatched: true,
             },
             include: {
                 MovieInfo: {
@@ -52,7 +53,7 @@ export async function getDownloadMovies({ page = 1, collected, order = "download
             },
             orderBy: getDownloadOrder(order),
             skip,
-            distinct: ['movieCode'],
+            distinct: ['matchCode'],
             take: DEFAULT_PAGE_SIZE,
         };
 
@@ -63,8 +64,8 @@ export async function getDownloadMovies({ page = 1, collected, order = "download
 
         const downloadMovies = result.map((x: any) => {
             const m = x.MovieInfo;
-            const downloadTime = x.createdTime;
-            delete x.createdTime;
+            const downloadTime = x.downloadDate;
+            delete x.downloadDate;
             delete x.MovieInfo;
             return {
                 downloadTime,

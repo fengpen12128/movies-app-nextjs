@@ -10,7 +10,7 @@ export async function GET(request) {
 
   try {
     const response = await fetch(
-      `${process.env.CRAWLER_SERVER}/spider-log/${jobId}`,
+      `${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/spider-log/${jobId}`,
       {
         cache: "no-store",
       }

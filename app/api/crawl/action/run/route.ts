@@ -14,7 +14,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<CrawlResp
   try {
     const crawlParams: CrawlParams = await request.json();
 
-    const response = await fetch(`${process.env.CRAWLER_SERVER}/run-spider`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/run-spider`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
+import { deleteMovies } from "./deleteMovies";
 
 export async function deleteMoviesByCondition({
     search,
@@ -16,13 +17,13 @@ export async function deleteMoviesByCondition({
         let relevantCodes: string[] = [];
         if (batchNum) {
             const batchRecords = await prisma.crawlBatchRecord.findMany({
-                where: { batchNum },
+                where: { batchNum: batchNum },
                 select: { code: true },
             });
             relevantCodes = batchRecords.map((record: { code: string }) => record.code);
         }
 
-        // 构建删除条件，与 getMoviesList 使用相同的查询条件
+        // 构建查询条件
         const whereCondition: any = {
             deletedAt: null,
             ...(search && {
@@ -58,30 +59,27 @@ export async function deleteMoviesByCondition({
             }),
         };
 
-        // 获取要删除的记录数量
-        const countToDelete = await prisma.moviesInfo.count({
+        // 获取要删除的记录的 ID 列表
+        const moviesToDelete = await prisma.moviesInfo.findMany({
             where: whereCondition,
+            select: { id: true },
         });
 
-        if (countToDelete === 0) {
+        if (moviesToDelete.length === 0) {
             return {
                 code: 500,
                 msg: "没有找到符合条件的记录",
             };
         }
 
-        // 执行软删除操作
-        const deleteResult = await prisma.moviesInfo.updateMany({
-            where: whereCondition,
-            data: {
-                deletedAt: new Date(),
-            },
-        });
+        // 调用 deleteMovies 函数执行删除操作
+        const movieIds = moviesToDelete.map(movie => movie.id);
+        const deleteResult = await deleteMovies(movieIds);
 
         return {
             code: 200,
-            msg: `成功删除 ${deleteResult.count} 条记录`,
-            data: deleteResult.count,
+            msg: deleteResult.msg,
+            data: movieIds.length,
         };
     } catch (error) {
         console.error("Error deleting movies:", error);

@@ -86,7 +86,7 @@ model MoviesCollection {
     movieCode   String      @unique @map("movie_code") @db.VarChar(100)
     createdTime DateTime    @default(now()) @map("created_time") @db.Timestamp(6)
     MovieInfo   MoviesInfo? @relation(fields: [movieCode], references: [code])
-
+ 
     @@map("movies_collection")
 }
 
@@ -101,12 +101,13 @@ model MoviesTag {
 
 model MoviesVideoResource {
     id           Int         @id @default(autoincrement()) @map("id")
-    matchCode    String?     @map("match_code") @db.VarChar(100)
+    matchCode    String      @map("match_code") @db.VarChar(100)
     path         String      @map("path") @db.VarChar(400)
     size         String?     @map("size") @db.VarChar(100)
     downloadDate DateTime?   @map("download_date")
     MovieInfo    MoviesInfo? @relation(fields: [matchCode], references: [code])
     deletedTime  DateTime?   @map("deleted_time")
+    isMatched    Boolean?    @default(false) @map("is_matched")
 
     @@unique([matchCode, path])
     @@map("movies_video_resource")

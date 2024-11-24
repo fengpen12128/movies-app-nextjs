@@ -75,9 +75,10 @@ export async function saveResourceList(resourceList: MovieResource[] | MovieReso
     try {
         await prisma.moviesVideoResource.createMany({
             data: resources.map((item) => ({
-                matchCode: item.matchCode || null,
+                matchCode: item.matchCode || '-',
                 path: item.path,
                 size: String(item.size),
+                isMatched: item.matchCode ? true : false,
             })),
             skipDuplicates: true,
         });

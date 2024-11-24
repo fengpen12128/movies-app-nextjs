@@ -12,8 +12,8 @@ export async function GET(req, { params }) {
   try {
     const url =
       mode === "async"
-        ? `${process.env.CRAWLER_SERVER}/start-download-async`
-        : `${process.env.CRAWLER_SERVER}/start-download-sync`;
+        ? `${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/start-download-async`
+        : `${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/start-download-sync`;
 
     const taskInfo = await fetch(url, {
       method: "get",

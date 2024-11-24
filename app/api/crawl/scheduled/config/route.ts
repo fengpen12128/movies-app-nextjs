@@ -11,7 +11,7 @@ interface ScheduledUrlsResponse {
 
 export async function GET(req: NextRequest): Promise<NextResponse<ScheduledUrlsResponse | { error: string }>> {
     try {
-        const res = await fetch(`${process.env.CRAWLER_SERVER}/scheduled-urls`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/scheduled-urls`);
 
         if (!res.ok) {
             throw new Error(`HTTP error! status: ${res.status}`);

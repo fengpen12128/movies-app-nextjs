@@ -10,7 +10,7 @@ export async function getMatchResult(): Promise<DataResponse<MovieResource[]>> {
         let serverData: ResourceServerData[] = [];
         try {
             const response = await fetch(
-                process.env.NEXT_PUBLIC_VIDEO_META_PARSER,
+                `${process.env.NEXT_PUBLIC_SCRIPT_BACKEND_ENDPOINT}/getDownloadVideo`,
                 {
                     method: "GET",
                     headers: {
@@ -69,7 +69,7 @@ export async function getMatchResult(): Promise<DataResponse<MovieResource[]>> {
 export async function getUnMatchedResource(): Promise<DataResponse<MovieResource[]>> {
     const data = await prisma.moviesVideoResource.findMany({
         where: {
-            matchCode: null,
+            isMatched: false
         },
     });
 
